@@ -855,12 +855,15 @@ class PTA_SUS_Admin {
                 </p>';
         // Allow other plugins to add fields to the form
         do_action( 'pta_sus_sheet_form_after_contact_info', $f, $edit );
+        $content = isset($f['sheet_details']) ? wp_kses_post($f['sheet_details']) : '';
+        $editor_id = "sheet_details";
+        $settings = array( 'textarea_rows' => 10 );
         echo '
                 <hr />
                 <p>
                     <label for="sheet_details"><h3>'.__('Program/Event Details (optional):', 'pta_volunteer_sus').'</h3></label>
-                    <textarea id="sheet_details" name="sheet_details" style="width: 100%;" rows="3">'.((isset($f['sheet_details']) ? stripslashes(esc_attr($f['sheet_details'])) : '')).'</textarea>
                 </p>';
+                    wp_editor( $content, $editor_id, $settings );
         // Allow other plugins to add fields to the form
         do_action( 'pta_sus_sheet_form_after_sheet_details', $f, $edit );
         echo '

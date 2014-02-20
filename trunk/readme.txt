@@ -4,13 +4,13 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.8.1
-Stable tag: 1.2.2
+Stable tag: 1.3
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
 == Description ==
 
-This plugin allows you to easily create and manage volunteer sign up sheets for your school or organization. You can define three different types of events:  Single, Recurring, or Multi-Day events. Single events are for events that take place on just a single date. Recurring events are events that happen more than once (such as a weekly function), but have the same needs for each date. Multi-Day events are events that are spread across more than one day, but have different needs for each day. 
+This plugin allows you to easily create and manage volunteer sign up sheets for your school or organization. You can define four different types of events:  Single, Recurring, Multi-Day, or Ongoing events. Single events are for events that take place on just a single date. Recurring events are events that happen more than once (such as a weekly function), but have the same needs for each date. Multi-Day events are events that are spread across more than one day, but have different needs for each day. Ongoing events do not have any dates associated with them, but are for committees or helpers that are needed on an ongoing basis.
 
 For each of these types of events, you can create as many tasks or items as needed. For each of these tasks/items, you can specify how many items or people are needed, a start and end time, the date (for multi-day events), and whether or not item details are needed (for example, if you want the volunteer to enter the type of dish they are bringing for a luncheon). The order of tasks/items can easily be sorted by drag and drop.
 
@@ -22,7 +22,7 @@ If a user is logged in when they sign up, the system will keep track of the user
 
 There is a shortcode for a main sign-up sheet page that will show a list of all active (and non-hidden) sign-up sheets, showing the number of open volunteer slots with links to view each individual sheet. Individual sheets have links next to each open task/item for signing up.  When signing up, if the user is already logged in, their name and contact info (phone and email) will be pre-filled in the sign-up page form if that info exists in the user's meta data. You can also enter shortcode arguments to display a specific sign-up sheet on any page.
 
-There is a sidebar widget to show upcoming volunteer events and how many spots still need to be filled for each, linked to each individual sign-up sheet.
+There is a sidebar widget to show upcoming volunteer events and how many spots still need to be filled for each, linked to each individual sign-up sheet. You can choose whether or not to show Ongoing type events in the widget, and if they should be at the top or bottom of the list (since they don't have dates associated with them).
 
 Admin users can view sign-ups for each sheet, and clear any spots with a simple link. Each sheet can also be exported to a CSV format file for easy import into Excel or other spreadsheet programs.
 
@@ -46,7 +46,7 @@ Features:
 *   Individual sheets can be set to hidden until you are ready to have people sign up (useful for testing individual sheets)
 *   Test Mode for entire volunteer system, which displays a message of your choosing to the public while you test the system
 *   "manage_signup_sheets" capability so you can set up other users who can create and manage sign-up sheets without giving them full admin level access.
-*	Integration with the PTA Member Directory & Contact Form plugin to quickly specify contacts for each sign-up sheet
+*	Integration with the PTA Member Directory & Contact Form plugin to quickly specify contacts for each sign-up sheet, linked to the contact form with the proper recipient already selected.
 
 == Installation ==
 
@@ -72,6 +72,14 @@ https://stephensherrardplugins.com/pta-volunteer-sign-up-sheets/
 
 
 == Changelog ==
+**Version 1.3**
+
+*	Added Wordpress editor for sheet details textarea to allow rich text formatting.
+*	Added option to show "Filled" instead of the volunteer's first name and last initial for filled spots on a sign-up sheet.
+*	Small change for compatibility with older PHP versions
+*	Added hooks, filters, and CSS classes for easier extension & customizing
+*	Additional translation coding prep
+
 **Version 1.2.2**
 
 *	First public release
