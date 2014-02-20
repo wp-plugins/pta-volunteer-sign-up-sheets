@@ -52,3 +52,10 @@ TABLE.pta-sus-sheets .column-view_link {
 .pta-sus.error {
     background: #FFF2CF url('../assets/images/icon-alert.png') no-repeat scroll 8px .5em;
     }
+.pta-sus-hidden {
+    color: red;
+    font-weight: 600;
+}
+.pta-sus-em {
+    font-style: italic;
+}

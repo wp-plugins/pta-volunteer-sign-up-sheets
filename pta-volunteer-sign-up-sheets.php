@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: PTA Volunteer Sign Up Sheets
-Plugin URI: http://stephensherrardplugins.com/volunteer-sign-up-sheets
+Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.2.2
+Version: 1.3
 Author: Stephen Sherrard
-Author URI: http://stephensherrardplugins.com
+Author URI: https://stephensherrardplugins.com
 License: GPL2
 Text Domain: pta_volunteer_sus
 Domain Path: /languages
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.2.2');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.3');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -49,12 +49,14 @@ class PTA_Sign_Up_Sheet {
         add_action('plugins_loaded', array($this, 'init'));
         add_action('init', array($this, 'public_init' ));
 
-        add_action( 'widgets_init', function() { register_widget( 'PTA_SUS_Widget' ); } );
+        add_action( 'widgets_init', array($this, 'register_sus_widget') );
 
         $this->main_options = get_option( 'pta_volunteer_sus_main_options' );
     }
-    
-    
+
+    public function register_sus_widget() {
+        register_widget( 'PTA_SUS_Widget' );
+    }   
         
     /**
     * Admin Menu
@@ -182,6 +184,7 @@ class PTA_Sign_Up_Sheet {
                     'enable_test_mode' => false,
                     'test_mode_message' => 'The Volunteer Sign-Up System is currently undergoing maintenance. Please check back later.',
                     'volunteer_page_id' => 0,
+                    'hide_volunteer_names' => false,
                     'show_ongoing_in_widget' => true,
                     'show_ongoing_last' => true,
                     'login_required' => false,
@@ -307,7 +310,7 @@ endif; // class exists
 $pta_vol_sus_plugin_file = 'pta-volunteer-sign-up-sheets/pta-volunteer-sign-up-sheets.php';
 add_filter( "plugin_action_links_{$pta_vol_sus_plugin_file}", 'pta_vol_sus_plugin_action_links', 10, 2 );
 function pta_vol_sus_plugin_action_links( $links, $file ) {
-    $extensions_link = '<a href="http://stephensherrardplugins.com">' . __( 'Extensions', 'pta_volunteer_sus' ) . '</a>';
+    $extensions_link = '<a href="https://stephensherrardplugins.com">' . __( 'Extensions', 'pta_volunteer_sus' ) . '</a>';
     array_unshift( $links, $extensions_link );
     $settings_link = '<a href="' . admin_url( 'admin.php?page=pta-sus-settings_settings' ) . '">' . __( 'Settings', 'pta_volunteer_sus' ) . '</a>';
     array_unshift( $links, $settings_link );

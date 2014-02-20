@@ -76,6 +76,7 @@ class PTA_SUS_Options {
         add_settings_field('enable_test_mode', __('Enable Test Mode', 'pta_volunteer_sus'), array($this, 'enable_test_mode_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('test_mode_message', __('Test Mode Message:', 'pta_volunteer_sus'), array($this, 'test_mode_message_text_input'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('volunteer_page_id', __('Volunteer Sign Up Page', 'pta_volunteer_sus'), array($this, 'volunteer_page_id_select'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
+        add_settings_field('hide_volunteer_names', __('Hide volunteer names from public?', 'pta_volunteer_sus'), array($this, 'hide_volunteer_names_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_ongoing_in_widget', __('Show Ongoing events in Widget?', 'pta_volunteer_sus'), array($this, 'show_ongoing_in_widget_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_ongoing_last', __('Show Ongoing events last?', 'pta_volunteer_sus'), array($this, 'show_ongoing_last_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required', __('Login Required?', 'pta_volunteer_sus'), array($this, 'login_required_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
@@ -167,6 +168,7 @@ class PTA_SUS_Options {
     		'enable_test_mode' => 'bool',
             'test_mode_message' => 'text',
             'volunteer_page_id' => 'integer',
+            'hide_volunteer_names' => 'bool',
             'show_ongoing_in_widget' => 'bool',
             'show_ongoing_last' => 'bool',
             'login_required' => 'bool',
@@ -299,6 +301,18 @@ class PTA_SUS_Options {
         ?>
         <input name="pta_volunteer_sus_main_options[enable_test_mode]" type="checkbox" value="1" <?php echo $checked; ?> />
         <em><?php _e('Puts Volunteer Sign-up Sheet system in test mode. Only admin level users can view public side sign-up sheets.', 'pta_volunteer_sus'); ?></em>
+        <?php
+    }
+
+    public function hide_volunteer_names_checkbox() {
+        if(isset($this->main_options['hide_volunteer_names']) && true === $this->main_options['hide_volunteer_names']) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        ?>
+        <input name="pta_volunteer_sus_main_options[hide_volunteer_names]" type="checkbox" value="1" <?php echo $checked; ?> />
+        <em><?php _e('If checked filled sign-up slots will show "Filled" instead of first name and last initial of volunteer.', 'pta_volunteer_sus'); ?></em>
         <?php
     }
 
