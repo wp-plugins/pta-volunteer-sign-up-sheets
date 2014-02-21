@@ -15,9 +15,6 @@ class PTA_SUS_Emails {
 		$this->main_options = get_option( 'pta_volunteer_sus_main_options' );
 		$this->data = new PTA_SUS_Data();
 
-		// hook into our own hourly cron function to check/send reminder emails
-		add_action( 'pta_sus_hourly_cron', array($this, 'send_reminders') );
-
 	} // Construct
 
 	/**
