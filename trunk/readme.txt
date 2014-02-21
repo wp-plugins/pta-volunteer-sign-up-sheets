@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.8.1
-Stable tag: 1.3
+Stable tag: 1.3.1
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -16,7 +16,9 @@ For each of these types of events, you can create as many tasks or items as need
 
 Each sign-up sheet can be set to visible or hidden, so that you can create sign-up sheets ahead of time, but only make them visible to the public when you are ready for them to start signing up. There is also a test mode which will only show sign-up sheets on the public side to admin users or those who you give the "manage_signup_sheets" capability. Everyone else will see a message of your choosing while you are in test mode. When not in test mode, admins and users with the "manage_signup_sheets" capability can still view hidden sheets on the public side (for testing those sheets without putting the whole system into test mode).
 
-In the settings, you can choose to require that users be logged in to view or sign-up for any volunteer sign-up sheets, and pick the message they will see if they are not logged in. Even if you keep the sheets open to the public, no personal information is shown for any slots that have already been filled. Only a first name and last initial is shown for filled slots, along with any item descriptions. Contact info is only shown on the admin side. There is also a hidden spambot field to prevent signup form submission from spambots.
+In the settings, you can choose to require that users be logged in to view or sign-up for any volunteer sign-up sheets, and pick the message they will see if they are not logged in. Even if you keep the sheets open to the public, no personal information is shown for any slots that have already been filled. Only a first name and last initial is shown for filled slots, along with any item descriptions. Contact info is only shown on the admin side.  Version 1.3 adds an option to simply show "Filled" for filled spots.
+
+There is also a hidden spambot field to prevent signup form submission from spambots.
 
 If a user is logged in when they sign up, the system will keep track of the user ID, and on the main volunteer sign-ups page, they will also see a list of items/tasks that they have signed up for, and it will give them a link to clear each sign up if they need to cancel or reschedule. If they are not logged in when they sign up, but they use the same email as a registered user, that sign-up will be linked to that user's account.
 
@@ -37,7 +39,7 @@ Features:
 *   Easily create volunteer sign-up sheets with unlimited number of tasks/items for each
 *	Supports Single, Recurring, Ongoing or Multi-Day Events
 *  	All Sheets can be hidden from the public (visible only to logged in users)   
-*   No volunteer last names or contact info are shown to the public
+*   No volunteer last names or contact info are shown to the public. Default public view shows only first name and last name for filled spots.  Version 1.3 introduces an option to simply show "Filled" for filled spots.
 *   Hidden spambot field helps prevent automatic spambot form submissions
 *	Up to 2 automatic reminder emails can be set up at individually specified intervals for each sheet (e.g., 7 days and 1 day before event)
 *   Shortcodes for all sheets, or use argument to show a specific sheet on a page
@@ -47,6 +49,7 @@ Features:
 *   Test Mode for entire volunteer system, which displays a message of your choosing to the public while you test the system
 *   "manage_signup_sheets" capability so you can set up other users who can create and manage sign-up sheets without giving them full admin level access.
 *	Integration with the PTA Member Directory & Contact Form plugin to quickly specify contacts for each sign-up sheet, linked to the contact form with the proper recipient already selected.
+*	Use the free PTA Zilla Shortcodes extension to easily generate shortcodes with all possible arguments ( available at https://stephensherrardplugins.com )
 
 == Installation ==
 
@@ -57,7 +60,7 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 **Is there any documentation or help on how to use this?**
 
 Documentation will be coming soon. Please use the Wordpress.org support forum for this plugin if you have any problems, or visit:  
-http://stephensherrardplugins.com
+https://stephensherrardplugins.com
 
 **How do I display the signup sheets?**
 
@@ -72,6 +75,10 @@ https://stephensherrardplugins.com/pta-volunteer-sign-up-sheets/
 
 
 == Changelog ==
+**Version 1.3.1**
+
+*	Small rework/fix to ensure reminder emails function is run every hour with the CRON job
+
 **Version 1.3**
 
 *	Added Wordpress editor for sheet details textarea to allow rich text formatting.

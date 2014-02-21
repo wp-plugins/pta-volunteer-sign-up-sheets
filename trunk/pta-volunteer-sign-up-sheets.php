@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.3
+Version: 1.3.1
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.3');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.3.1');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -26,18 +26,21 @@ if (!class_exists('PTA_SUS_Data')) require_once 'classes/data.php';
 if (!class_exists('PTA_SUS_List_Table')) require_once 'classes/list-table.php';
 if (!class_exists('PTA_SUS_Widget')) require_once 'classes/widget.php';
 if (!class_exists('PTA_CSV_EXPORTER')) require_once 'classes/class-pta_csv_exporter.php';
+if (!class_exists('PTA_SUS_Emails')) require_once 'classes/class-pta_sus_emails.php';
 
 if(!class_exists('PTA_Sign_Up_Sheet')):
 
 class PTA_Sign_Up_Sheet {
 	
     private $data;
+    private $emails;
     public $db_version = '1.1.2';
     private $wp_roles;
     public $main_options;
     
     public function __construct() {
         $this->data = new PTA_SUS_Data();
+        $this->emails = new PTA_SUS_Emails();
 
         add_shortcode('pta_sign_up_sheet', array($this, 'display_sheet'));
         register_activation_hook(__FILE__, array($this, 'activate'));
@@ -74,6 +77,9 @@ class PTA_Sign_Up_Sheet {
     public function cron_functions() {
         // Let other plugins hook into our hourly cron job
         do_action( 'pta_sus_hourly_cron' );
+
+        // Run our reminders email check
+        $this->emails->send_reminders();
 
         // If automatic clearing of expired signups is enabled, run the check
         if($this->main_options['clear_expired_signups']) {
