@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.8.1
-Stable tag: 1.3.1
+Stable tag: 1.3.3
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -65,7 +65,7 @@ https://stephensherrardplugins.com
 **How do I display the signup sheets?**
 
 Use the shortcode [pta_sign_up_sheet] to display the sign-up sheets on a page. There are also shortcode arguments for id (specific sheet id), date (specific date), and list_title (change the title of the main list of signup sheets). To make generating shortcodes with arguments easier, download the free PTA Zilla Shortcodes plugin extension from: 
-http://stephensherrardplugins.com
+https://stephensherrardplugins.com
 
 
 == Screenshots ==
@@ -75,6 +75,14 @@ https://stephensherrardplugins.com/pta-volunteer-sign-up-sheets/
 
 
 == Changelog ==
+**Version 1.3.2**
+
+*	Fixed bug dealing with sheet visibility & trash settings
+
+**Version 1.3.2**
+
+*	Patch for people with PHP versions < 5.3 who were getting fatal errors for str_getcsv function
+
 **Version 1.3.1**
 
 *	Small rework/fix to ensure reminder emails function is run every hour with the CRON job
