@@ -83,12 +83,13 @@ class PTA_SUS_Data
             SELECT * 
             FROM ".$this->tables['sheet']['name']." 
             WHERE trash = %d
-            ".(($active_only) ? " AND ADDDATE(last_date,1) >= NOW() OR last_date = 0000-00-00" : "")
-            .(($show_hidden) ? "" : " AND visible = 1")."
+            ".(($active_only) ? " AND (ADDDATE(last_date,1) >= NOW() OR last_date = 0000-00-00)" : "")
+            .(($show_hidden) ? "" : " AND visible = 1")." 
             ORDER BY first_date DESC, id DESC
         ", $trash));
         $results = $this->stripslashes_full($results);
         // Hide incomplete sheets (no tasks) from public
+
         if (!is_admin()) {
             foreach($results as $key => $result) {
                 $tasks = $this->get_tasks($result->id);
@@ -97,6 +98,7 @@ class PTA_SUS_Data
                 }
             }
         }
+
         return $results;
     }
      
