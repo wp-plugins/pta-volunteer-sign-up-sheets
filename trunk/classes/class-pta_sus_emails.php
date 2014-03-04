@@ -51,7 +51,6 @@ class PTA_SUS_Emails {
         } else {
             if('' == $sheet->chair_email) {
                 $chair_emails = false;
-                wp_die('OOPS!');
             } else {
                 $chair_emails = explode(',', $sheet->chair_email);
             }
