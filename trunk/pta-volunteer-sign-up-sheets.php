@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.3.4
+Version: 1.4
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.3.4');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.4');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -64,7 +64,7 @@ class PTA_Sign_Up_Sheet {
     public $main_options;
     
     public function __construct() {
-        $this->data = new PTA_SUS_Data();
+        
         $this->emails = new PTA_SUS_Emails();
 
         add_shortcode('pta_sign_up_sheet', array($this, 'display_sheet'));
@@ -78,6 +78,8 @@ class PTA_Sign_Up_Sheet {
         add_action('init', array($this, 'public_init' ));
 
         add_action( 'widgets_init', array($this, 'register_sus_widget') );
+
+        add_action( 'wpmu_new_blog', array($this, 'new_blog'), 10, 6); 
 
         $this->main_options = get_option( 'pta_volunteer_sus_main_options' );
     }
@@ -108,6 +110,7 @@ class PTA_Sign_Up_Sheet {
 
         // If automatic clearing of expired signups is enabled, run the check
         if($this->main_options['clear_expired_signups']) {
+            $this->data = new PTA_SUS_Data();
             $results = $this->data->delete_expired_signups();
             if($results && $this->main_options['enable_cron_notifications']) {
                 $to = get_bloginfo( 'admin_email' );
@@ -131,15 +134,56 @@ class PTA_Sign_Up_Sheet {
     public function init() {
         load_plugin_textdomain( 'pta_volunteer_sus', false, dirname(plugin_basename( __FILE__ )) . '/languages/' );
     }
+
+      
+ 
+    /*
+    *   Run activation procedure to set up tables and options when a new blog is added
+     */
+    public function new_blog($blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+        global $wpdb;
+     
+        if (is_plugin_active_for_network('pta-volunteer-sign-up-sheets/pta-volunteer-sign-up-sheets.php')) {
+            $old_blog = $wpdb->blogid;
+            switch_to_blog($blog_id);
+            $this->pta_sus_activate();
+            switch_to_blog($old_blog);
+        }
+    }
     
     /**
     * Activate the plugin
     */
-    public function activate() {
+    public function activate($networkwide) {
+        global $wpdb;
+                     
+        if (function_exists('is_multisite') && is_multisite()) {
+            // check if it is a network activation - if so, run the activation function for each blog id
+            if ($networkwide) {
+                $old_blog = $wpdb->blogid;
+                // Get all blog ids
+                $blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+                foreach ($blogids as $blog_id) {
+                    switch_to_blog($blog_id);
+                    $this->pta_sus_activate();
+                }
+                switch_to_blog($old_blog);
+                return;
+            }  
+        }
+        $this->pta_sus_activate();     
+    }
+
+    public function pta_sus_activate() {
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
+        /*
         $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
         check_admin_referer( "activate-plugin_{$plugin}" );
+        */
+       
+        // Create new data object here so it works for multi-site activation
+        $this->data = new PTA_SUS_Data();
 
         // Database Tables
         // **********************************************************
@@ -276,6 +320,7 @@ Thank You!
 ";
         $defaults = array(
                     'from_email' => get_bloginfo( $show='admin_email' ),
+                    'replyto_email' => get_bloginfo( $show='admin_email' ),
                     'confirmation_email_subject' => 'Thank you for volunteering!',
                     'confirmation_email_template' => $confirm_template,
                     'reminder_email_subject' => 'Volunteer Reminder',

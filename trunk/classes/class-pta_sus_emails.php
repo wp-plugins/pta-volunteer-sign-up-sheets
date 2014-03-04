@@ -31,6 +31,8 @@ class PTA_SUS_Emails {
         
         $from = $this->email_options['from_email'];
         if (empty($from)) $from = get_bloginfo('admin_email');
+        $replyto = $this->email_options['replyto_email'];
+        if (empty($replyto)) $replyto = get_bloginfo('admin_email');
 
         $to = $signup->firstname . ' ' . $signup->lastname . ' <'. $signup->email . '>';
 
@@ -49,6 +51,7 @@ class PTA_SUS_Emails {
         } else {
             if('' == $sheet->chair_email) {
                 $chair_emails = false;
+                wp_die('OOPS!');
             } else {
                 $chair_emails = explode(',', $sheet->chair_email);
             }
@@ -56,7 +59,7 @@ class PTA_SUS_Emails {
 
         $headers = array();
             $headers[]  = "From: " . get_bloginfo('name') . " <" . $from . ">";
-            $headers[]  = 'Reply-To: No Reply <no-reply@ivepta.org>';
+            $headers[]  = "Reply-To: " . $replyto;
             $headers[]  = "Content-Type: text/plain; charset=UTF-8";
             $headers[]  = "Content-Transfer-Encoding: 8bit";
             if (!empty($chair_emails) && !$reminder) { 

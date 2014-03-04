@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.8.1
-Stable tag: 1.3.4
+Stable tag: 1.4
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -48,8 +48,9 @@ Features:
 *   Individual sheets can be set to hidden until you are ready to have people sign up (useful for testing individual sheets)
 *   Test Mode for entire volunteer system, which displays a message of your choosing to the public while you test the system
 *   "manage_signup_sheets" capability so you can set up other users who can create and manage sign-up sheets without giving them full admin level access.
-*	Integration with the PTA Member Directory & Contact Form plugin to quickly specify contacts for each sign-up sheet, linked to the contact form with the proper recipient already selected.
+*	Integration with the PTA Member Directory & Contact Form plugin to quickly specify contacts for each sign-up sheet, linked to the contact form with the proper recipient already selected. http://wordpress.org/plugins/pta-member-directory/
 *	Use the free PTA Zilla Shortcodes extension to easily generate shortcodes with all possible arguments ( available at https://stephensherrardplugins.com )
+*	Version 1.4 adds Wordpress Multisite compatibility
 
 == Installation ==
 
@@ -75,6 +76,13 @@ https://stephensherrardplugins.com/pta-volunteer-sign-up-sheets/
 
 
 == Changelog ==
+**Version 1.4**
+
+*	After a user signs up, save the firstname, lastname, and phone in user's meta if it doesn't exist so it will be pre-filled on future signups
+*	Modified to work with Wordpress Multisite installations
+*	Added reply-to email option for confirmation & reminder emails
+*	Minor bug fixes and tweaks
+
 **Version 1.3.4**
 
 *	Tweak for admin side permissions

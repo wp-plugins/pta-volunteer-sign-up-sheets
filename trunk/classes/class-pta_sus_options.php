@@ -90,6 +90,7 @@ class PTA_SUS_Options {
         register_setting( 'pta_volunteer_sus_email_options', 'pta_volunteer_sus_email_options', array($this, 'pta_sus_validate_email_options') );
         add_settings_section('pta_volunteer_email', __('Email Settings', 'pta_volunteer_sus'), array($this, 'pta_volunteer_email_description'), 'pta_volunteer_sus_email');
         add_settings_field('from_email', __('FROM email:', 'pta_volunteer_sus'), array($this, 'from_email_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
+        add_settings_field('replyto_email', __('Reply-To email:', 'pta_volunteer_sus'), array($this, 'replyto_email_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('confirmation_email_subject', __('Confirmation email subject:', 'pta_volunteer_sus'), array($this, 'confirmation_email_subject_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('confirmation_email_template', __('Confirmation email template:', 'pta_volunteer_sus'), array($this, 'confirmation_email_template_textarea_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('reminder_email_subject', __('Reminder email subject:', 'pta_volunteer_sus'), array($this, 'reminder_email_subject_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
@@ -114,7 +115,7 @@ class PTA_SUS_Options {
         foreach ($fields as $field => $type) {
         	switch ($type) {
         		case 'integer':
-        			if(is_numeric($inputs[$field])) {
+        			if( is_numeric($inputs[$field]) || '' === $inputs[$field] ) {
 		                $this->{$options}[$field] = (int)$inputs[$field];
 		            } else {
 		                $err++;
@@ -185,6 +186,7 @@ class PTA_SUS_Options {
     	$options = "email_options";
     	$fields = array(
     		'from_email' => 'email',
+            'replyto_email' => 'email',
             'confirmation_email_subject' => 'text',
             'confirmation_email_template' => 'textarea',
             'reminder_email_subject' => 'text',
@@ -214,6 +216,11 @@ class PTA_SUS_Options {
 
     public function pta_volunteer_integration_description() {
         echo '<p> ' . __('Integration with other plugins', 'pta_volunteer_sus') . '</p>';
+        if (!is_plugin_active( 'pta-member-directory/pta-member-directory.php' )) {
+            $link = '<a href="http://wordpress.org/plugins/pta-member-directory/">http://wordpress.org/plugins/pta-member-directory/</a>';
+            echo '<p> ' . __('This plugin can integrate with the PTA Member Directory and Contact Form plugin to set contacts for each sign-up sheet, with contact links being directed to the contact form.', 'pta_volunteer_sus') . '</p>';
+            echo '<p> ' . sprintf(__('Search for "PTA Member Directory" from your Install Plugins page, or download from Wordpress.org here: %s', 'pta_volunteer_sus'), $link ) . '</p>';
+        }
     }
 
     public function volunteer_page_id_select() {
@@ -262,6 +269,11 @@ class PTA_SUS_Options {
     public function from_email_text_input() {
         echo "<input id='from_email' name='pta_volunteer_sus_email_options[from_email]' size='40' type='text' value='{$this->email_options['from_email']}' />";
         echo '<em> ' . __('The email address that confirmation and reminder emails will be sent from.', 'pta_volunteer_sus') . '</em>';
+    }
+
+    public function replyto_email_text_input() {
+        echo "<input id='replyto_email' name='pta_volunteer_sus_email_options[replyto_email]' size='40' type='text' value='{$this->email_options['replyto_email']}' />";
+        echo '<em> ' . __('The Reply-To email address for confirmation and reminder emails.', 'pta_volunteer_sus') . '</em>';
     }
 
     public function confirmation_email_subject_text_input() {

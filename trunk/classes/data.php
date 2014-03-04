@@ -425,6 +425,21 @@ class PTA_SUS_Data
                 $clean_fields['user_id'] = $user->ID;
             }           
         }
+        // If we have a user_id, check to see if their meta fields are empty and update them so they can be pre-filled for future signups
+        if(isset($clean_fields['user_id']) && !empty($clean_fields['user_id'])) {
+            if (!isset($user)) {
+                $user = get_user_by( 'id', $clean_fields['user_id'] );
+            }
+            if ( !isset($user->first_name) || '' == $user->first_name ) {
+                update_user_meta( $user->ID, 'first_name', $clean_fields['firstname'] );
+            }
+            if ( !isset($user->last_name) || '' == $user->last_name ) {
+                update_user_meta( $user->ID, 'last_name', $clean_fields['lastname'] );
+            }
+            if ( '' == $phone = get_user_meta( $user->ID, 'billing_phone', true ) ) {
+                update_user_meta( $user->ID, 'billing_phone', $clean_fields['phone'] );
+            }
+        }
         
         // Check if signup spots are filled
         $task = $this->get_task($task_id);
