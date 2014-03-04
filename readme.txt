@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.8.1
-Stable tag: 1.4
+Stable tag: 1.4.1
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -76,6 +76,10 @@ https://stephensherrardplugins.com/pta-volunteer-sign-up-sheets/
 
 
 == Changelog ==
+**Version 1.4.1**
+
+*	Remove some debug code accidentally left in the email function
+
 **Version 1.4**
 
 *	After a user signs up, save the firstname, lastname, and phone in user's meta if it doesn't exist so it will be pre-filled on future signups
