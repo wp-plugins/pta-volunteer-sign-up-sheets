@@ -9,6 +9,7 @@ class PTA_SUS_Emails {
 	public $email_options;
 	public $main_options;
 	public $data;
+    public $last_reminder;
 
 	public function __construct() {
 		$this->email_options = get_option( 'pta_volunteer_sus_email_options' );
@@ -96,6 +97,10 @@ class PTA_SUS_Emails {
         $message = str_replace('{site_name}', get_bloginfo('name'), $message);
         $message = str_replace('{site_url}', get_bloginfo('url'), $message);
 
+        if( $reminder && $this->main_options['detailed_reminder_admin_emails'] ) {
+            $this->last_reminder = "To: " . $to . "\r\n\r\n" . $message . "\r\n\r\n\r\n";
+        }
+
         return wp_mail($to, $subject, $message, $headers);
     }
 
@@ -168,6 +173,7 @@ class PTA_SUS_Emails {
             // so each one can be used to create a personalized email.  However, if there are
             // no signups for a given task on a sheet, an event object for that task will still
             // be created, so need to see if there is a valid email first before sending.
+            $reminders_log = '';
             foreach ($reminder_events as $event) {
                 if(!is_email( $event->email)) continue; // skip any invalid emails
 
@@ -182,7 +188,8 @@ class PTA_SUS_Emails {
                 if ($this->send_mail($event->signup_id, $reminder = true) === TRUE) { 
                     // Keep track of # of reminders sent
                     $reminder_count++; 
-
+                    // Add reminder message to reminders_log
+                    $reminders_log .= $this->last_reminder;
                     // Here we need to set the reminder_sent to true
                     $update = array();
                     if ( 1 === $event->reminder_num ) {
@@ -207,8 +214,12 @@ class PTA_SUS_Emails {
                 $to = get_bloginfo( 'admin_email' );
                 $subject = __("Volunteer Signup Reminders sent", 'pta_volunteer_sus');
                 $message = __("Volunteer signup sheet CRON job has been completed.", 'pta_volunteer_sus')."\r\n\r\n";
-                $message .= sprintf( __("%d reminder emails were sent.", 'pta_volunteer_sus'), $reminder_count ); 
-                //$reminder_count . __(" reminder emails were sent.", 'pta_volunteer_sus'). "\r\n\r\n";
+                $message .= sprintf( __("%d reminder emails were sent.", 'pta_volunteer_sus'), $reminder_count ) ."\r\n\r\n"; 
+                // If enabled, add details of all reminders sent to the admin notification email
+                if ($this->main_options['detailed_reminder_admin_emails']) {
+                    $message .= "Messages Sent:\r\n\r\n";
+                    $message .= $reminders_log;
+                }               
                 wp_mail($to, $subject, $message);
             }
         }

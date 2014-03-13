@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.4.1
+Version: 1.4.2
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.4.1');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.4.2');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -265,6 +265,7 @@ class PTA_Sign_Up_Sheet {
                     'login_required' => false,
                     'login_required_message' => 'You must be logged in to a valid account to view and sign up for volunteer opportunities.',
                     'enable_cron_notifications' => true,
+                    'detailed_reminder_admin_emails' => true,
                     'show_expired_tasks' => false,
                     'clear_expired_signups' => true,
                     'hide_donation_button' => false,
@@ -388,6 +389,8 @@ add_filter( "plugin_action_links_{$pta_vol_sus_plugin_file}", 'pta_vol_sus_plugi
 function pta_vol_sus_plugin_action_links( $links, $file ) {
     $extensions_link = '<a href="https://stephensherrardplugins.com">' . __( 'Extensions', 'pta_volunteer_sus' ) . '</a>';
     array_unshift( $links, $extensions_link );
+    $docs_link = '<a href="https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentation/">' . __( 'Docs', 'pta_volunteer_sus' ) . '</a>';
+    array_unshift( $links, $docs_link );
     $settings_link = '<a href="' . admin_url( 'admin.php?page=pta-sus-settings_settings' ) . '">' . __( 'Settings', 'pta_volunteer_sus' ) . '</a>';
     array_unshift( $links, $settings_link );
     return $links;

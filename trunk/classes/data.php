@@ -630,7 +630,7 @@ class PTA_SUS_Data
         foreach ( $this->tables[$post_type]['required_fields'] as $required_field => $label ) {
             if( empty($clean_fields[$required_field]) ) {
                 $results['errors']++;
-                $results['message'] .= $label . ' is a required field.<br/>';
+                $results['message'] .= sprintf( __('%s is a required field.', 'pta_volunteer_sus'), $label ) . '<br/>';
             }
         }
 
@@ -641,7 +641,7 @@ class PTA_SUS_Data
                     case 'names':
                         if (!$this->check_allowed_text($clean_fields[$field])) {
                             $results['errors']++;
-                            $results['message'] .= 'Invalid characters in '.$field.' field.<br/>';
+                            $results['message'] .= sprintf( __('Invalid characters in %s field.', 'pta_volunteer_sus'), $field ) .'<br/>';
                         }
                         break;
 
@@ -661,7 +661,7 @@ class PTA_SUS_Data
                         foreach ($emails as $email) {
                             if (!is_email( $email )) {
                                 $results['errors']++;
-                                $results['message'] .= 'Invalid email.<br/>';
+                                $results['message'] .= __('Invalid email.', 'pta_volunteer_sus') . '<br/>';
                             }
                         }
                         break;
@@ -669,7 +669,7 @@ class PTA_SUS_Data
                     case 'date':
                         if (!$this->check_date( $clean_fields[$field] )) {
                             $results['errors']++;
-                            $results['message'] .= 'Invalid date.<br/>';
+                            $results['message'] .= __('Invalid date.', 'pta_volunteer_sus') .'<br/>';
                         }
                         break;
 
@@ -683,7 +683,7 @@ class PTA_SUS_Data
                         foreach ($dates as $date) {
                             if (!$this->check_date( $date )) {
                                 $results['errors']++;
-                                $results['message'] .= 'Invalid date.<br/>';
+                                $results['message'] .= __('Invalid date.', 'pta_volunteer_sus') .'<br/>';
                             }
                         }
                         break;
@@ -692,21 +692,21 @@ class PTA_SUS_Data
                         // Validate input is only numbers
                         if (!$this->check_numbers($clean_fields[$field])) {
                             $results['errors']++;
-                            $results['message'] .= 'Numbers only for '.$field.' please!<br/>';
+                            $results['message'] .= sprintf(__('Numbers only for %s please!', 'pta_volunteer_sus'), $field ) . '<br/>';
                         }
                         break;
 
                     case 'yesno':
                         if ("YES" != $clean_fields[$field] && "NO" != $clean_fields[$field]) {
                             $results['errors']++;
-                            $results['message'] .= 'YES or NO only for '.$field.' please!<br/>';
+                            $results['message'] .= sprintf( __('YES or NO only for %s please!', 'pta_volunteer_sus'), $field ) . '<br/>';
                         }
                         break;
 
                     case 'bool':
                         if ("1" != $clean_fields[$field] && "0" != $clean_fields[$field]) {
                             $results['errors']++;
-                            $results['message'] .= 'Invalid Value for '.$field.'!<br/>';
+                            $results['message'] .= sprintf( __('Invalid Value for %s', 'pta_volunteer_sus'), $field ) .'<br/>';
                         }
                         break;
 
@@ -714,7 +714,7 @@ class PTA_SUS_Data
                         $pattern = '/^(?:0[1-9]|1[0-2]):[0-5][0-9] (am|pm|AM|PM)$/';
                         if(!preg_match($pattern, $clean_fields[$field])){
                             $results['errors']++;
-                            $results['message'] .= 'Invalid time format for '.$field.'!<br/>';
+                            $results['message'] .= sprintf( __('Invalid time format for %s', 'pta_volunteer_sus'), $field) .'<br/>';
                         }
                         break;
                         

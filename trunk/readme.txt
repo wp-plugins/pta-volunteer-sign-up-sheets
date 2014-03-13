@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.8.1
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -51,6 +51,7 @@ Features:
 *	Integration with the PTA Member Directory & Contact Form plugin to quickly specify contacts for each sign-up sheet, linked to the contact form with the proper recipient already selected. http://wordpress.org/plugins/pta-member-directory/
 *	Use the free PTA Zilla Shortcodes extension to easily generate shortcodes with all possible arguments ( available at https://stephensherrardplugins.com )
 *	Version 1.4 adds Wordpress Multisite compatibility
+*	Version 1.4.2 adds Spanish translation by Simon Samson at http://sitestraduction.com -- half-price translation services for non-profits
 
 == Installation ==
 
@@ -60,8 +61,8 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 **Is there any documentation or help on how to use this?**
 
-Documentation will be coming soon. Please use the Wordpress.org support forum for this plugin if you have any problems, or visit:  
-https://stephensherrardplugins.com
+Documentation can be found at:
+https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentation/
 
 **How do I display the signup sheets?**
 
@@ -74,8 +75,18 @@ https://stephensherrardplugins.com
 Screenshots and extended description can be found at:
 https://stephensherrardplugins.com/pta-volunteer-sign-up-sheets/
 
+Documentation can be found at:
+https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentation/
+
 
 == Changelog ==
+**Version 1.4.2**
+
+*	Added option to append reminder emails content to admin notifications when reminder emails have been sent
+*	Settings pages now include a link to the documentation at: https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentation/
+*	Several code fixes for translation
+*	Includes Spanish translation by Simon Samson at http://sitestraduction.com -- half-price translation services for non-profits
+
 **Version 1.4.1**
 
 *	Remove some debug code accidentally left in the email function
