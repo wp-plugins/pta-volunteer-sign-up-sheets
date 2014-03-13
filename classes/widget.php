@@ -117,23 +117,23 @@ class PTA_SUS_Widget extends WP_Widget
 	 */
 	public function form( $instance ) {
 		/* Set up default widget settings. */
-		$defaults = array( 'title' => 'Current Volunteer Opportunities', 'num_items' => 10, 'permalink' => 'volunteer-sign-ups', 'list_class' => '');
+		$defaults = array( 'title' => __('Current Volunteer Opportunities', 'pta_volunteer_sus'), 'num_items' => 10, 'permalink' => 'volunteer-sign-ups', 'list_class' => '');
 		$instance = wp_parse_args( (array) $instance, $defaults );
 		?>
 		<p>
-		<label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e( 'Title:', 'pta_volunteer_sus' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_name( 'num_items' ); ?>"><?php _e( '# of items to show (-1 for all):' ); ?></label> 
+		<label for="<?php echo $this->get_field_name( 'num_items' ); ?>"><?php _e( '# of items to show (-1 for all):', 'pta_volunteer_sus' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'num_items' ); ?>" name="<?php echo $this->get_field_name( 'num_items' ); ?>" type="text" value="<?php echo esc_attr( $instance['num_items'] ); ?>" />
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_name( 'permalink' ); ?>"><?php _e( 'Main sign-up page permalink' ); ?></label> 
+		<label for="<?php echo $this->get_field_name( 'permalink' ); ?>"><?php _e( 'Main sign-up page permalink', 'pta_volunteer_sus' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'permalink' ); ?>" name="<?php echo $this->get_field_name( 'permalink' ); ?>" type="text" value="<?php echo esc_attr( $instance['permalink'] ); ?>" />
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_name( 'list_class' ); ?>"><?php _e( 'CSS Class for ul list of signups' ); ?></label> 
+		<label for="<?php echo $this->get_field_name( 'list_class' ); ?>"><?php _e( 'CSS Class for ul list of signups', 'pta_volunteer_sus' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'list_class' ); ?>" name="<?php echo $this->get_field_name( 'list_class' ); ?>" type="text" value="<?php echo esc_attr( $instance['list_class'] ); ?>" />
 		</p>
 		<?php 

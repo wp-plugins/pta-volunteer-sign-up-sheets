@@ -120,7 +120,7 @@ class PTA_SUS_Admin {
         if (isset($_GET['action']) && $_GET['action'] == 'clear') {
             if (($result = $this->data->delete_signup($_GET['signup_id'])) === false) {
                 $err = true;
-                echo '<div class="error"><p>'.__('Error clearing spot (ID #', 'pta_volunteer_sus').esc_attr($_GET['signup_id']).')</p></div>';
+                echo '<div class="error"><p>'.sprintf( __('Error clearing spot (ID # %s)', 'pta_volunteer_sus'), esc_attr($_GET['signup_id']) ).'</p></div>';
             } else {
                 $success = true;
                 if ($result > 0) echo '<div class="updated"><p>'.__('Spot has been cleared.', 'pta_volunteer_sus').'</p></div>';
@@ -137,7 +137,7 @@ class PTA_SUS_Admin {
         $edit = (!$trash && !$untrash && !$delete && !$copy && !$toggle_visibility && !empty($_GET['sheet_id']));
         
         echo '<div class="wrap pta_sus">';
-        echo ($edit || $view_signups) ? __('<h2>Sheet Details</h2>', 'pta_volunteer_sus') : '<h2>'.__('Sign-up Sheets ', 'pta_volunteer_sus').'
+        echo ($edit || $view_signups) ? '<h2>'.__('Sheet Details', 'pta_volunteer_sus').'</h2>' : '<h2>'.__('Sign-up Sheets ', 'pta_volunteer_sus').'
             <a href="?page='.$this->admin_settings_slug.'_modify_sheet" class="add-new-h2">'.__('Add New', 'pta_volunteer_sus').'</a>
             </h2>
         ';
@@ -412,7 +412,7 @@ class PTA_SUS_Admin {
                     'task_time_start'   => $_POST['task_time_start'][$key],
                     'task_time_end'     => $_POST['task_time_end'][$key],
                     'task_qty'          => $_POST['task_qty'][$key],
-                    'task_need_details' => isset($_POST['task_need_details'][$key]) ? __("YES", 'pta_volunteer_sus') : __("NO", 'pta_volunteer_sus'),
+                    'task_need_details' => isset($_POST['task_need_details'][$key]) ? "YES" : "NO",
                     'task_id'           => (isset($_POST['task_id'][$key]) && 0 != $_POST['task_id'][$key]) ? (int)$_POST['task_id'][$key] : -1,
                     );
             }
@@ -432,7 +432,8 @@ class PTA_SUS_Admin {
                         $signup_count = count($signups);
                         if ($signup_count > 0) {
                             $task_err++;
-                            echo '<div class="error"><p><strong>'.printf(__('The task "%1$s" cannot be changed to a new date because it has %2$d '._n('person', 'people', $signup_count, 'pta_volunteer_sus').' signed up.  Please clear all spots first before chaning this task date.', 'pta_volunteer_sus'), esc_html($old_task->title), (int)$signup_count).'</strong></p></div>';
+                            $people = _n('person', 'people', $signup_count, 'pta_volunteer_sus');
+                            echo '<div class="error"><p><strong>'.sprintf(__('The task "%1$s" cannot be changed to a new date because it has %2$d %3$s signed up.  Please clear all spots first before changing this task date.', 'pta_volunteer_sus'), esc_html($old_task->title), (int)$signup_count, $people) .'</strong></p></div>';
                         } else {
                             $dates[] = $task['task_dates']; // build our array of valid dates
                         }
@@ -499,8 +500,9 @@ class PTA_SUS_Admin {
                             $signup_count = count($this->data->get_signups((int)$_POST['task_id'][$i], $cdate));
                             if ($signup_count > $_POST['task_qty'][$i]) {
                                 $task_err++;
+                                $people = _n('person', 'people', $signup_count, 'pta_volunteer_sus');
                                 if (!empty($task_err)) echo '<div class="error"><p><strong>';
-                                printf(__('The number of spots for task "%1$s" cannot be set below %2$d because it currently has %2$d '._n('person', 'people', $signup_count, 'pta_volunteer_sus').' signed up.  Please clear some spots first before updating this task.'), esc_attr($_POST['task_title'][$i]), (int)$signup_count, 'pta_volunteer_sus');
+                                printf(__('The number of spots for task "%1$s" cannot be set below %2$d because it currently has %2$d %3$s signed up.  Please clear some spots first before updating this task.', 'pta_volunteer_sus'), esc_attr($_POST['task_title'][$i]), (int)$signup_count, $people);
                                 echo '</strong></p></div>';
                             }
                         }                        
@@ -524,7 +526,8 @@ class PTA_SUS_Admin {
                         $task_err++;
                         $task = $this->data->get_task($task_id);
                         if (!empty($task_err)) echo '<div class="error"><p><strong>';
-                        printf(__('The task "%1$s" cannot be removed because it has %2$d '._n('person', 'people', $signup_count, 'pta_volunteer_sus').' signed up.  Please clear all spots first before removing this task.'), esc_html($task->title), (int)$signup_count, 'pta_volunteer_sus');
+                        $people = _n('person', 'people', $signup_count, 'pta_volunteer_sus');
+                        printf(__('The task "%1$s" cannot be removed because it has %2$d %3$s signed up.  Please clear all spots first before removing this task.', 'pta_volunteer_sus'), esc_html($task->title), (int)$signup_count, $people);
                         echo '</strong></p></div>';
                     }
                 }
@@ -759,7 +762,13 @@ class PTA_SUS_Admin {
 
     private function display_sheet_form($f=array(), $edit=false) {
         // Allow other plugins to add/modify other sheet types
-        $sheet_types = apply_filters( 'pta_sus_sheet_form_sheet_types', array('Single', 'Recurring', 'Multi-Day', 'Ongoing'));
+        $sheet_types = apply_filters( 'pta_sus_sheet_form_sheet_types', 
+            array(
+                'Single' => __('Single', 'pta_volunteer_sus'), 
+                'Recurring' => __('Recurring', 'pta_volunteer_sus'), 
+                'Multi-Day' => __('Multi-Day', 'pta_volunteer_sus'), 
+                'Ongoing' => __('Ongoing', 'pta_volunteer_sus')
+                ));
         // default for visible will be checked
         if ((isset($f['sheet_visible']) && 1 == $f['sheet_visible']) || !isset($f['sheet_visible'])) {
             $visible_checked = 'checked="checked"';
@@ -769,12 +778,12 @@ class PTA_SUS_Admin {
         }
         $options = array();
         $options[] = "<option value=''>".__('Select Event Type', 'pta_volunteer_sus')."</option>";
-        foreach ($sheet_types as $type) {
+        foreach ($sheet_types as $type => $display) {
             $selected = '';
             if ( isset($f['sheet_type']) && $type == $f['sheet_type'] ) {
                 $selected = "selected='selected'"; 
             }
-            $options[] = "<option value='{$type}' $selected >{$type}</option>";
+            $options[] = "<option value='{$type}' $selected >{$display}</option>";
         }
         echo '
             <form name="add_sheet" id="pta-sus-modify-sheet" method="post" action="">

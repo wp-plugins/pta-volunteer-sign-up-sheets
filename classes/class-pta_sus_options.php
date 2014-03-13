@@ -26,6 +26,7 @@ class PTA_SUS_Options {
         if (!current_user_can('manage_options') && !current_user_can('manage_signup_sheets'))  {
             wp_die( __( 'You do not have sufficient permissions to access this page.', 'pta_volunteer_sus' ) );
         }
+        $docs_link = '<a href="https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentation/" target="_blank">'.__('Documentation', 'pta_volunteer_sus') . '</a>';
 
         ?>
         <div class="wrap pta_sus">
@@ -34,9 +35,9 @@ class PTA_SUS_Options {
             <?php settings_errors(); ?>
             <?php $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'main_options'; ?> 
             <h2 class="nav-tab-wrapper">  
-                <a href="?page=<?php echo $this->settings_page_slug?>&tab=main_options" class="nav-tab <?php echo $active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>">Main Settings</a>  
-                <a href="?page=<?php echo $this->settings_page_slug?>&tab=email_options" class="nav-tab <?php echo $active_tab == 'email_options' ? 'nav-tab-active' : ''; ?>">Email Settings</a>   
-                <a href="?page=<?php echo $this->settings_page_slug?>&tab=integration_options" class="nav-tab <?php echo $active_tab == 'integration_options' ? 'nav-tab-active' : ''; ?>">Integration Settings</a> 
+                <a href="?page=<?php echo $this->settings_page_slug?>&tab=main_options" class="nav-tab <?php echo $active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Main Settings', 'pta_volunteer_sus'); ?></a>  
+                <a href="?page=<?php echo $this->settings_page_slug?>&tab=email_options" class="nav-tab <?php echo $active_tab == 'email_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Email Settings', 'pta_volunteer_sus'); ?></a>   
+                <a href="?page=<?php echo $this->settings_page_slug?>&tab=integration_options" class="nav-tab <?php echo $active_tab == 'integration_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Integration Settings', 'pta_volunteer_sus'); ?></a> 
             </h2> 
             <form action="options.php" method="post">
                 <?php 
@@ -64,6 +65,7 @@ class PTA_SUS_Options {
                     <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
                 </form>
             <?php endif; ?>
+            <h3><?php echo $docs_link; ?></h3>
         </div>        
         <?php
         return;
@@ -82,6 +84,7 @@ class PTA_SUS_Options {
         add_settings_field('login_required', __('Login Required?', 'pta_volunteer_sus'), array($this, 'login_required_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required_message', __('Login Required Message:', 'pta_volunteer_sus'), array($this, 'login_required_message_text_input'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('enable_cron_notifications', __('Enable CRON Notifications?', 'pta_volunteer_sus'), array($this, 'enable_cron_notifications_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
+        add_settings_field('detailed_reminder_admin_emails', __('Detailed Reminder Notifications?', 'pta_volunteer_sus'), array($this, 'detailed_reminder_admin_emails_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_expired_tasks', __('Show Expired Tasks?', 'pta_volunteer_sus'), array($this, 'show_expired_tasks_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('clear_expired_signups', __('Automatically clear expired signups?', 'pta_volunteer_sus'), array($this, 'clear_expired_signups_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('hide_donation_button', __('Hide donation button?', 'pta_volunteer_sus'), array($this, 'hide_donation_button_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
@@ -175,6 +178,7 @@ class PTA_SUS_Options {
             'login_required' => 'bool',
             'login_required_message' => 'text',
             'enable_cron_notifications' => 'bool',
+            'detailed_reminder_admin_emails' => 'bool',
             'show_expired_tasks' => 'bool',
             'clear_expired_signups' => 'bool',
             'hide_donation_button' => 'bool',
@@ -374,6 +378,18 @@ class PTA_SUS_Options {
         <input name="pta_volunteer_sus_main_options[enable_cron_notifications]" type="checkbox" value="1" <?php echo $checked; ?> />
         <?php
         echo __('YES.', 'pta_volunteer_sus') . ' <em> '. __('Sends site admin an email whenever a CRON job is completed (such as sending reminders or deleting expired signups).', 'pta_volunteer_sus').'</em>';
+    }
+
+    public function detailed_reminder_admin_emails_checkbox() {
+        if(isset($this->main_options['detailed_reminder_admin_emails']) && true === $this->main_options['detailed_reminder_admin_emails']) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        ?>
+        <input name="pta_volunteer_sus_main_options[detailed_reminder_admin_emails]" type="checkbox" value="1" <?php echo $checked; ?> />
+        <?php
+        echo __('YES.', 'pta_volunteer_sus') . ' <em> '. __('Admin reminder emails notification will include the message body of all reminders sent, useful for troubleshooting.', 'pta_volunteer_sus').'</em>';
     }
 
     public function show_expired_tasks_checkbox() {
