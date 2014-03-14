@@ -1,6 +1,6 @@
 <?php
 /**
-* Database queries and actions
+* Database queries and actions class
 */
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
