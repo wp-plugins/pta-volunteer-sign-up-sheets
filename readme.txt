@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.8.1
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -52,6 +52,7 @@ Features:
 *	Use the free PTA Zilla Shortcodes extension to easily generate shortcodes with all possible arguments ( available at https://stephensherrardplugins.com )
 *	Version 1.4 adds Wordpress Multisite compatibility
 *	Version 1.4.2 adds Spanish translation by Simon Samson at http://sitestraduction.com -- half-price translation services for non-profits
+*	Version 1.4.5 Includes French translation, and updated Spanish translation, by Simon Samson at http://sitestraduction.com
 
 == Installation ==
 
@@ -80,9 +81,14 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.4.5**
+
+* 	Changed the way the signup input form and signup form error messages are displayed to fix issues with certain themes.
+*	Includes French & Spanish translations by Simon Samson at http://sitestraduction.com
+
 **Version 1.4.4**
 
-* Reupload to try to fix corrupted directory structure in the repository
+* 	Fix corrupted directory structure in the repository
 
 **Version 1.4.2**
 

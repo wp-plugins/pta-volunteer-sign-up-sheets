@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PTA Volunteer Sign Up Sheets\n"
 "POT-Creation-Date: 2014-03-13 08:58-0800\n"
-"PO-Revision-Date: 2014-03-13 14:25-0500\n"
+"PO-Revision-Date: 2014-03-14 13:16-0500\n"
 "Last-Translator: Simon Samson <contact@sitestraduction.com>\n"
 "Language-Team: Stephen Sherrard <stephen@dbar-productions.com>\n"
 "MIME-Version: 1.0\n"
@@ -169,7 +169,7 @@ msgstr "La hoja ha sido copiado a la nueva hoja con ID #"
 #: classes/class-pta_sus_admin.php:167 classes/class-pta_sus_admin.php:707
 #: classes/class-pta_sus_admin.php:711 classes/class-pta_sus_admin.php:721
 msgid "Edit"
-msgstr "Editar"
+msgstr "Modificar"
 
 #: classes/class-pta_sus_admin.php:171
 msgid "Error toggling sheet visibility."
@@ -292,7 +292,7 @@ msgstr "Fecha inválida!"
 
 #: classes/class-pta_sus_admin.php:391
 msgid "You must enter at least two dates for a Recurring event!"
-msgstr "Debe introducir al menos dos fechas para un evento Recurrente!"
+msgstr "Debe introducir al menos dos fechas para un evento Periódico!"
 
 #: classes/class-pta_sus_admin.php:396
 msgid "Invalid dates!  Enter at least 2 valid dates."
@@ -443,7 +443,7 @@ msgstr "Hoja de Inscripción."
 #: classes/class-pta_sus_admin.php:715 classes/class-pta_sus_admin.php:729
 #: classes/list-table.php:112
 msgid "Edit Tasks"
-msgstr "Editar las Tareas"
+msgstr "Modificar las Tareas"
 
 #: classes/class-pta_sus_admin.php:717
 msgid "Dates and Tasks are added on the next page"
@@ -455,7 +455,7 @@ msgstr "Tareas han actualizado correctamente!"
 
 #: classes/class-pta_sus_admin.php:726 classes/list-table.php:111
 msgid "Edit Sheet"
-msgstr "Editar la Hoja"
+msgstr "Modificar la Hoja"
 
 #: classes/class-pta_sus_admin.php:727
 msgid "Sheet Updated!"
@@ -467,7 +467,7 @@ msgstr "Simple"
 
 #: classes/class-pta_sus_admin.php:768
 msgid "Recurring"
-msgstr "Recurrente"
+msgstr "Periódico"
 
 #: classes/class-pta_sus_admin.php:769
 msgid "Multi-Day"
@@ -1073,7 +1073,7 @@ msgstr "Relleno"
 #: classes/class-pta_sus_public.php:160
 msgid "Please login to view and edit your volunteer sign ups."
 msgstr ""
-"Por favor inicia sesión para ver y editar sus inscripciones de voluntario"
+"Por favor inicia sesión para ver y modificar sus inscripciones de voluntario"
 
 #: classes/class-pta_sus_public.php:171
 msgid "Signup Cleared"
@@ -1242,7 +1242,7 @@ msgid ""
 msgstr ""
 "Si usted tiene una cuenta, se recomienda encarecidamente que <em style="
 "\"text-decoration:underline;\">se connecta antes de inscribirse</em> de modo "
-"que usted puede ver y editar todas sus suscripciones."
+"que usted puede ver y modificar todas sus suscripciones."
 
 #: classes/class-pta_sus_public.php:600
 msgid "Item you are bringing"

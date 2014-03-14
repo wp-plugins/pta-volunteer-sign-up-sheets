@@ -286,13 +286,14 @@ class PTA_SUS_Public {
 			    $submitted = (isset($_POST['mode']) && $_POST['mode'] == 'submitted');
 			    $err = 0;
 			    $success = false;
+                $errors = '';
 			    
 			    // Process Sign-up Form
 			    if ($submitted) {
                     // Check for spambots
                     if (!empty($_POST['website'])) {
                         $err++;
-                        echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Oops! You filled in the spambot field. Please leave it blank and try again.', 'pta_volunteer_sus').'</p>', 'spambot_error_message' );
+                        $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Oops! You filled in the spambot field. Please leave it blank and try again.', 'pta_volunteer_sus').'</p>', 'spambot_error_message' );
                     }
 				    //Error Handling
 				    if (
@@ -302,44 +303,44 @@ class PTA_SUS_Public {
                         || empty($_POST['signup_phone'])
 				    ) {
 					    $err++;
-					    echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please complete all required fields.', 'pta_volunteer_sus').'</p>', 'required_fields_error_message' );
+					    $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please complete all required fields.', 'pta_volunteer_sus').'</p>', 'required_fields_error_message' );
 				    }
 
                     if("YES" == $_POST['need_details'] && '' == $_POST['signup_item']) {
                         $err++;
-                        echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please enter the item you are bringing.', 'pta_volunteer_sus').'</p>', 'item_details_required_error_message' );
+                        $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please enter the item you are bringing.', 'pta_volunteer_sus').'</p>', 'item_details_required_error_message' );
                     }
 
                     // Check for non-allowed characters
                     elseif (preg_match("/[^A-Za-z\-\.\'\ ]/", stripslashes($_POST['signup_firstname'])))
                         {
                             $err++;
-                            echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in First Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'firstname_error_message' );
+                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in First Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'firstname_error_message' );
                         }
                     elseif (preg_match("/[^A-Za-z\-\.\'\ ]/", stripslashes($_POST['signup_lastname'])))
                         {
                             $err++;
-                            echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Last Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'lastname_error_message' );
+                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Last Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'lastname_error_message' );
                         }
                     elseif ( !is_email( $_POST['signup_email'] ) )
                         {
                             $err++;
-                            echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Email!  Please try again.', 'pta_volunteer_sus').'</p>', 'email_error_message' );
+                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Email!  Please try again.', 'pta_volunteer_sus').'</p>', 'email_error_message' );
                         }
                     elseif (preg_match("/[^0-9\-\.\(\)\ ]/", $_POST['signup_phone']))
                         {
                             $err++;
-                            echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Phone Number!  Please try again.', 'pta_volunteer_sus').'</p>', 'phone_error_message' );
+                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Phone Number!  Please try again.', 'pta_volunteer_sus').'</p>', 'phone_error_message' );
                         }
                     elseif (preg_match("/[^A-Za-z0-9\-\.\'\(\)\ ]/", stripslashes($_POST['signup_item'])))
                         {
                             $err++;
-                            echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Signup Item!  Please try again.', 'pta_volunteer_sus').'</p>', 'item_details_error_message' );
+                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Signup Item!  Please try again.', 'pta_volunteer_sus').'</p>', 'item_details_error_message' );
                         }
                     elseif (!$this->data->check_date($_POST['signup_date']))
                         {
                             $err++;
-                            echo apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Hidden signup date field is invalid!  Please try again.', 'pta_volunteer_sus').'</p>', 'signup_date_error_message' );
+                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Hidden signup date field is invalid!  Please try again.', 'pta_volunteer_sus').'</p>', 'signup_date_error_message' );
                         }
 
                     // Add Signup
@@ -368,7 +369,7 @@ class PTA_SUS_Public {
 			    if (!$submitted || $err) {
 				    if (isset($_GET['task_id']) && $date) {
                         do_action('pta_sus_before_display_signup_form', $_GET['task_id'], $date );
-					    return $this->display_signup_form($_GET['task_id'], $date);
+					    return $errors . $this->display_signup_form($_GET['task_id'], $date);
 				    }
 			    }
 			    
@@ -524,17 +525,17 @@ class PTA_SUS_Public {
         } else {
             $show_date = date_i18n(get_option('date_format'), strtotime($date));
         }
-        echo apply_filters( 'pta_sus_public_output', '<h3>'.__('Sign Up', 'pta_volunteer_sus').'</h3>', 'sign_up_form_heading' );
-        echo '<h4>'. apply_filters( 'pta_sus_public_output', __('You are signing up for... ', 'pta_volunteer_sus'), 'you_are_signing_up_for' ).'<br/><strong>'.esc_html($task->title).'</strong> ';
+        $form = apply_filters( 'pta_sus_public_output', '<h3>'.__('Sign Up', 'pta_volunteer_sus').'</h3>', 'sign_up_form_heading' );
+        $form .= '<h4>'. apply_filters( 'pta_sus_public_output', __('You are signing up for... ', 'pta_volunteer_sus'), 'you_are_signing_up_for' ).'<br/><strong>'.esc_html($task->title).'</strong> ';
         if ($show_date) {
-            echo sprintf(__('on %s', 'pta_volunteer_sus'), $show_date);
+            $form .= sprintf(__('on %s', 'pta_volunteer_sus'), $show_date);
         }
-        echo '</h4>';
+        $form .= '</h4>';
         if ('' != $task->time_start) {
-            echo '<strong>'.apply_filters( 'pta_sus_public_output', __('Start Time: ', 'pta_volunteer_sus'), 'start_time_label' ) . date_i18n(get_option("time_format"), strtotime($task->time_start)) . '</strong><br/>';
+            $form .= '<strong>'.apply_filters( 'pta_sus_public_output', __('Start Time: ', 'pta_volunteer_sus'), 'start_time_label' ) . date_i18n(get_option("time_format"), strtotime($task->time_start)) . '</strong><br/>';
         }
         if ('' != $task->time_end) {
-            echo '<strong>'.apply_filters( 'pta_sus_public_output', __('End Time: ', 'pta_volunteer_sus'), 'end_time_label' ) . date_i18n(get_option("time_format"), strtotime($task->time_end)) . '</strong>';
+            $form .= '<strong>'.apply_filters( 'pta_sus_public_output', __('End Time: ', 'pta_volunteer_sus'), 'end_time_label' ) . date_i18n(get_option("time_format"), strtotime($task->time_end)) . '</strong>';
         }
         $firstname_label = apply_filters( 'pta_sus_public_output', __('First Name', 'pta_volunteer_sus'), 'firstname_label' );
         $lastname_label = apply_filters( 'pta_sus_public_output', __('Last Name', 'pta_volunteer_sus'), 'lastname_label' );
@@ -548,8 +549,8 @@ class PTA_SUS_Public {
             // Using Woocommerce to handle site registrations stores a "billing_phone" user meta field
             // since we set single to "true", this will return an empty string if the field doesn't exist
             $phone = get_user_meta( $current_user->ID, 'billing_phone', true );
-            echo '
-			<form name="form1" method="post" action="">
+            $form .= '
+			<form name="pta_sus_signup_form" method="post" action="">
                 <input type="hidden" name="signup_user_id" value="'.$current_user->ID.'" />
 				<p>
 					<label for="signup_firstname">'.$firstname_label.'</label>
@@ -569,9 +570,9 @@ class PTA_SUS_Public {
                 </p>';
         } else { 
         	// If not signed in, get the user data
-            echo '
+            $form .= '
             <p><strong>'.__('If you have an account, it is strongly recommended that you <em style="text-decoration:underline;">login before you sign up</em> so that you can view and edit all your signups.', 'pta_volunteer_sus').'</strong></p>
-			<form name="form1" method="post" action="">
+			<form name="pta_sus_signup_form" method="post" action="">
 				<p>
 					<label for="signup_firstname">'.$firstname_label.'</label>
 					<input type="text" id="signup_firstname" name="signup_firstname" value="'.((isset($_POST['signup_firstname'])) ? esc_attr($_POST['signup_firstname']) : '').'" />
@@ -595,23 +596,23 @@ class PTA_SUS_Public {
         // If details are needed for the task, show the field to fill in details.
         // Otherwise don't show the field, but fill it with a blank space
         if ($task->need_details == "YES") {
-            echo '
+            $form .= '
             <p>
 			    <label for="signup_item">'.apply_filters( 'pta_sus_public_output', __('Item you are bringing', 'pta_volunteer_sus'), 'item_details_label' ).'</label>
 			    <input type="text" id="signup_item" name="signup_item" value="'.((isset($_POST['signup_item'])) ? esc_attr($_POST['signup_item']) : '').'" />
                 <input type="hidden" name="need_details" value="YES" />
 		    </p>';
         } else {
-            echo '<input type="hidden" name="signup_item" value=" " />
+            $form .= '<input type="hidden" name="signup_item" value=" " />
             <input type="hidden" name="need_details" value="NO" />'; 
         }
 
         // Spam check and form submission
         $go_back_args = array('task_id' => false, 'date' => $date, 'sheet_id' => $_GET['sheet_id']);
         $go_back_url = add_query_arg($go_back_args);
-        echo '
+        $form .= '
 			<div style="visibility:hidden"> 
-	            <input name="website" type="text"size="20" />
+	            <input name="website" type="text" size="20" />
 	        </div>
 	        <p class="submit">
 	            <input type="hidden" name="signup_date" value="'.esc_attr($date).'" />
@@ -621,7 +622,8 @@ class PTA_SUS_Public {
 	            <a href="'.esc_url($go_back_url).'">'.esc_html( apply_filters( 'pta_sus_public_output', __('&laquo; go back to the Sign-Up Sheet', 'pta_volunteer_sus'), 'go_back_to_signup_sheet_text' ) ).'</a>
 	        </p>
 		</form>
-		';       
+		';
+        return $form;       
 	} // Display Sign up form
 
 	/**
