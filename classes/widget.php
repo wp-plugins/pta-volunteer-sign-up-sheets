@@ -1,6 +1,6 @@
 <?php
 /**
-* Volunteer sign-up-sheets Widget class.
+* Volunteer sign-up-sheets Widget class
 */
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 

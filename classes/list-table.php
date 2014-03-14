@@ -1,6 +1,6 @@
 <?php
 /**
-* Class to create admin list tables.
+* Class to create admin list tables
 */
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 

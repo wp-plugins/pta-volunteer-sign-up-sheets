@@ -1,6 +1,6 @@
 <?php
 /**
-* Admin Setting page class
+* Admin Setting page
 */
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 

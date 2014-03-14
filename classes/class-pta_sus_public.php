@@ -1,6 +1,6 @@
 <?php
 /**
-* Public pages class
+* Public pages
 */
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
