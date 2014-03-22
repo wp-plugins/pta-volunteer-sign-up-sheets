@@ -16,6 +16,11 @@ class PTA_SUS_Public {
     public $email_options;
     public $integration_options;
     public $member_directory_active;
+    public $submitted;
+    public $err;
+    public $success;
+    public $errors;
+    public $messages;
     
     public function __construct() {
         $this->data = new PTA_SUS_Data();
@@ -30,10 +35,104 @@ class PTA_SUS_Public {
         
         add_action('wp_enqueue_scripts', array($this, 'add_css_and_js_to_frontend'));
 
+        add_action('wp_loaded', array($this, 'process_signup_form'));
+
         $this->main_options = get_option( 'pta_volunteer_sus_main_options' );
         $this->email_options = get_option( 'pta_volunteer_sus_email_options' );
         $this->integration_options = get_option( 'pta_volunteer_sus_integration_options' );
     } // Construct
+
+    public function process_signup_form() {
+        $this->submitted = (isset($_POST['pta_sus_form_mode']) && $_POST['pta_sus_form_mode'] == 'submitted');
+        $this->err = 0;
+        $this->success = false;
+        $this->errors = '';
+        $this->messages = '';
+        
+        // Process Sign-up Form
+        if ($this->submitted) {
+            // NONCE check
+            if ( ! isset( $_POST['pts_sus_signup_nonce'] ) || ! wp_verify_nonce( $_POST['pts_sus_signup_nonce'], 'pta_sus_signup' ) ) {
+                $this->err++;
+                $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Sorry! Your security nonce did not verify!', 'pta_volunteer_sus').'</p>', 'nonce_error_message' );
+                return;
+            }
+            // Check for spambots
+            if (!empty($_POST['website'])) {
+                $this->err++;
+                $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Oops! You filled in the spambot field. Please leave it blank and try again.', 'pta_volunteer_sus').'</p>', 'spambot_error_message' );
+                return;
+            }
+            //Error Handling
+            if (
+                empty($_POST['signup_firstname'])
+                || empty($_POST['signup_lastname'])
+                || empty($_POST['signup_email'])
+                || empty($_POST['signup_phone'])
+            ) {
+                $this->err++;
+                $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please complete all required fields.', 'pta_volunteer_sus').'</p>', 'required_fields_error_message' );
+            }
+
+            if("YES" == $_POST['need_details'] && '' == $_POST['signup_item']) {
+                $this->err++;
+                $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please enter the item you are bringing.', 'pta_volunteer_sus').'</p>', 'item_details_required_error_message' );
+            }
+
+            // Check for non-allowed characters
+            elseif (preg_match("/[^A-Za-z\-\.\'\ ]/", stripslashes($_POST['signup_firstname'])))
+                {
+                    $this->err++;
+                    $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in First Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'firstname_error_message' );
+                }
+            elseif (preg_match("/[^A-Za-z\-\.\'\ ]/", stripslashes($_POST['signup_lastname'])))
+                {
+                    $this->err++;
+                    $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Last Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'lastname_error_message' );
+                }
+            elseif ( !is_email( $_POST['signup_email'] ) )
+                {
+                    $this->err++;
+                    $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Email!  Please try again.', 'pta_volunteer_sus').'</p>', 'email_error_message' );
+                }
+            elseif (preg_match("/[^0-9\-\.\(\)\ ]/", $_POST['signup_phone']))
+                {
+                    $this->err++;
+                    $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Phone Number!  Please try again.', 'pta_volunteer_sus').'</p>', 'phone_error_message' );
+                }
+            elseif (preg_match("/[^A-Za-z0-9\-\.\'\(\)\ ]/", stripslashes($_POST['signup_item'])))
+                {
+                    $this->err++;
+                    $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Signup Item!  Please try again.', 'pta_volunteer_sus').'</p>', 'item_details_error_message' );
+                }
+            elseif (!$this->data->check_date($_POST['signup_date']))
+                {
+                    $this->err++;
+                    $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Hidden signup date field is invalid!  Please try again.', 'pta_volunteer_sus').'</p>', 'signup_date_error_message' );
+                }
+
+            // Add Signup
+            if (!$this->err) {
+                do_action( 'pta_sus_before_add_signup', $_POST, $_GET['task_id'] );
+                if ( $this->data->add_signup($_POST, $_GET['task_id']) === false) {
+                    $this->err++;
+                    $this->messages .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Error adding signup record.  Please try again.', 'pta_volunteer_sus').'</p>', 'add_signup_database_error_message' );
+                } else {
+                    global $wpdb;
+                    if(!class_exists('PTA_SUS_Emails')) {
+                        include_once(dirname(__FILE__).'/class-pta_sus_emails.php');
+                    }
+                    $emails = new PTA_SUS_Emails();
+                    $this->success = true;
+                    $this->messages .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus updated">'.__('You have been signed up!', 'pta_volunteer_sus').'</p>', 'signup_success_message' );
+                    if ($emails->send_mail($wpdb->insert_id) === false) { 
+                        $this->messages .= apply_filters( 'pta_sus_public_output', __('ERROR SENDING EMAIL', 'pta_volunteer_sus'), 'email_send_error_message' ); 
+                    }
+                }
+            }
+            
+        }
+    }
 
 	/**
      * Output the volunteer signup form
@@ -214,7 +313,7 @@ class PTA_SUS_Public {
             }
 
         } else {
-            
+            $return .= $this->messages;
             // Display Individual Sheet
             $sheet = apply_filters( 'pta_sus_display_individual_sheet', $this->data->get_sheet($id), $id );
             if ($sheet === false) {
@@ -281,101 +380,17 @@ class PTA_SUS_Public {
                     $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus-hidden";>'.__('This sheet is currently hidden from the public.', 'pta_volunteer_sus') .'</p>', 'sheet_hidden_message' );
                 }
                 
-                // ******************************************************************************
-        	    
-			    $submitted = (isset($_POST['mode']) && $_POST['mode'] == 'submitted');
-			    $err = 0;
-			    $success = false;
-                $errors = '';
-			    
-			    // Process Sign-up Form
-			    if ($submitted) {
-                    // Check for spambots
-                    if (!empty($_POST['website'])) {
-                        $err++;
-                        $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Oops! You filled in the spambot field. Please leave it blank and try again.', 'pta_volunteer_sus').'</p>', 'spambot_error_message' );
-                    }
-				    //Error Handling
-				    if (
-					    empty($_POST['signup_firstname'])
-					    || empty($_POST['signup_lastname'])
-					    || empty($_POST['signup_email'])
-                        || empty($_POST['signup_phone'])
-				    ) {
-					    $err++;
-					    $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please complete all required fields.', 'pta_volunteer_sus').'</p>', 'required_fields_error_message' );
-				    }
-
-                    if("YES" == $_POST['need_details'] && '' == $_POST['signup_item']) {
-                        $err++;
-                        $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Please enter the item you are bringing.', 'pta_volunteer_sus').'</p>', 'item_details_required_error_message' );
-                    }
-
-                    // Check for non-allowed characters
-                    elseif (preg_match("/[^A-Za-z\-\.\'\ ]/", stripslashes($_POST['signup_firstname'])))
-                        {
-                            $err++;
-                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in First Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'firstname_error_message' );
-                        }
-                    elseif (preg_match("/[^A-Za-z\-\.\'\ ]/", stripslashes($_POST['signup_lastname'])))
-                        {
-                            $err++;
-                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Last Name!  Please try again.', 'pta_volunteer_sus').'</p>', 'lastname_error_message' );
-                        }
-                    elseif ( !is_email( $_POST['signup_email'] ) )
-                        {
-                            $err++;
-                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Email!  Please try again.', 'pta_volunteer_sus').'</p>', 'email_error_message' );
-                        }
-                    elseif (preg_match("/[^0-9\-\.\(\)\ ]/", $_POST['signup_phone']))
-                        {
-                            $err++;
-                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Phone Number!  Please try again.', 'pta_volunteer_sus').'</p>', 'phone_error_message' );
-                        }
-                    elseif (preg_match("/[^A-Za-z0-9\-\.\'\(\)\ ]/", stripslashes($_POST['signup_item'])))
-                        {
-                            $err++;
-                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Signup Item!  Please try again.', 'pta_volunteer_sus').'</p>', 'item_details_error_message' );
-                        }
-                    elseif (!$this->data->check_date($_POST['signup_date']))
-                        {
-                            $err++;
-                            $errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Hidden signup date field is invalid!  Please try again.', 'pta_volunteer_sus').'</p>', 'signup_date_error_message' );
-                        }
-
-                    // Add Signup
-                    if (!$err) {
-                        do_action( 'pta_sus_before_add_signup', $_POST, $_GET['task_id'] );
-                        if ( $this->data->add_signup($_POST, $_GET['task_id']) === false) {
-                            $err++;
-                            $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Error adding signup record.  Please try again.', 'pta_volunteer_sus').'</p>', 'add_signup_database_error_message' );
-                        } else {
-                            global $wpdb;
-                            if(!class_exists('PTA_SUS_Emails')) {
-                            	include_once(dirname(__FILE__).'/class-pta_sus_emails.php');
-                            }
-                            $emails = new PTA_SUS_Emails();
-                            $success = true;
-                            $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus updated">'.__('You have been signed up!', 'pta_volunteer_sus').'</p>', 'signup_success_message' );
-                            if ($emails->send_mail($wpdb->insert_id) === false) { 
-                                $return .= apply_filters( 'pta_sus_public_output', __('ERROR SENDING EMAIL', 'pta_volunteer_sus'), 'email_send_error_message' ); 
-                            }
-                        }
-                    }
-                    
-			    }
-                
                 // Display Sign-up Form
-			    if (!$submitted || $err) {
+			    if (!$this->submitted || $this->err) {
 				    if (isset($_GET['task_id']) && $date) {
                         do_action('pta_sus_before_display_signup_form', $_GET['task_id'], $date );
-					    return $errors . $this->display_signup_form($_GET['task_id'], $date);
+					    return $this->errors . $this->display_signup_form($_GET['task_id'], $date);
 				    }
 			    }
 			    
 			    // Sheet Details
                 // Need to escape/sanitize all output to screen
-			    if (!$submitted || $success || $err) {
+			    if (!$this->submitted || $this->success || $this->err) {
                     $future_dates = false;
                     $task_dates = $this->data->get_all_task_dates($sheet->id);
                     foreach ($task_dates as $tdate) {
@@ -617,10 +632,11 @@ class PTA_SUS_Public {
 	        <p class="submit">
 	            <input type="hidden" name="signup_date" value="'.esc_attr($date).'" />
 	            <input type="hidden" name="signup_task_id" value="'.esc_attr($_GET['task_id']).'" />
-	        	<input type="hidden" name="mode" value="submitted" />
+	        	<input type="hidden" name="pta_sus_form_mode" value="submitted" />
 	        	<input type="submit" name="Submit" class="button-primary" value="'.esc_attr( apply_filters( 'pta_sus_public_output', __('Sign me up!', 'pta_volunteer_sus'), 'signup_button_text' ) ).'" />
 	            <a href="'.esc_url($go_back_url).'">'.esc_html( apply_filters( 'pta_sus_public_output', __('&laquo; go back to the Sign-Up Sheet', 'pta_volunteer_sus'), 'go_back_to_signup_sheet_text' ) ).'</a>
 	        </p>
+            ' . wp_nonce_field('pta_sus_signup','pts_sus_signup_nonce') . '
 		</form>
 		';
         return $form;       
