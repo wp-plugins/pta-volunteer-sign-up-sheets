@@ -816,7 +816,7 @@ class PTA_SUS_Data
     public function check_allowed_text($text) {
         // For titles and names, allow letters, numbers, and common punctuation
         // Returns true if good or false if bad
-        return !preg_match( "/[^A-Za-z0-9\-\.\,\!\&\(\)\'\/\?\ ]/", stripslashes($text) );
+        return !preg_match( "/[^A-Za-z0-9\p{L}\p{Z}\p{N}\-\.\,\!\&\(\)\'\/\?\ ]+$/", stripslashes($text) );
     }
 
     public function check_date($date) {

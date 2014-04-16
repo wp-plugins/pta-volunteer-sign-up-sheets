@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PTA Volunteer Sign Up Sheets\n"
-"POT-Creation-Date: 2014-03-21 19:46-0800\n"
-"PO-Revision-Date: 2014-03-21 19:46-0800\n"
+"POT-Creation-Date: 2014-04-16 08:39-0800\n"
+"PO-Revision-Date: 2014-04-16 08:39-0800\n"
 "Last-Translator: Stephen Sherrard <stephen@dbar-productions.com>\n"
 "Language-Team: Stephen Sherrard <stephen@dbar-productions.com>\n"
 "Language: en\n"
@@ -186,19 +186,19 @@ msgstr ""
 
 #: classes/class-pta_sus_admin.php:196 classes/class-pta_sus_admin.php:247
 #: classes/class-pta_sus_admin.php:269 classes/class-pta_sus_public.php:289
-#: classes/class-pta_sus_public.php:444
+#: classes/class-pta_sus_public.php:446
 msgid "Task/Item"
 msgstr ""
 
 #: classes/class-pta_sus_admin.php:197 classes/class-pta_sus_admin.php:249
 #: classes/class-pta_sus_admin.php:271 classes/class-pta_sus_public.php:290
-#: classes/class-pta_sus_public.php:445
+#: classes/class-pta_sus_public.php:447
 msgid "Start Time"
 msgstr ""
 
 #: classes/class-pta_sus_admin.php:198 classes/class-pta_sus_admin.php:250
 #: classes/class-pta_sus_admin.php:272 classes/class-pta_sus_public.php:291
-#: classes/class-pta_sus_public.php:446
+#: classes/class-pta_sus_public.php:448
 msgid "End Time"
 msgstr ""
 
@@ -206,17 +206,17 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: classes/class-pta_sus_admin.php:200 classes/class-pta_sus_public.php:557
+#: classes/class-pta_sus_admin.php:200 classes/class-pta_sus_public.php:559
 msgid "E-mail"
 msgstr ""
 
-#: classes/class-pta_sus_admin.php:201 classes/class-pta_sus_public.php:558
+#: classes/class-pta_sus_admin.php:201 classes/class-pta_sus_public.php:560
 msgid "Phone"
 msgstr ""
 
 #: classes/class-pta_sus_admin.php:202 classes/class-pta_sus_admin.php:254
 #: classes/class-pta_sus_admin.php:276 classes/class-pta_sus_public.php:292
-#: classes/class-pta_sus_public.php:449
+#: classes/class-pta_sus_public.php:451
 msgid "Item Details"
 msgstr ""
 
@@ -228,9 +228,9 @@ msgstr ""
 #: classes/class-pta_sus_emails.php:75 classes/class-pta_sus_emails.php:79
 #: classes/class-pta_sus_emails.php:84 classes/class-pta_sus_public.php:302
 #: classes/class-pta_sus_public.php:304 classes/class-pta_sus_public.php:305
-#: classes/class-pta_sus_public.php:306 classes/class-pta_sus_public.php:481
-#: classes/class-pta_sus_public.php:482 classes/class-pta_sus_public.php:512
-#: classes/class-pta_sus_public.php:513 classes/list-table.php:68
+#: classes/class-pta_sus_public.php:306 classes/class-pta_sus_public.php:483
+#: classes/class-pta_sus_public.php:484 classes/class-pta_sus_public.php:514
+#: classes/class-pta_sus_public.php:515 classes/list-table.php:68
 #: classes/list-table.php:83
 msgid "N/A"
 msgstr ""
@@ -1016,7 +1016,7 @@ msgstr ""
 msgid "View &amp; sign-up"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:245 classes/class-pta_sus_public.php:490
+#: classes/class-pta_sus_public.php:245 classes/class-pta_sus_public.php:492
 msgid "Filled"
 msgstr ""
 
@@ -1085,63 +1085,63 @@ msgstr ""
 msgid "Sign up below..."
 msgstr ""
 
-#: classes/class-pta_sus_public.php:431
+#: classes/class-pta_sus_public.php:433
 msgid "No tasks were found for "
 msgstr ""
 
-#: classes/class-pta_sus_public.php:447
+#: classes/class-pta_sus_public.php:449
 msgid "Available Spots"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:520
+#: classes/class-pta_sus_public.php:522
 msgid "Sign up "
 msgstr ""
 
-#: classes/class-pta_sus_public.php:543
+#: classes/class-pta_sus_public.php:545
 msgid "Sign Up"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:544
+#: classes/class-pta_sus_public.php:546
 msgid "You are signing up for... "
 msgstr ""
 
-#: classes/class-pta_sus_public.php:546
+#: classes/class-pta_sus_public.php:548
 #, php-format
 msgid "on %s"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:550
+#: classes/class-pta_sus_public.php:552
 msgid "Start Time: "
 msgstr ""
 
-#: classes/class-pta_sus_public.php:553
+#: classes/class-pta_sus_public.php:555
 msgid "End Time: "
 msgstr ""
 
-#: classes/class-pta_sus_public.php:555
+#: classes/class-pta_sus_public.php:557
 msgid "First Name"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:556
+#: classes/class-pta_sus_public.php:558
 msgid "Last Name"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:589
+#: classes/class-pta_sus_public.php:591
 msgid ""
 "If you have an account, it is strongly recommended that you <em style=\"text-"
 "decoration:underline;\">login before you sign up</em> so that you can view "
 "and edit all your signups."
 msgstr ""
 
-#: classes/class-pta_sus_public.php:616
+#: classes/class-pta_sus_public.php:618
 msgid "Item you are bringing"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:636
+#: classes/class-pta_sus_public.php:638
 msgid "Sign me up!"
 msgstr ""
 
-#: classes/class-pta_sus_public.php:637
+#: classes/class-pta_sus_public.php:639
 msgid "&laquo; go back to the Sign-Up Sheet"
 msgstr ""
 
