@@ -17,7 +17,7 @@ class PTA_SUS_Data
         
         // Set table names
         $this->tables = array(
-            'sheet' => array(
+            'sheet' => apply_filters( 'pta_sus_sheet_fields', array(
                 'name' => $this->wpdb->prefix.'pta_sus_sheets',
                 'allowed_fields' => array(
                     'title' => 'text',
@@ -37,8 +37,8 @@ class PTA_SUS_Data
                     'title' => 'Title',
                     'type' => 'Event Type'
                     ),
-            ),
-            'task' => array(
+            )),
+            'task' => apply_filters( 'pta_sus_task_fields', array(
                 'name' => $this->wpdb->prefix.'pta_sus_tasks',
                 'allowed_fields' => array(
                     'sheet_id' => 'int',
@@ -51,8 +51,8 @@ class PTA_SUS_Data
                     'position' => 'int',
                 ),
                 'required_fields' => array(),
-            ),
-            'signup' => array(
+            )),
+            'signup' => apply_filters( 'pta_sus_signup_fields', array(
                 'name' => $this->wpdb->prefix.'pta_sus_signups',
                 'allowed_fields' => array(
                     'task_id' => 'int',
@@ -66,7 +66,7 @@ class PTA_SUS_Data
                     'reminder1_sent' => 'bool',
                     'reminder2_sent' => 'bool',
                 ),
-            ),
+            )),
         );
 
     }
@@ -719,7 +719,7 @@ class PTA_SUS_Data
                         break;
                         
                     default:
-                        # code...
+                        $results = apply_filters( 'pta_sus_validate_custom_fields', $results, $field, $type );
                         break;
                 }
             }
@@ -805,7 +805,7 @@ class PTA_SUS_Data
 
                     default:
                         // return any other fields unaltered for now
-                        $sanitized_fields[$field] = $clean_fields[$field];
+                        $sanitized_fields[$field] = apply_filters('pta_sus_sanitize_sheet_fields', $clean_fields[$field], $type);
                         break;
                 }
             }
@@ -816,7 +816,15 @@ class PTA_SUS_Data
     public function check_allowed_text($text) {
         // For titles and names, allow letters, numbers, and common punctuation
         // Returns true if good or false if bad
-        return !preg_match( "/[^A-Za-z0-9\p{L}\p{Z}\p{N}\-\.\,\!\&\(\)\'\/\?\ ]+$/", stripslashes($text) );
+        // return !preg_match( "/[^A-Za-z0-9\p{L}\p{Z}\p{N}\-\.\,\!\&\(\)\'\/\?\ ]+$/", stripslashes($text) );
+        
+        // New method to allow all good text... check against wordpress santized version
+        $sanitized = sanitize_text_field( $text );
+        if ( $text === $sanitized ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function check_date($date) {

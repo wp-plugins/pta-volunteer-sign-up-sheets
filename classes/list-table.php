@@ -58,7 +58,7 @@ class PTA_SUS_List_Table extends WP_List_Table
     * @param    array   name of column to be processed
     * @return   string  text that will go in the column's TD
     */
-    function column_default($item, $column_name){
+    function column_default($item, $column_name) {
         switch($column_name){
             case 'id':
             case 'type':
@@ -90,7 +90,9 @@ class PTA_SUS_List_Table extends WP_List_Table
             case 'filled_spot_num':
                 return (int)$this->data->get_sheet_signup_count($item['id']).' '.(($this->data->get_sheet_total_spots($item['id'], '') == $this->data->get_sheet_signup_count($item['id'])) ? '&#10004;' : '');
             default:
-                return print_r($item,true); // Show the whole array for troubleshooting purposes
+                // Allow extensions to add column content
+                $return = apply_filters( 'pta_sus_process_other_columns', '', $item, $column_name );
+                return $return;
         }
     }
     
@@ -121,11 +123,11 @@ class PTA_SUS_List_Table extends WP_List_Table
                 $page = $_GET['page'];
             }
             $url = sprintf('?page=%s&action=%s&sheet_id=%s', $page, $action_slug, $item['id']);
-            $nonced_url = wp_nonce_url($url, $action_slug);
+            $nonced_url = wp_nonce_url($url, $action_slug, '_sus_nonce');
             $show_actions[$action_slug] = sprintf('<a href="%s">%s</a>', $nonced_url, $action_name);
         }
         $view_url = sprintf('?page=%s&action=view_signup&sheet_id=%s', $_GET['page'], $item['id']);
-        $nonced_view_url = wp_nonce_url( $view_url, 'view_signup' );
+        $nonced_view_url = wp_nonce_url( $view_url, 'view_signup', '_sus_nonce' );
         return sprintf('<strong><a href="%1$s">%2$s</a></strong>%3$s', 
             $nonced_view_url,  // %1$s
             $item['title'], // %2$s
@@ -166,7 +168,7 @@ class PTA_SUS_List_Table extends WP_List_Table
     */
     function get_columns()
     {
-        $columns = array(
+        $columns = apply_filters( 'pta_sus_list_table_columns', array(
             'id'                => __('ID#', 'pta_volunteer_sus'),
             'title'             => __('Title', 'pta_volunteer_sus'),
             'visible'           => __('Visible', 'pta_volunteer_sus'),
@@ -177,7 +179,7 @@ class PTA_SUS_List_Table extends WP_List_Table
             'task_num'          => __('# Tasks', 'pta_volunteer_sus'),
             'spot_num'          => __('Total Spots', 'pta_volunteer_sus'),
             'filled_spot_num'   => __('Filled Spots', 'pta_volunteer_sus'),
-        );
+        ) );
         
         // Add checkbox if bulk actions is available
         if (count($this->get_bulk_actions()) > 0) {
@@ -194,20 +196,19 @@ class PTA_SUS_List_Table extends WP_List_Table
     */
     function get_sortable_columns()
     {
-        $sortable_columns = array(
+        $sortable_columns = apply_filters( 'pta_sus_list_table_sortable_columns', array(
             'id'    => array('id',false),
             'visible'    => array('visible',false),
             'title' => array('title',false),
             'first_date'  => array('first_date',true),
             'last_date'  => array('last_date',false),
-        );
+        ) );
         return $sortable_columns;
     }
     
     /**
     * All allowed bulk actions
     * 
-    * @todo finish
     */
     function get_bulk_actions()
     {
@@ -231,7 +232,6 @@ class PTA_SUS_List_Table extends WP_List_Table
     /**
     * Process bulk actions if called
     * 
-    * @todo finish this
     */
     function process_bulk_action() {
         $bulk_actions = array('bulk_trash', 'bulk_delete', 'bulk_restore', 'bulk_toggle_visibility' );
@@ -301,11 +301,8 @@ class PTA_SUS_List_Table extends WP_List_Table
     /**
     * Get data and prepare for use
     * 
-    * @todo finish data
     */
-    function prepare_items()
-    {
-        //$this->show_trash = $show_trash;
+    function prepare_items() {
         $this->process_bulk_action();
         $rows = (array)$this->data->get_sheets($this->show_trash, $active_only = false, $show_hidden = true);
         foreach ($rows AS $k=>$v) {
@@ -325,6 +322,8 @@ class PTA_SUS_List_Table extends WP_List_Table
             $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'title'; // If no sort, default to title
             $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; // If no order, default to asc
             $result = strcmp($a[$orderby], $b[$orderby]); // Determine sort order
+            // Allow extensions to do custom sorting
+            $result = apply_filters( 'pta_sus_list_table_usort', $result, $a, $b, $orderby );
             return ($order === 'asc') ? $result : -$result; // Send final sort direction to usort
         }
         usort($this->rows, 'usort_reorder');

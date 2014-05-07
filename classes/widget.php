@@ -129,10 +129,6 @@ class PTA_SUS_Widget extends WP_Widget
 		<input class="widefat" id="<?php echo $this->get_field_id( 'num_items' ); ?>" name="<?php echo $this->get_field_name( 'num_items' ); ?>" type="text" value="<?php echo esc_attr( $instance['num_items'] ); ?>" />
 		</p>
 		<p>
-		<label for="<?php echo $this->get_field_name( 'permalink' ); ?>"><?php _e( 'Main sign-up page permalink', 'pta_volunteer_sus' ); ?></label> 
-		<input class="widefat" id="<?php echo $this->get_field_id( 'permalink' ); ?>" name="<?php echo $this->get_field_name( 'permalink' ); ?>" type="text" value="<?php echo esc_attr( $instance['permalink'] ); ?>" />
-		</p>
-		<p>
 		<label for="<?php echo $this->get_field_name( 'list_class' ); ?>"><?php _e( 'CSS Class for ul list of signups', 'pta_volunteer_sus' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'list_class' ); ?>" name="<?php echo $this->get_field_name( 'list_class' ); ?>" type="text" value="<?php echo esc_attr( $instance['list_class'] ); ?>" />
 		</p>
@@ -153,7 +149,6 @@ class PTA_SUS_Widget extends WP_Widget
 		$instance = array();
 		$instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		$instance['num_items'] = ( !empty( $new_instance['num_items'] ) ) ? (int)strip_tags( $new_instance['num_items'] ) : '';
-		$instance['permalink'] = ( !empty( $new_instance['permalink'] ) ) ? strip_tags( $new_instance['permalink'] ) : '';
 		$instance['list_class'] = ( !empty( $new_instance['list_class'] ) ) ? strip_tags( $new_instance['list_class'] ) : '';
 		return $instance;
 	}

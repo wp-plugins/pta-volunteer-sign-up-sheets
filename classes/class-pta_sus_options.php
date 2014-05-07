@@ -36,7 +36,7 @@ class PTA_SUS_Options {
             <?php $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'main_options'; ?> 
             <h2 class="nav-tab-wrapper">  
                 <a href="?page=<?php echo $this->settings_page_slug?>&tab=main_options" class="nav-tab <?php echo $active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Main Settings', 'pta_volunteer_sus'); ?></a>  
-                <a href="?page=<?php echo $this->settings_page_slug?>&tab=email_options" class="nav-tab <?php echo $active_tab == 'email_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Email Settings', 'pta_volunteer_sus'); ?></a>   
+                <a href="?page=<?php echo $this->settings_page_slug?>&tab=email_options" class="nav-tab <?php echo $active_tab == 'email_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Email Settings', 'pta_volunteer_sus'); ?></a> 
                 <a href="?page=<?php echo $this->settings_page_slug?>&tab=integration_options" class="nav-tab <?php echo $active_tab == 'integration_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Integration Settings', 'pta_volunteer_sus'); ?></a> 
             </h2> 
             <form action="options.php" method="post">
@@ -136,13 +136,7 @@ class PTA_SUS_Options {
 		            }
 		            break;
         		case 'text':
-        			if(!preg_match( "/[^A-Za-z0-9\-\.\,\!\&\(\)\'\/\?\ ]/", stripslashes( $inputs[$field] ) ) ) {
-		                $this->{$options}[$field] = $inputs[$field];
-		            } else {
-		                $err++;
-		                $message = sprintf(__('Invalid characters in %s!', 'pta_volunteer_sus'), $field);
-		                add_settings_error( $field, $field, $message, $type = 'error' );
-		            }
+		                $this->{$options}[$field] = sanitize_text_field( $inputs[$field] );
 		            break;
 	            case 'bool':
 	            	$this->{$options}[$field] = (bool)$inputs[$field];
@@ -198,6 +192,14 @@ class PTA_SUS_Options {
             'reminder_email_limit' => 'integer',
     		);
     	return $this->validate_options($inputs, $fields, $options);
+    }
+
+    public function pta_sus_validate_group_options($inputs) {
+        $options = "group_options";
+        $fields = array(
+            'enable_groups' => 'bool',
+            );
+        return $this->validate_options($inputs, $fields, $options);
     }
 
     public function pta_sus_validate_integration_options($inputs) {

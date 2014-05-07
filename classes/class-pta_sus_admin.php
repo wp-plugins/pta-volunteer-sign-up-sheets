@@ -21,8 +21,10 @@ class PTA_SUS_Admin {
 		add_action('admin_enqueue_scripts', array($this, 'add_scripts_to_admin'));
 		$this->options_page = new PTA_SUS_Options();
 
+        $this->main_options = get_option( 'pta_volunteer_sus_main_options' );
+
         add_menu_page(__('Sign-up Sheets', 'pta_volunteer_sus'), __('Sign-up Sheets', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_sheets', array($this, 'admin_sheet_page'));
-        add_submenu_page($this->admin_settings_slug.'_sheets', __('Sign-up Sheets ', 'pta_volunteer_sus'), __('All Sheets', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_sheets', array($this, 'admin_sheet_page'));
+        add_submenu_page($this->admin_settings_slug.'_sheets', __('Sign-up Sheets', 'pta_volunteer_sus'), __('All Sheets', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_sheets', array($this, 'admin_sheet_page'));
         add_submenu_page($this->admin_settings_slug.'_sheets', __('Add New Sheet', 'pta_volunteer_sus'), __('Add New', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_modify_sheet', array($this, 'admin_modify_sheet_page'));
         add_submenu_page($this->admin_settings_slug.'_sheets', __('Settings', 'pta_volunteer_sus'), __('Settings', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_settings', array($this->options_page, 'admin_options'));
         add_submenu_page($this->admin_settings_slug.'_sheets', __('CRON Functions', 'pta_volunteer_sus'), __('CRON Functions', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_test', array($this, 'admin_reminders_page'));
@@ -31,9 +33,7 @@ class PTA_SUS_Admin {
         	$this->member_directory_active = true;
         } else {
         	$this->member_directory_active = false;
-        }
-
-        $this->main_options = get_option( 'pta_volunteer_sus_main_options' );
+        }       
 	}
 
 	/**
@@ -49,6 +49,7 @@ class PTA_SUS_Admin {
         wp_enqueue_style( 'jquery-ui-1.10.0.custom', plugins_url( '../assets/css/jquery-ui-1.10.0.custom.min.css', __FILE__ ) );
         wp_enqueue_style( 'admin-style', plugins_url( '../assets/css/admin-style.css', __FILE__ ) );
     }
+
 
     public function admin_reminders_page() {
     	$messages = '';
@@ -114,7 +115,7 @@ class PTA_SUS_Admin {
         // SECURITY CHECK
         // Checks nonces for ALL actions
         if (isset($_GET['action'])) {
-            check_admin_referer( $_GET['action']);
+            check_admin_referer( $_GET['action'], '_sus_nonce');
         }
         // Remove signup record
         if (isset($_GET['action']) && $_GET['action'] == 'clear') {
@@ -352,8 +353,8 @@ class PTA_SUS_Admin {
 
         if($tasks_submitted) {
             // Tasks
-            // Need to add some validation to tasks
-            // Need to check for required fields and then sanitize the fields
+            // Nonce check
+            check_admin_referer( 'pta_sus_add_tasks', 'pta_sus_add_tasks_nonce' );
 
             $sheet_success = true;
             $tasks_success = false;
@@ -616,6 +617,8 @@ class PTA_SUS_Admin {
 
             
         } elseif($sheet_submitted) {
+            // Nonce check
+            check_admin_referer( 'pta_sus_add_sheet', 'pta_sus_add_sheet_nonce' );
             // Create an empty results array to grab validation results
             $results = array();
             $sheet_err = 0;
@@ -636,6 +639,8 @@ class PTA_SUS_Admin {
                 echo '<div class="error"><p><strong>'.__('Please enter Chair Name(s) and Email(s)!', 'pta_volunteer_sus').'</strong></p></div>';
             }
             $results = $this->data->validate_post($_POST, 'sheet');
+            // Give extensions a chance to validate any custom fields
+            $results = apply_filters( 'pta_sus_validate_sheet_post', $results );
             if(!empty($results['errors'])) {
                 $sheet_err++;
                 echo '<div class="error"><p><strong>'.wp_kses($results['message'], array('br' => array())).'</strong></p></div>';
@@ -643,6 +648,8 @@ class PTA_SUS_Admin {
                 // Passed Validation
                 $sheet_fields = $_POST;
                 $duplicates = $this->data->check_duplicate_sheet( $sheet_fields['sheet_title'] );
+                // Some extensions may want to allow duplicates
+                $duplicates = apply_filters( 'pta_sus_check_duplicate_sheets', $duplicates, $sheet_fields );
                 // Make sure our sheet_visible gets set correctly
                 if (isset($sheet_fields['sheet_visible']) && '1' == $sheet_fields['sheet_visible']) {
                     $sheet_fields['sheet_visible'] = true;
@@ -651,7 +658,7 @@ class PTA_SUS_Admin {
                 }
                 if ($duplicates && $add) {
                     $sheet_err++;
-                    echo '<div class="error"><p><strong>'.__('A Sheet with the same name and date already exists!', 'pta_volunteer_sus').'</strong></p></div>';
+                    echo '<div class="error"><p><strong>'.__('A Sheet with the same name already exists!', 'pta_volunteer_sus').'</strong></p></div>';
                     return;
                 }
                 // Add/Update Sheet
@@ -875,6 +882,8 @@ class PTA_SUS_Admin {
                     wp_editor( $content, $editor_id, $settings );
         // Allow other plugins to add fields to the form
         do_action( 'pta_sus_sheet_form_after_sheet_details', $f, $edit );
+        // Security Nonce
+        wp_nonce_field('pta_sus_add_sheet','pta_sus_add_sheet_nonce');
         echo '
                 <p class="submit">
                     <input type="hidden" name="sheet_mode" value="submitted" />
@@ -940,7 +949,9 @@ class PTA_SUS_Admin {
             }
             
             echo '
-            </ul>
+            </ul>';
+            wp_nonce_field('pta_sus_add_tasks','pta_sus_add_tasks_nonce');
+            echo '
             <hr />
             <p class="submit">
                 <input type="hidden" name="sheet_id" value="'.(int)$f["sheet_id"].'" />

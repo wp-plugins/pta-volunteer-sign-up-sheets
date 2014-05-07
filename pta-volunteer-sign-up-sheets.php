@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.4.7
+Version: 1.5
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.4.7');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.5');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -59,7 +59,7 @@ class PTA_Sign_Up_Sheet {
 	
     private $data;
     private $emails;
-    public $db_version = '1.1.2';
+    public $db_version = '1.5';
     private $wp_roles;
     public $main_options;
     
@@ -133,6 +133,11 @@ class PTA_Sign_Up_Sheet {
 
     public function init() {
         load_plugin_textdomain( 'pta_volunteer_sus', false, dirname(plugin_basename( __FILE__ )) . '/languages/' );
+        // Check our database version and run the activate function if version < 1.5
+        $current = get_option( "pta_sus_db_version" );
+        if ($current < $this->db_version) {
+            $this->pta_sus_activate();
+        }
     }
 
       
@@ -177,10 +182,6 @@ class PTA_Sign_Up_Sheet {
     public function pta_sus_activate() {
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
-        /*
-        $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
-        check_admin_referer( "activate-plugin_{$plugin}" );
-        */
        
         // Create new data object here so it works for multi-site activation
         $this->data = new PTA_SUS_Data();
@@ -197,6 +198,7 @@ class PTA_Sign_Up_Sheet {
             position VARCHAR(200) NOT NULL,
             chair_name VARCHAR(100) NOT NULL,
             chair_email VARCHAR(100) NOT NULL,
+            sus_group VARCHAR(100) DEFAULT 'none',
             reminder1_days INT NOT NULL,
             reminder2_days INT NOT NULL,
             visible BOOL NOT NULL DEFAULT TRUE,
@@ -232,7 +234,7 @@ class PTA_Sign_Up_Sheet {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
-        add_option("pta_sus_db_version", $this->db_version);
+        update_option("pta_sus_db_version", $this->db_version);
         
         // Add custom role and capability
         $role = get_role( 'author' );
@@ -351,6 +353,7 @@ Thank You!
             }
         }
         update_option( 'pta_volunteer_sus_integration_options', $options );
+
     }
     
     /**

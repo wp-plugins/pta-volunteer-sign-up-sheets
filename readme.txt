@@ -3,8 +3,8 @@ Contributors: DBAR Productions
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4HF689YQ9DEE
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
-Tested up to: 3.8.1
-Stable tag: 1.4.7
+Tested up to: 3.9
+Stable tag: 1.5
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -43,7 +43,7 @@ Features:
 *   Hidden spambot field helps prevent automatic spambot form submissions
 *	Up to 2 automatic reminder emails can be set up at individually specified intervals for each sheet (e.g., 7 days and 1 day before event)
 *   Shortcodes for all sheets, or use argument to show a specific sheet on a page
-*   Widget to show upcoming events that need volunteers in page sidebars
+*   Widget to show upcoming events that need volunteers in page sidebars (with version 1.5, can specify a group in the Widget)
 *   CSV Export for each sheet on admin side
 *   Individual sheets can be set to hidden until you are ready to have people sign up (useful for testing individual sheets)
 *   Test Mode for entire volunteer system, which displays a message of your choosing to the public while you test the system
@@ -67,8 +67,12 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 **How do I display the signup sheets?**
 
-Use the shortcode [pta_sign_up_sheet] to display the sign-up sheets on a page. There are also shortcode arguments for id (specific sheet id), date (specific date), and list_title (change the title of the main list of signup sheets). To make generating shortcodes with arguments easier, download the free PTA Zilla Shortcodes plugin extension from: 
+Use the shortcode [pta_sign_up_sheet] to display the sign-up sheets on a page. There are also shortcode arguments for id (specific sheet id), date (specific date), and list_title (change the title of the main list of signup sheets). To make generating shortcodes with arguments easier, download the free PTA Shortcodes plugin extension from: 
 https://stephensherrardplugins.com
+
+**Can signup sheets be assigned to and displayed by groups or categories?**
+
+This was not something we needed for our own school PTA web site, so that wasn't part of the original plugin. However, since several people have asked about incorporating BuddyPress Groups in some way, I have created an extension to allow sheets to be assigned to groups. Groups can be created manually, or, if you are using BuddyPress, you can choose to import as many of the BuddyPress groups as you want. This is a paid extension that can be found at: https://stephensherrardplugins.com
 
 
 == Screenshots ==
@@ -81,6 +85,12 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.5**
+
+* 	Fixed additional validation fields to allow foreign language characters
+*	Added additional nonce/security checks on admim side forms
+*	Additional hooks and filters for extensions
+
 **Version 1.4.7**
 
 * 	Fixed text input validation to allow foreign language characters
