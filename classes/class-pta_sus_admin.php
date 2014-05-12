@@ -67,7 +67,7 @@ class PTA_SUS_Admin {
 
         }
     	if (isset($_GET['action']) && 'reminders' == $_GET['action']) {
-    		check_admin_referer( 'pta-sus-reminders');
+    		check_admin_referer( 'pta-sus-reminders', '_sus_nonce');
     		if(!class_exists('PTA_SUS_Emails')) {
             	include_once(dirname(__FILE__).'/class-pta_sus_emails.php');
             }
@@ -77,15 +77,15 @@ class PTA_SUS_Admin {
             $messages .= '<div class="updated">'.$results.'</div>';
     	}
         if (isset($_GET['action']) && 'clear_signups' == $_GET['action'] ) {
-            check_admin_referer( 'pta-sus-clear-signups');
+            check_admin_referer( 'pta-sus-clear-signups', '_sus_nonce');
             $num = $this->data->delete_expired_signups();
             $results = sprintf( _n( '1 signup cleared', '%d signups cleared', $num, 'pta_volunteer_sus'), $num );
             $cleared_message = '<div class="updated">'.$results.'</div>';
         }
     	$reminders_link = add_query_arg(array('action' => 'reminders'));
-    	$nonced_reminders_link = wp_nonce_url( $reminders_link, 'pta-sus-reminders');
+    	$nonced_reminders_link = wp_nonce_url( $reminders_link, 'pta-sus-reminders', '_sus_nonce');
         $clear_signups_link = add_query_arg(array('action' => 'clear_signups'));
-        $nonced_clear_signups_link = wp_nonce_url( $clear_signups_link, 'pta-sus-clear-signups');
+        $nonced_clear_signups_link = wp_nonce_url( $clear_signups_link, 'pta-sus-clear-signups', '_sus_nonce');
     	echo '<div class="wrap pta_sus">';
     	echo '<h2>'.__('CRON Functions', 'pta_volunteer_sus').'</h2>';
         echo '<h3>'.__('Volunteer Reminders', 'pta_volunteer_sus').'</h3>';
@@ -229,7 +229,7 @@ class PTA_SUS_Admin {
                                         $signups = $this->data->get_signups($task->id, $tdate);
                                         foreach ($signups AS $signup) {
                                             $clear_url = '?page='.$this->admin_settings_slug.'_sheets&amp;sheet_id='.$_GET['sheet_id'].'&amp;signup_id='.$signup->id.'&amp;action=clear';
-                                            $nonced_clear_url = wp_nonce_url( $clear_url, 'clear' );
+                                            $nonced_clear_url = wp_nonce_url( $clear_url, 'clear', '_sus_nonce' );
                                             echo '
                                                 <tr>
                                                     <td>'.(($i === 1) ? esc_html($task->title) : '' ).'</td>

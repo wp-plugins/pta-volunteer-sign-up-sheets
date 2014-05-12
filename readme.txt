@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.9
-Stable tag: 1.5
+Stable tag: 1.5.1
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -85,6 +85,10 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.5.1**
+
+* 	Fixed bad nonce checked that wouldn't allow you to clear a signup on admin side
+
 **Version 1.5**
 
 * 	Fixed additional validation fields to allow foreign language characters
