@@ -147,6 +147,19 @@ class PTA_SUS_Data
         return $results[0]->count;
     }
 
+    /**
+     * Return # of signups that have matching task_id, and signup names
+     */
+    public function check_duplicate_signup($task_id, $firstname, $lastname) {
+        $results = $this->wpdb->get_results($this->wpdb->prepare("
+            SELECT COUNT(*) AS count 
+            FROM ".$this->tables['signup']['name']." 
+            WHERE task_id = %d AND firstname = %s AND lastname = %s
+        ", $task_id, $firstname, $lastname));
+        $results = $this->stripslashes_full($results);
+        return $results[0]->count;
+    }
+
     public function toggle_visibility($id) {
         $SQL = "UPDATE ".$this->tables['sheet']['name']." 
                 SET visible = IF(visible, 0, 1) 
