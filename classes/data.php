@@ -150,12 +150,12 @@ class PTA_SUS_Data
     /**
      * Return # of signups that have matching task_id, and signup names
      */
-    public function check_duplicate_signup($task_id, $firstname, $lastname) {
+    public function check_duplicate_signup($task_id, $signup_date, $firstname, $lastname) {
         $results = $this->wpdb->get_results($this->wpdb->prepare("
             SELECT COUNT(*) AS count 
             FROM ".$this->tables['signup']['name']." 
-            WHERE task_id = %d AND firstname = %s AND lastname = %s
-        ", $task_id, $firstname, $lastname));
+            WHERE task_id = %d AND date = %s AND firstname = %s AND lastname = %s
+        ", $task_id, $signup_date, $firstname, $lastname));
         $results = $this->stripslashes_full($results);
         return $results[0]->count;
     }

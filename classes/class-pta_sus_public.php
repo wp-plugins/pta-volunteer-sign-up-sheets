@@ -112,7 +112,7 @@ class PTA_SUS_Public {
                 }
             // If no errors so far, Check for duplicate signups
             if (!$this->err) {
-                if( $this->data->check_duplicate_signup( $_GET['task_id'], $_POST['signup_firstname'], $_POST['signup_lastname']) ) {
+                if( $this->data->check_duplicate_signup( $_GET['task_id'], $_POST['signup_date'], $_POST['signup_firstname'], $_POST['signup_lastname']) ) {
                     $this->err++;
                     $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('You are already signed up for this task!', 'pta_volunteer_sus').'</p>', 'signup_duplicate_error_message' );
                 }
