@@ -120,7 +120,7 @@ class PTA_SUS_Emails {
 
     public function send_reminders() {
     	$limit = false;
-    	$now = time();
+    	$now = current_time( 'timestamp' );
     	// This function is used to check if we need to send out reminder emails or not
     	if(isset($this->email_options['reminder_email_limit']) && '' != $this->email_options['reminder_email_limit'] && 0 < $this->email_options['reminder_email_limit']) {
     		$limit = (int)$this->email_options['reminder_email_limit'];

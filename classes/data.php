@@ -9,11 +9,13 @@ class PTA_SUS_Data
     
     public $wpdb;
     public $tables = array();
+    public $now;
     
     public function __construct()
     {
         global $wpdb;
         $this->wpdb = $wpdb;
+        $this->now = current_time( 'mysql' );
         
         // Set table names
         $this->tables = array(
@@ -79,14 +81,21 @@ class PTA_SUS_Data
      * @return    mixed    array of sheets
      */
     public function get_sheets($trash=false, $active_only=false, $show_hidden=false) {
-        $results = $this->wpdb->get_results($this->wpdb->prepare("
+        $SQL = "
             SELECT * 
             FROM ".$this->tables['sheet']['name']." 
             WHERE trash = %d
-            ".(($active_only) ? " AND (ADDDATE(last_date,1) >= NOW() OR last_date = 0000-00-00)" : "")
-            .(($show_hidden) ? "" : " AND visible = 1")." 
+            ";
+        if ( $active_only ) {
+            $SQL .= " AND (ADDDATE(last_date,1) >= NOW() OR last_date = 0000-00-00)";
+        }
+        if ( !$show_hidden ) {
+            $SQL .= " AND visible = 1";
+        }
+        $SQL .= "
             ORDER BY first_date DESC, id DESC
-        ", $trash));
+        ";
+        $results = $this->wpdb->get_results($this->wpdb->prepare($SQL, $trash));
         $results = $this->stripslashes_full($results);
         // Hide incomplete sheets (no tasks) from public
 
