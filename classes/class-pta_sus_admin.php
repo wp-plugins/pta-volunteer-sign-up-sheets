@@ -47,7 +47,7 @@ class PTA_SUS_Admin {
         wp_enqueue_style( 'jquery.datepick', plugins_url( '../assets/css/jquery.datepick.css', __FILE__ ) );
         wp_enqueue_style( 'jquery.ui.timepicker', plugins_url( '../assets/css/jquery.ui.timepicker.css', __FILE__ ) );
         wp_enqueue_style( 'jquery-ui-1.10.0.custom', plugins_url( '../assets/css/jquery-ui-1.10.0.custom.min.css', __FILE__ ) );
-        wp_enqueue_style( 'admin-style', plugins_url( '../assets/css/admin-style.css', __FILE__ ) );
+        wp_enqueue_style( 'pta-admin-style', plugins_url( '../assets/css/pta-admin-style.css', __FILE__ ) );
     }
 
 
