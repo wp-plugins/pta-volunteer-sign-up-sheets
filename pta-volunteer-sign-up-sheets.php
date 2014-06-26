@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.5.5
+Version: 1.5.6
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.5.5');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.5.6');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -59,7 +59,7 @@ class PTA_Sign_Up_Sheet {
 	
     private $data;
     private $emails;
-    public $db_version = '1.5';
+    public $db_version = '1.6';
     private $wp_roles;
     public $main_options;
     
@@ -133,7 +133,7 @@ class PTA_Sign_Up_Sheet {
 
     public function init() {
         load_plugin_textdomain( 'pta_volunteer_sus', false, dirname(plugin_basename( __FILE__ )) . '/languages/' );
-        // Check our database version and run the activate function if version < 1.5
+        // Check our database version and run the activate function if version < 1.6
         $current = get_option( "pta_sus_db_version" );
         if ($current < $this->db_version) {
             $this->pta_sus_activate();
@@ -191,16 +191,16 @@ class PTA_Sign_Up_Sheet {
         $sql = "CREATE TABLE {$this->data->tables['sheet']['name']} (
             id INT NOT NULL AUTO_INCREMENT,
             title VARCHAR(200) NOT NULL,
-            first_date DATE NOT NULL,
-            last_date DATE NOT NULL,
-            details LONGTEXT NOT NULL,
+            first_date DATE,
+            last_date DATE,
+            details LONGTEXT,
             type VARCHAR(200) NOT NULL,
-            position VARCHAR(200) NOT NULL,
-            chair_name VARCHAR(100) NOT NULL,
-            chair_email VARCHAR(100) NOT NULL,
+            position VARCHAR(200),
+            chair_name VARCHAR(100),
+            chair_email VARCHAR(100),
             sus_group VARCHAR(100) DEFAULT 'none',
-            reminder1_days INT NOT NULL,
-            reminder2_days INT NOT NULL,
+            reminder1_days INT,
+            reminder2_days INT,
             visible BOOL NOT NULL DEFAULT TRUE,
             trash BOOL NOT NULL DEFAULT FALSE,
             UNIQUE KEY id (id)
@@ -210,8 +210,8 @@ class PTA_Sign_Up_Sheet {
             sheet_id INT NOT NULL,
             dates VARCHAR(500) NOT NULL,
             title VARCHAR(200) NOT NULL,
-            time_start VARCHAR(50) NOT NULL,
-            time_end VARCHAR(50) NOT NULL,
+            time_start VARCHAR(50),
+            time_end VARCHAR(50),
             qty INT NOT NULL DEFAULT 1,
             need_details VARCHAR(3) NOT NULL DEFAULT 'NO',
             position INT NOT NULL,
