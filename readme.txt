@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.9.1
-Stable tag: 1.5.6
+Stable tag: 1.6
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -36,6 +36,7 @@ Simple to use custom email templates for sign-up confirmations and reminders.
 
 Features:
 
+*	New features added in version 1.6 include the ability to allow duplicate signups on a per task basis, changing the label for the item details form field on a per task/item basis, as well as allowing volunteers to specify quanitites on a per task/item basis.
 *   Easily create volunteer sign-up sheets with unlimited number of tasks/items for each
 *	Supports Single, Recurring, Ongoing or Multi-Day Events
 *  	All Sheets can be hidden from the public (visible only to logged in users)   
@@ -85,6 +86,14 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6**
+
+* 	New "Allow Duplicates" task checkbox field to allow more than one signup from the same user for a task. Set per task.
+*	New "Enable Quantities" task checkbox field to allow volunteers to specify quantity of items they are bringing
+*	New task field to enter label for "Needs Details" field of each task to prompt volunteer on what to enter
+*	Updated email template tags for new fields and options
+*	Added option to turn off the "strongly recommended" login notice on the sign-up page
+
 **Version 1.5.6**
 
 * 	Updated database table setup to fix an issue that could occur with null field values on some servers.

@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.5.6
+Version: 1.6
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.5.6');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.6');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -59,7 +59,7 @@ class PTA_Sign_Up_Sheet {
 	
     private $data;
     private $emails;
-    public $db_version = '1.6';
+    public $db_version = '1.6.5';
     private $wp_roles;
     public $main_options;
     
@@ -214,6 +214,9 @@ class PTA_Sign_Up_Sheet {
             time_end VARCHAR(50),
             qty INT NOT NULL DEFAULT 1,
             need_details VARCHAR(3) NOT NULL DEFAULT 'NO',
+            details_text VARCHAR(200) NOT NULL DEFAULT 'Item you are bringing',
+            allow_duplicates VARCHAR(3) NOT NULL DEFAULT 'NO',
+            enable_quantities VARCHAR(3) NOT NULL DEFAULT 'NO',
             position INT NOT NULL,
             UNIQUE KEY id (id)
         );";
@@ -229,6 +232,7 @@ class PTA_Sign_Up_Sheet {
             phone VARCHAR(50) NOT NULL,
             reminder1_sent BOOL NOT NULL DEFAULT FALSE,
             reminder2_sent BOOL NOT NULL DEFAULT FALSE,
+            item_qty INT NOT NULL DEFAULT 1,
             UNIQUE KEY id (id)
         );";
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -266,6 +270,7 @@ class PTA_Sign_Up_Sheet {
                     'show_ongoing_last' => true,
                     'login_required' => false,
                     'login_required_message' => 'You must be logged in to a valid account to view and sign up for volunteer opportunities.',
+                    'disable_signup_login_notice' => false,
                     'enable_cron_notifications' => true,
                     'detailed_reminder_admin_emails' => true,
                     'show_expired_tasks' => false,
@@ -293,7 +298,8 @@ Task/Item: {task_title}
 Date: {date}
 Start Time: {start_time}
 End Time: {end_time}
-Item Details: {item_details}
+{details_text}: {item_details}
+Item Quantity: {item_qty}
 
 If you have any questions, please contact:
 {contact_emails}
@@ -312,7 +318,8 @@ Task/Item: {task_title}
 Date: {date}
 Start Time: {start_time}
 End Time: {end_time}
-Item Details: {item_details}
+{details_text}: {item_details}
+Item Quantity: {item_qty}
 
 If you have any questions, please contact:
 {contact_emails}

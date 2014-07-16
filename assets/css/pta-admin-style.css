@@ -17,3 +17,6 @@
 .pta_sus .tasks LI.ui-sortable-helper{
     cursor: move;
     }
+.pta_toggle {
+    display: none;
+}

@@ -50,6 +50,9 @@ class PTA_SUS_Data
                     'time_end' => 'time',
                     'qty' => 'int',
                     'need_details' => 'yesno',
+                    'details_text' => 'text',
+                    'allow_duplicates' => 'yesno',
+                    'enable_quantities' => 'yesno',
                     'position' => 'int',
                 ),
                 'required_fields' => array(),
@@ -67,6 +70,7 @@ class PTA_SUS_Data
                     'phone' => 'phone',
                     'reminder1_sent' => 'bool',
                     'reminder2_sent' => 'bool',
+                    'item_qty' => 'int',
                 ),
             )),
         );
@@ -257,9 +261,12 @@ class PTA_SUS_Data
                 , task.time_end AS task_time_end
                 , task.qty AS task_qty
                 , task.need_details AS need_details
+                , task.details_text AS details_text
+                , task.enable_quantities AS enable_quantities
                 , task.position AS task_position
                 , signup.id AS signup_id
                 , signup.date AS signup_date
+                , signup.item_qty AS item_qty
                 , signup.user_id AS signup_user_id
                 , item
                 , firstname
@@ -297,26 +304,55 @@ class PTA_SUS_Data
         }
     }
 
+    public function get_available_qty($task_id, $date, $task_qty) {
+        $signups = $this->get_signups($task_id, $date);
+        $count = 0;
+        foreach ($signups as $signup) {
+            $count += (int)$signup->item_qty;
+        }
+        $available = $task_qty - $count;
+        if ($available > 0) {
+            return $available;
+        } else {
+            return false;
+        }
+    }
+
 
     /**
     * Get number of signups on a specific sheet
     * Optionally for a specific date
     * Don't count any signups for past dates
+    * UPDATED in version 1.6 to take into account signup quanitites
     * 
     * @param    int    sheet id
     */
     public function get_sheet_signup_count($id, $date='') {
+        $signup_table = $this->tables['signup']['name'];
+        $task_table = $this->tables['task']['name'];
+        $sheet_table = $this->tables['sheet']['name'];
         $SQL = "
-            SELECT COUNT(*) AS count FROM ".$this->tables['task']['name']." t
-            RIGHT OUTER JOIN ".$this->tables['signup']['name']." s ON t.id = s.task_id 
-            WHERE t.sheet_id = %d 
-            AND (NOW() <= ADDDATE(s.date, 1) OR s.date = 0000-00-00) 
+            SELECT 
+            $signup_table.item_qty AS item_qty
+            , $task_table.enable_quantities AS enable_quantities 
+            FROM $task_table 
+            RIGHT OUTER JOIN $signup_table ON $task_table.id = $signup_table.task_id 
+            WHERE $task_table.sheet_id = %d 
+            AND (NOW() <= ADDDATE($signup_table.date, 1) OR $signup_table.date = 0000-00-00) 
         ";
         if( '' != $date ) {
-            $SQL .= " AND s.date = %s ";
+            $SQL .= " AND $signup_table.date = %s ";
         }
         $results = $this->wpdb->get_results($this->wpdb->prepare($SQL, $id, $date));
-        return $results[0]->count;
+        $count = 0;
+        foreach ($results as $result) {
+            if ( 'YES' === $result->enable_quantities ) {
+                $count += $result->item_qty;
+            } else {
+                $count++;
+            }
+        }
+        return $count;
     }
     
     /**
@@ -361,6 +397,7 @@ class PTA_SUS_Data
             $signup_table.user_id AS user_id, 
             $signup_table.date AS date,
             $signup_table.item AS item,
+            $signup_table.item_qty AS item_qty,
             $task_table.title AS task_title,
             $task_table.time_start AS time_start,
             $task_table.time_end AS time_end,
@@ -466,7 +503,17 @@ class PTA_SUS_Data
         // Check if signup spots are filled
         $task = $this->get_task($task_id);
         $signups = $this->get_signups($task_id, $clean_fields['date']);
-        if (count($signups) >= $task->qty) {
+        if ('YES' == $task->enable_quantities) {
+            // Take item quantities into account when calculating # of items
+            $count = 0;
+            foreach ($signups as $signup) {
+                $count += (int)$signup->item_qty;
+            }
+            $count += $clean_fields['item_qty'];
+        } else {
+            $count = count($signups) + 1;
+        }
+        if ($count > $task->qty) {
             return false;
         }
         // wpdb->insert does all necessary sanitation before inserting into database

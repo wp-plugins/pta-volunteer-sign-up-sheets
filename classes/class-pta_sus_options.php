@@ -83,6 +83,7 @@ class PTA_SUS_Options {
         add_settings_field('show_ongoing_last', __('Show Ongoing events last?', 'pta_volunteer_sus'), array($this, 'show_ongoing_last_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required', __('Login Required?', 'pta_volunteer_sus'), array($this, 'login_required_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required_message', __('Login Required Message:', 'pta_volunteer_sus'), array($this, 'login_required_message_text_input'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
+        add_settings_field('disable_signup_login_notice', __('Disable Login Message?', 'pta_volunteer_sus'), array($this, 'disable_signup_login_notice_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('enable_cron_notifications', __('Enable CRON Notifications?', 'pta_volunteer_sus'), array($this, 'enable_cron_notifications_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('detailed_reminder_admin_emails', __('Detailed Reminder Notifications?', 'pta_volunteer_sus'), array($this, 'detailed_reminder_admin_emails_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_expired_tasks', __('Show Expired Tasks?', 'pta_volunteer_sus'), array($this, 'show_expired_tasks_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
@@ -171,6 +172,7 @@ class PTA_SUS_Options {
             'show_ongoing_last' => 'bool',
             'login_required' => 'bool',
             'login_required_message' => 'text',
+            'disable_signup_login_notice' => 'bool',
             'enable_cron_notifications' => 'bool',
             'detailed_reminder_admin_emails' => 'bool',
             'show_expired_tasks' => 'bool',
@@ -370,6 +372,18 @@ class PTA_SUS_Options {
         echo __('YES.', 'pta_volunteer_sus') . ' <em> '. __('Force user to be logged in before they can view or sign-up for any volunteer sheets.', 'pta_volunteer_sus').'</em>';
     }
 
+    public function disable_signup_login_notice_checkbox() {
+        if(isset($this->main_options['disable_signup_login_notice']) && true === $this->main_options['disable_signup_login_notice']) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        ?>
+        <input name="pta_volunteer_sus_main_options[disable_signup_login_notice]" type="checkbox" value="1" <?php echo $checked; ?> />
+        <?php
+        echo __('YES.', 'pta_volunteer_sus') . ' <em> '. __('Turn off the notice strongly suggesting volunteers login before signing up for a volunteer slot (on signup form page).', 'pta_volunteer_sus').'</em>';
+    }
+
     public function enable_cron_notifications_checkbox() {
         if(isset($this->main_options['enable_cron_notifications']) && true === $this->main_options['enable_cron_notifications']) {
             $checked = 'checked="checked"';
@@ -435,7 +449,7 @@ class PTA_SUS_Options {
         echo esc_textarea( $this->email_options['confirmation_email_template'] );
         echo '</textarea>';
         echo '<br />' . __('Email user receives when they sign up for a volunteer slot.', 'pta_volunteer_sus');
-        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {task_title} {date} {start_time} {end_time} {item_details} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
+        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {task_title} {date} {start_time} {end_time} {details_text} {item_details} {item_qty} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
     }
 
     public function reminder_email_template_textarea_input() {
@@ -443,7 +457,7 @@ class PTA_SUS_Options {
         echo esc_textarea( $this->email_options['reminder_email_template'] );
         echo '</textarea>';
         echo '<br />' . __('Reminder email sent to volunteers.', 'pta_volunteer_sus');
-        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {task_title} {date} {start_time} {end_time} {item_details} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
+        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {task_title} {date} {start_time} {end_time} {details_text} {item_details} {item_qty} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
     }
 
 } // End Class

@@ -18,6 +18,32 @@ class PTA_SUS_Emails {
 
 	} // Construct
 
+    public function convert_to_plain_text($html) {
+        // convert common formatting tags
+        $text = str_replace('<p>', '', $html);
+        $text = str_replace('<h1>', '', $text);
+        $text = str_replace('<h2>', '', $text);
+        $text = str_replace('<h3>', '', $text);
+        $text = str_replace('<h4>', '', $text);
+        $text = str_replace('<h5>', '', $text);
+        $text = str_replace('<h6>', '', $text);
+        $text = str_replace('<div>', '', $text);
+        $text = str_replace('</p>', "\r\n", $text);
+        $text = str_replace('</h1>', "\r\n", $text);
+        $text = str_replace('</h2>', "\r\n", $text);
+        $text = str_replace('</h3>', "\r\n", $text);
+        $text = str_replace('</h4>', "\r\n", $text);
+        $text = str_replace('</h5>', "\r\n", $text);
+        $text = str_replace('</h6>', "\r\n", $text);
+        $text = str_replace('</div>', "\r\n", $text);
+        $text = str_replace('<br/>', "\r\n", $text);
+        $text = str_replace('<br />', "\r\n", $text);
+        // Strip any other tags
+        $text = strip_tags($text);
+        return $text;
+
+    }
+
 	/**
     * Send email when user signs up
     * 
@@ -60,7 +86,7 @@ class PTA_SUS_Emails {
         $headers = array();
             $headers[]  = "From: " . get_bloginfo('name') . " <" . $from . ">";
             $headers[]  = "Reply-To: " . $replyto;
-            $headers[]  = "Content-Type: text/plain; charset=UTF-8";
+            $headers[]  = "Content-Type: text/plain; charset=utf-8";
             $headers[]  = "Content-Transfer-Encoding: 8bit";
             if (!empty($chair_emails) && !$reminder) { 
             	// CC to all chairs for signups, but not reminders
@@ -83,14 +109,18 @@ class PTA_SUS_Emails {
         } else {
         	$contact_emails = __('N/A', 'pta_volunteer_sus');
         }
+        $sheet_details = $this->convert_to_plain_text($sheet->details);
         
         // Replace any template tags with the appropriate variables
         $message = str_replace('{sheet_title}', $sheet->title, $message);
+        $message = str_replace('{sheet_details}', $sheet_details, $message);
         $message = str_replace('{task_title}', $task->title, $message);
         $message = str_replace('{date}', $date, $message);
         $message = str_replace('{start_time}', $start_time, $message);
         $message = str_replace('{end_time}', $end_time, $message);
         $message = str_replace('{item_details}', $item, $message);
+        $message = str_replace('{item_qty}', $signup->item_qty, $message);
+        $message = str_replace('{details_text}', $task->details_text, $message);
         $message = str_replace('{firstname}', $signup->firstname, $message);
         $message = str_replace('{lastname}', $signup->lastname, $message);
         $message = str_replace('{contact_emails}', $contact_emails, $message);

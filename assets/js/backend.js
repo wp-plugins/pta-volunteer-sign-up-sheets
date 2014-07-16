@@ -21,10 +21,22 @@ jQuery(document).ready(function($) {
     defaultTime: '',
 	});
 
+    // Open details_text for checked values on page load
+    $('input.details_checkbox', 'li').each(function() {
+        if ($(this).is(':checked')) {
+            $(this).closest('li').find('.pta_toggle').show();
+        }
+    });
+    
+
+    $('.details_checkbox').change(function() {
+        $(this).closest('li').find('.pta_toggle').toggle(this.checked);
+    });
 
 	if ($('.tasks LI').is('*')) {
                     var last_css_id = $(".tasks LI").last().attr('id');
                     var row_key = last_css_id.substr(last_css_id.indexOf("-") + 1);
+                    var default_text = PTA_Backend_js.default_text;
                     $(".add-task-after").live('click', function() {
                         row_key++;
                         // Clone the last row
@@ -41,6 +53,14 @@ jQuery(document).ready(function($) {
                             $(this).attr('name', newNameAttr);   // set the new name attribute 
                             $(this).attr('id', newIdAttr);   // set the new id attribute
                             $(this).attr('value', ""); // clear the cloned values
+                            if ($(this).hasClass('details_text')) {
+                                $(this).attr('value', default_text);
+                                $(this).closest('span').hide();
+                            } 
+                            if ($(this).is(':checkbox')) {
+                                $(this).attr('checked', false);
+                                $(this).attr('value', "YES");
+                            } 
                         });
                         // Insert the new task row
                         $(this).parent("LI").after(new_row);
@@ -54,6 +74,10 @@ jQuery(document).ready(function($) {
                         new_row.find(".singlePicker").removeClass('hasDatepick').datepick({ 
                         monthsToShow: 1, dateFormat: 'yyyy-mm-dd',
                         showTrigger: '#calImg'});
+                        // Reset toggle for new row
+                        new_row.find('.details_checkbox').change(function() {
+                            $(this).closest('li').find('.pta_toggle').toggle(this.checked);
+                        });
 
                         return false;
                     });
