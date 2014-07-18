@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.9.1
-Stable tag: 1.6.1
+Stable tag: 1.6.1.1
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -86,6 +86,10 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6.1.1**
+
+* 	Another Small logic fix to allow there to be only one contact name, but more than one contact email, for a sheet without getting the "No Event Chair contact info provided" message on the public side.
+
 **Version 1.6.1**
 
 * 	Small logic fix to make sure the PTA Member Directory is actually activated before trying to display contact info from the member directory. If you had integration features and Member Directory contact info set for a sheet, but then deactivated the PTA Member Directory, it would give you the message that No Event Chair contact info was provided, even if you type in a name and email on the edit sheet page.

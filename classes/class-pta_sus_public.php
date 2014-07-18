@@ -378,7 +378,7 @@ class PTA_SUS_Public {
                         $count = count($names);
                         if ( $count > 1) {
                             $display_chair = __('Event Chairs:', 'pta_volunteer_sus').' <a href="mailto:'.esc_attr($sheet->chair_email).'">'.esc_html($chair_names).'</a>';
-                        } elseif ( 1 == $count && is_email($sheet->chair_email)) {
+                        } elseif ( 1 == $count ) {
                             $display_chair = __('Event Chair:', 'pta_volunteer_sus').' <a href="mailto:'.esc_attr($sheet->chair_email).'">'.esc_html($chair_names).'</a>';
                         } else {
                             $display_chair = __("No Event Chair contact info provided", 'pta_volunteer_sus');

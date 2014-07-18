@@ -45,7 +45,7 @@ class PTA_SUS_Emails {
     }
 
 	/**
-    * Send email when user signs up
+    * Send signs up & reminder emails
     * 
     * @param    int  the signup id
     *           bool signup or reminder email
