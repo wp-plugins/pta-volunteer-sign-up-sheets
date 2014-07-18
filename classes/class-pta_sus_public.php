@@ -272,8 +272,10 @@ class PTA_SUS_Public {
             
             // If current user has signed up for anything, list their signups and allow them to edit/clear them
             // If they aren't logged in, prompt them to login to see their signup info
-            if (!is_user_logged_in()) {
-                $return .= apply_filters( 'pta_sus_public_output', '<p>'.__('Please login to view and edit your volunteer sign ups.', 'pta_volunteer_sus').'</p>', 'user_not_loggedin_signups_list_message' );
+            if ( !is_user_logged_in() ) {
+                if (!$this->main_options['disable_signup_login_notice']) {
+                    $return .= apply_filters( 'pta_sus_public_output', '<p>'.__('Please login to view and edit your volunteer sign ups.', 'pta_volunteer_sus').'</p>', 'user_not_loggedin_signups_list_message' );
+                }
             } else {
                 $current_user = wp_get_current_user();
                 if ( !($current_user instanceof WP_User) )
@@ -282,11 +284,22 @@ class PTA_SUS_Public {
                 // Check if they clicked on a CLEAR link
                 // Perhaps add some sort of confirmation, maybe with jQuery?
                 if (isset($_GET['signup_id'])) {
-                    $cleared = $this->data->delete_signup((int)$_GET['signup_id']);
-                    if ($cleared) {
-                        $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus updated">'.__('Signup Cleared', 'pta_volunteer_sus').'</p>', 'signup_cleared_message' );
+                    // Make sure the signup exists first
+                    if (null == $this->data->get_signup((int)$_GET['signup_id'])) {
+                        $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Not a valid signup!', 'pta_volunteer_sus').'</p>', 'clear_invalid_signup_message' );
                     } else {
-                        $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('ERROR clearing signup!', 'pta_volunteer_sus').'</p>', 'error_clearing_signup_message' );
+                        // Send cleared emails
+                        if(!class_exists('PTA_SUS_Emails')) {
+                            include_once(dirname(__FILE__).'/class-pta_sus_emails.php');
+                        }
+                        $emails = new PTA_SUS_Emails();
+                        $emails->send_mail((int)$_GET['signup_id'], $reminder=false, $clear=true);
+                        $cleared = $this->data->delete_signup((int)$_GET['signup_id']);
+                        if ($cleared) {
+                            $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus updated">'.__('Signup Cleared', 'pta_volunteer_sus').'</p>', 'signup_cleared_message' );
+                        } else {
+                            $return .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('ERROR clearing signup!', 'pta_volunteer_sus').'</p>', 'error_clearing_signup_message' );
+                        }
                     }
                 }
 
@@ -317,7 +330,7 @@ class PTA_SUS_Public {
                         $clear_url = add_query_arg($clear_args);
                         $return .= '<tr>
                             <td>'.esc_html($signup->title).'</td>
-                            <td>'.(($signup->date == "0000-00-00") ? __("N/A", 'pta_volunteer_sus') : date_i18n(get_option("date_format"), strtotime($signup->date))).'</td>
+                            <td>'.(($signup->signup_date == "0000-00-00") ? __("N/A", 'pta_volunteer_sus') : date_i18n(get_option("date_format"), strtotime($signup->signup_date))).'</td>
                             <td>'.esc_html($signup->task_title).'</td>
                             <td style="text-align:right;">'.(("" == $signup->time_start) ? __("N/A", 'pta_volunteer_sus') : date_i18n(get_option("time_format"), strtotime($signup->time_start)) ).'</td>
                             <td style="text-align:right;">'.(("" == $signup->time_end) ? __("N/A", 'pta_volunteer_sus') : date_i18n(get_option("time_format"), strtotime($signup->time_end)) ).'</td>

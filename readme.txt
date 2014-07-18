@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.9.1
-Stable tag: 1.6.1.1
+Stable tag: 1.6.2
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -86,6 +86,13 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6.2**
+
+*	Added email notifications when a user clears themselves from a volunteer spot. There is now a custom email subject and email templated for these cleared signup emails in the email settings. These emails will be copied to the event chairs as well as the new global CC Email (see below) so that they will be immediately informed when someone clears themselves from a signup.
+* 	Added CC Email in the Email Settings. Here you can specify an email address to CC for all signup notifications as well as when a user clears one of their signups. This email will be IN ADDITION to the chair contact emails you specify for each sign-up sheet. This was added so the admin or head volunteer coordinator can receive sign-up/clear notifications without having to enter their email for every sheet you add.
+*	Fixed issue of Ongoing type events that others have signed up for showing up in user's list of signups
+*	The "Disable Login Notices?" option in the main settings will now also turn off the "Please login..." message at the bottom of the main list of volunteer sheets. If you are not using user accounts for your site, you should probably disable these notices to avoid volunteers asking how to login.
+
 **Version 1.6.1.1**
 
 * 	Another Small logic fix to allow there to be only one contact name, but more than one contact email, for a sheet without getting the "No Event Chair contact info provided" message on the public side.

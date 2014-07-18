@@ -51,7 +51,7 @@ class PTA_SUS_Emails {
     *           bool signup or reminder email
     * @return   bool
     */
-    public function send_mail($signup_id, $reminder=false) {
+    public function send_mail($signup_id, $reminder=false, $clear=false) {
         $signup = $this->data->get_signup($signup_id);
         $task = $this->data->get_task($signup->task_id);
         $sheet = $this->data->get_sheet($task->sheet_id);
@@ -67,6 +67,9 @@ class PTA_SUS_Emails {
         if($reminder) {
             $subject = $this->email_options['reminder_email_subject'];
             $message = $this->email_options['reminder_email_template'];
+        } elseif ($clear) {
+            $subject = $this->email_options['clear_email_subject'];
+            $message = $this->email_options['clear_email_template'];
         } else {
             $subject = $this->email_options['confirmation_email_subject'];
             $message = $this->email_options['confirmation_email_template'];
@@ -88,10 +91,16 @@ class PTA_SUS_Emails {
             $headers[]  = "Reply-To: " . $replyto;
             $headers[]  = "Content-Type: text/plain; charset=utf-8";
             $headers[]  = "Content-Transfer-Encoding: 8bit";
-            if (!empty($chair_emails) && !$reminder) { 
-            	// CC to all chairs for signups, but not reminders
-                foreach ($chair_emails as $cc) {
-                    $headers[] = 'Bcc: ' . $cc;
+            if ( !$reminder) { 
+                if (!empty($chair_emails)) {
+                    // CC to all chairs for signups/clears, but not reminders
+                    foreach ($chair_emails as $cc) {
+                        $headers[] = 'Bcc: ' . $cc;
+                    }
+                }           	
+                // If global CC is set, and it's a valid email, send to that email also
+                if( isset($this->email_options['cc_email']) && is_email($this->email_options['cc_email'] ) ) {
+                    $headers[] = 'Bcc: ' . $this->email_options['cc_email'];
                 }
             }
 

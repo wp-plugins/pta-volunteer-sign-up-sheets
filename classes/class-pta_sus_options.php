@@ -83,7 +83,7 @@ class PTA_SUS_Options {
         add_settings_field('show_ongoing_last', __('Show Ongoing events last?', 'pta_volunteer_sus'), array($this, 'show_ongoing_last_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required', __('Login Required?', 'pta_volunteer_sus'), array($this, 'login_required_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required_message', __('Login Required Message:', 'pta_volunteer_sus'), array($this, 'login_required_message_text_input'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
-        add_settings_field('disable_signup_login_notice', __('Disable Login Message?', 'pta_volunteer_sus'), array($this, 'disable_signup_login_notice_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
+        add_settings_field('disable_signup_login_notice', __('Disable Login Notices?', 'pta_volunteer_sus'), array($this, 'disable_signup_login_notice_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('enable_cron_notifications', __('Enable CRON Notifications?', 'pta_volunteer_sus'), array($this, 'enable_cron_notifications_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('detailed_reminder_admin_emails', __('Detailed Reminder Notifications?', 'pta_volunteer_sus'), array($this, 'detailed_reminder_admin_emails_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_expired_tasks', __('Show Expired Tasks?', 'pta_volunteer_sus'), array($this, 'show_expired_tasks_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
@@ -95,8 +95,11 @@ class PTA_SUS_Options {
         add_settings_section('pta_volunteer_email', __('Email Settings', 'pta_volunteer_sus'), array($this, 'pta_volunteer_email_description'), 'pta_volunteer_sus_email');
         add_settings_field('from_email', __('FROM email:', 'pta_volunteer_sus'), array($this, 'from_email_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('replyto_email', __('Reply-To email:', 'pta_volunteer_sus'), array($this, 'replyto_email_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
+        add_settings_field('cc_email', __('CC email:', 'pta_volunteer_sus'), array($this, 'cc_email_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('confirmation_email_subject', __('Confirmation email subject:', 'pta_volunteer_sus'), array($this, 'confirmation_email_subject_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('confirmation_email_template', __('Confirmation email template:', 'pta_volunteer_sus'), array($this, 'confirmation_email_template_textarea_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
+        add_settings_field('clear_email_subject', __('Cleared signup email subject:', 'pta_volunteer_sus'), array($this, 'clear_email_subject_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
+        add_settings_field('clear_email_template', __('Cleared signup email template:', 'pta_volunteer_sus'), array($this, 'clear_email_template_textarea_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('reminder_email_subject', __('Reminder email subject:', 'pta_volunteer_sus'), array($this, 'reminder_email_subject_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('reminder_email_template', __('Reminder email template:', 'pta_volunteer_sus'), array($this, 'reminder_email_template_textarea_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
         add_settings_field('reminder_email_limit', __('Max Reminders per Hour:', 'pta_volunteer_sus'), array($this, 'reminder_email_limit_text_input'), 'pta_volunteer_sus_email', 'pta_volunteer_email');
@@ -128,6 +131,8 @@ class PTA_SUS_Options {
 		            }
         			break;
     			case 'email':
+                    // Allow cc_email to be blank
+                    if ('cc_email' === $field && '' == $inputs[$field]) break;
     				if(is_email($inputs[$field])) {
 		                $this->{$options}[$field] = $inputs[$field];
 		            } else {
@@ -187,8 +192,11 @@ class PTA_SUS_Options {
     	$fields = array(
     		'from_email' => 'email',
             'replyto_email' => 'email',
+            'cc_email' => 'email',
             'confirmation_email_subject' => 'text',
             'confirmation_email_template' => 'textarea',
+            'clear_email_subject' => 'text',
+            'clear_email_template' => 'textarea',
             'reminder_email_subject' => 'text',
             'reminder_email_template' => 'textarea',
             'reminder_email_limit' => 'integer',
@@ -284,9 +292,19 @@ class PTA_SUS_Options {
         echo '<em> ' . __('The Reply-To email address for confirmation and reminder emails.', 'pta_volunteer_sus') . '</em>';
     }
 
+    public function cc_email_text_input() {
+        echo "<input id='cc_email' name='pta_volunteer_sus_email_options[cc_email]' size='40' type='text' value='{$this->email_options['cc_email']}' />";
+        echo '<em> ' . __('Global CC email address for signup confirmation and signup cleared emails. This email is in ADDITION TO the chair contact emails for sheets and will apply to ALL sheets. Useful for notifying admin or the head volunteer coordinator. Leave blank to only notify the chairs entered for each sheet.', 'pta_volunteer_sus') . '</em>';
+    }
+
     public function confirmation_email_subject_text_input() {
         echo "<input id='confirmation_email_subject' name='pta_volunteer_sus_email_options[confirmation_email_subject]' size='60' type='text' value='{$this->email_options['confirmation_email_subject']}' />";
         echo '<em> ' . __('Subject line for signup confirmation email messages', 'pta_volunteer_sus') .'</em>';
+    }
+
+    public function clear_email_subject_text_input() {
+        echo "<input id='clear_email_subject' name='pta_volunteer_sus_email_options[clear_email_subject]' size='60' type='text' value='{$this->email_options['clear_email_subject']}' />";
+        echo '<em> ' . __('Subject line for cleared signup email messages', 'pta_volunteer_sus') .'</em>';
     }
 
     public function reminder_email_subject_text_input() {
@@ -381,7 +399,7 @@ class PTA_SUS_Options {
         ?>
         <input name="pta_volunteer_sus_main_options[disable_signup_login_notice]" type="checkbox" value="1" <?php echo $checked; ?> />
         <?php
-        echo __('YES.', 'pta_volunteer_sus') . ' <em> '. __('Turn off the notice strongly suggesting volunteers login before signing up for a volunteer slot (on signup form page).', 'pta_volunteer_sus').'</em>';
+        echo __('YES.', 'pta_volunteer_sus') . ' <em> '. __('Turn off the notice strongly suggesting volunteers login before signing up for a volunteer slot (on signup form page) and the notice to login to view/edit signups on the main volunteer list page.', 'pta_volunteer_sus').'</em>';
     }
 
     public function enable_cron_notifications_checkbox() {
@@ -449,7 +467,7 @@ class PTA_SUS_Options {
         echo esc_textarea( $this->email_options['confirmation_email_template'] );
         echo '</textarea>';
         echo '<br />' . __('Email user receives when they sign up for a volunteer slot.', 'pta_volunteer_sus');
-        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {task_title} {date} {start_time} {end_time} {details_text} {item_details} {item_qty} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
+        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {sheet_details} {task_title} {date} {start_time} {end_time} {details_text} {item_details} {item_qty} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
     }
 
     public function reminder_email_template_textarea_input() {
@@ -457,7 +475,15 @@ class PTA_SUS_Options {
         echo esc_textarea( $this->email_options['reminder_email_template'] );
         echo '</textarea>';
         echo '<br />' . __('Reminder email sent to volunteers.', 'pta_volunteer_sus');
-        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {task_title} {date} {start_time} {end_time} {details_text} {item_details} {item_qty} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
+        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {sheet_details} {task_title} {date} {start_time} {end_time} {details_text} {item_details} {item_qty} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
+    }
+
+    public function clear_email_template_textarea_input() {
+        echo "<textarea id='clear_email_template' name='pta_volunteer_sus_email_options[clear_email_template]' cols='55' rows='15' >";
+        echo esc_textarea( $this->email_options['clear_email_template'] );
+        echo '</textarea>';
+        echo '<br />' . __('Cleared signup email sent to volunteers when they clear themselves from a signup.', 'pta_volunteer_sus');
+        echo '<br />' . __('Available Template Tags: ', 'pta_volunteer_sus') . '{sheet_title} {sheet_details} {task_title} {date} {start_time} {end_time} {details_text} {item_details} {item_qty} {firstname} {lastname} {contact_emails} {site_name} {site_url}';
     }
 
 } // End Class

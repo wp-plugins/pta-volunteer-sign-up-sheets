@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.6.1.1
+Version: 1.6.2
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.6.1.1');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.6.2');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -138,6 +138,133 @@ class PTA_Sign_Up_Sheet {
         if ($current < $this->db_version) {
             $this->pta_sus_activate();
         }
+
+        // If options haven't previously been setup, create the default options
+        // MAIN OPTIONS
+        $defaults = array(
+                    'enable_test_mode' => false,
+                    'test_mode_message' => 'The Volunteer Sign-Up System is currently undergoing maintenance. Please check back later.',
+                    'volunteer_page_id' => 0,
+                    'hide_volunteer_names' => false,
+                    'show_ongoing_in_widget' => true,
+                    'show_ongoing_last' => true,
+                    'login_required' => false,
+                    'login_required_message' => 'You must be logged in to a valid account to view and sign up for volunteer opportunities.',
+                    'disable_signup_login_notice' => false,
+                    'enable_cron_notifications' => true,
+                    'detailed_reminder_admin_emails' => true,
+                    'show_expired_tasks' => false,
+                    'clear_expired_signups' => true,
+                    'hide_donation_button' => false,
+                    'reset_options' => false
+                    );
+        $options = get_option( 'pta_volunteer_sus_main_options', $defaults );
+        // Make sure each option is set -- this helps if new options have been added during plugin upgrades
+        foreach ($defaults as $key => $value) {
+            if(!isset($options[$key])) {
+                $options[$key] = $value;
+            }
+        }
+        update_option( 'pta_volunteer_sus_main_options', $options );
+
+        // EMAIL OPTIONS
+$confirm_template = 
+"Dear {firstname} {lastname},
+
+This is to confirm that you volunteered for the following:
+
+Event: {sheet_title} 
+Task/Item: {task_title}
+Date: {date}
+Start Time: {start_time}
+End Time: {end_time}
+{details_text}: {item_details}
+Item Quantity: {item_qty}
+
+If you have any questions, please contact:
+{contact_emails}
+
+Thank You!
+{site_name}
+{site_url}
+";
+$remind_template = 
+"Dear {firstname} {lastname},
+
+This is to remind you that you volunteered for the following:
+
+Event: {sheet_title} 
+Task/Item: {task_title}
+Date: {date}
+Start Time: {start_time}
+End Time: {end_time}
+{details_text}: {item_details}
+Item Quantity: {item_qty}
+
+If you have any questions, please contact:
+{contact_emails}
+
+Thank You!
+{site_name}
+{site_url}
+";
+$clear_template = 
+"Dear {firstname} {lastname},
+
+This is to confirm that you have cleared yourself from the following volunteer signup:
+
+Event: {sheet_title} 
+Task/Item: {task_title}
+Date: {date}
+Start Time: {start_time}
+End Time: {end_time}
+{details_text}: {item_details}
+Item Quantity: {item_qty}
+
+If this was a mistake, please visit the site and sign up again.
+
+If you have any questions, please contact:
+{contact_emails}
+
+Thank You!
+{site_name}
+{site_url}
+";
+        $defaults = array(
+                    'cc_email' => '',
+                    'from_email' => get_bloginfo( $show='admin_email' ),
+                    'replyto_email' => get_bloginfo( $show='admin_email' ),
+                    'confirmation_email_subject' => 'Thank you for volunteering!',
+                    'confirmation_email_template' => $confirm_template,
+                    'clear_email_subject' => 'Volunteer spot cleared!',
+                    'clear_email_template' => $clear_template,
+                    'reminder_email_subject' => 'Volunteer Reminder',
+                    'reminder_email_template' => $remind_template,
+                    'reminder_email_limit' => "",
+                    );
+        $options = get_option( 'pta_volunteer_sus_email_options', $defaults );
+        // Make sure each option is set -- this helps if new options have been added during plugin upgrades
+        foreach ($defaults as $key => $value) {
+            if(!isset($options[$key])) {
+                $options[$key] = $value;
+            }
+        }
+        update_option( 'pta_volunteer_sus_email_options', $options );
+        
+        // INTEGRATION OPTIONS
+        $defaults = array(
+                    'enable_member_directory' => false,
+                    'directory_page_id' =>0,
+                    'contact_page_id' => 0,
+                    );
+        $options = get_option( 'pta_volunteer_sus_integration_options', $defaults );
+        // Make sure each option is set -- this helps if new options have been added during plugin upgrades
+        foreach ($defaults as $key => $value) {
+            if(!isset($options[$key])) {
+                $options[$key] = $value;
+            }
+        }
+        update_option( 'pta_volunteer_sus_integration_options', $options );
     }
 
       
@@ -258,108 +385,6 @@ class PTA_Sign_Up_Sheet {
         // we'll keep this at hourly so that it hopefully runs at 
         // least once a day
         wp_schedule_event( time(), 'hourly', 'pta_sus_cron_job');
-
-        // If options haven't previously been setup, create the default options
-        // MAIN OPTIONS
-        $defaults = array(
-                    'enable_test_mode' => false,
-                    'test_mode_message' => 'The Volunteer Sign-Up System is currently undergoing maintenance. Please check back later.',
-                    'volunteer_page_id' => 0,
-                    'hide_volunteer_names' => false,
-                    'show_ongoing_in_widget' => true,
-                    'show_ongoing_last' => true,
-                    'login_required' => false,
-                    'login_required_message' => 'You must be logged in to a valid account to view and sign up for volunteer opportunities.',
-                    'disable_signup_login_notice' => false,
-                    'enable_cron_notifications' => true,
-                    'detailed_reminder_admin_emails' => true,
-                    'show_expired_tasks' => false,
-                    'clear_expired_signups' => true,
-                    'hide_donation_button' => false,
-                    'reset_options' => false
-                    );
-        $options = get_option( 'pta_volunteer_sus_main_options', $defaults );
-        // Make sure each option is set -- this helps if new options have been added during plugin upgrades
-        foreach ($defaults as $key => $value) {
-            if(!isset($options[$key])) {
-                $options[$key] = $value;
-            }
-        }
-        update_option( 'pta_volunteer_sus_main_options', $options );
-
-        // EMAIL OPTIONS
-$confirm_template = 
-"Dear {firstname} {lastname},
-
-This is to confirm that you volunteered for the following:
-
-Event: {sheet_title} 
-Task/Item: {task_title}
-Date: {date}
-Start Time: {start_time}
-End Time: {end_time}
-{details_text}: {item_details}
-Item Quantity: {item_qty}
-
-If you have any questions, please contact:
-{contact_emails}
-
-Thank You!
-{site_name}
-{site_url}
-";
-$remind_template = 
-"Dear {firstname} {lastname},
-
-This is to remind you that you volunteered for the following:
-
-Event: {sheet_title} 
-Task/Item: {task_title}
-Date: {date}
-Start Time: {start_time}
-End Time: {end_time}
-{details_text}: {item_details}
-Item Quantity: {item_qty}
-
-If you have any questions, please contact:
-{contact_emails}
-
-Thank You!
-{site_name}
-{site_url}
-";
-        $defaults = array(
-                    'from_email' => get_bloginfo( $show='admin_email' ),
-                    'replyto_email' => get_bloginfo( $show='admin_email' ),
-                    'confirmation_email_subject' => 'Thank you for volunteering!',
-                    'confirmation_email_template' => $confirm_template,
-                    'reminder_email_subject' => 'Volunteer Reminder',
-                    'reminder_email_template' => $remind_template,
-                    'reminder_email_limit' => "",
-                    );
-        $options = get_option( 'pta_volunteer_sus_email_options', $defaults );
-        // Make sure each option is set -- this helps if new options have been added during plugin upgrades
-        foreach ($defaults as $key => $value) {
-            if(!isset($options[$key])) {
-                $options[$key] = $value;
-            }
-        }
-        update_option( 'pta_volunteer_sus_email_options', $options );
-        
-        // INTEGRATION OPTIONS
-        $defaults = array(
-                    'enable_member_directory' => false,
-                    'directory_page_id' =>0,
-                    'contact_page_id' => 0,
-                    );
-        $options = get_option( 'pta_volunteer_sus_integration_options', $defaults );
-        // Make sure each option is set -- this helps if new options have been added during plugin upgrades
-        foreach ($defaults as $key => $value) {
-            if(!isset($options[$key])) {
-                $options[$key] = $value;
-            }
-        }
-        update_option( 'pta_volunteer_sus_integration_options', $options );
 
     }
     

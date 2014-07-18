@@ -395,7 +395,7 @@ class PTA_SUS_Data
         $safe_sql = $this->wpdb->prepare("SELECT
             $signup_table.id AS id,
             $signup_table.user_id AS user_id, 
-            $signup_table.date AS date,
+            $signup_table.date AS signup_date,
             $signup_table.item AS item,
             $signup_table.item_qty AS item_qty,
             $task_table.title AS task_title,
@@ -407,7 +407,7 @@ class PTA_SUS_Data
             INNER JOIN $task_table ON $signup_table.task_id = $task_table.id 
             INNER JOIN $sheet_table ON $task_table.sheet_id = $sheet_table.id 
             WHERE $signup_table.user_id = %d AND $sheet_table.trash = 0 
-            AND ADDDATE(date, 1) >= NOW() OR date = '0000-00-00' 
+            AND (ADDDATE($signup_table.date, 1) >= NOW() OR $signup_table.date = '0000-00-00') 
             ", $user_id);
         $results = $this->wpdb->get_results($safe_sql);
         $results = $this->stripslashes_full($results);
