@@ -355,7 +355,7 @@ class PTA_SUS_Public {
                     // SEPARATED BY COMMAS, OR USE A BCC FOR OTHER EMAIL ADDRESSES AFTER THE FIRST
                     // 
                     // AFTER MAKING PTA MEMBER DIRECTORY A CLASS, WE CAN ALSO CHECK IF IT EXISTS
-                    if( isset($this->integration_options['enable_member_directory']) && true === $this->integration_options['enable_member_directory'] && '' != $sheet->position ) {
+                    if( isset($this->integration_options['enable_member_directory']) && true === $this->integration_options['enable_member_directory'] && function_exists('pta_member_directory_init') && '' != $sheet->position ) {
                         // Create Contact Form link
                         if($position = get_term_by( 'slug', $sheet->position, 'member_category' )) {
                             if ( isset($this->integration_options['contact_page_id']) && 0 < $this->integration_options['contact_page_id']) {               
