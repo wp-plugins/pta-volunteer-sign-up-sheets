@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 3.9.1
-Stable tag: 1.6.2
+Stable tag: 1.6.2.1
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -86,6 +86,11 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6.2.1**
+
+* 	Minor changes/fixes.
+*	Added/Updated filters for all public side output text to allow easy changing of default text using the customizer extension, or by adding your own filter hooks in your theme's functions.php file.
+
 **Version 1.6.2**
 
 *	Added email notifications when a user clears themselves from a volunteer spot. There is now a custom email subject and email templated for these cleared signup emails in the email settings. These emails will be copied to the event chairs as well as the new global CC Email (see below) so that they will be immediately informed when someone clears themselves from a signup.

@@ -38,6 +38,7 @@ class PTA_SUS_Options {
                 <a href="?page=<?php echo $this->settings_page_slug?>&tab=main_options" class="nav-tab <?php echo $active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Main Settings', 'pta_volunteer_sus'); ?></a>  
                 <a href="?page=<?php echo $this->settings_page_slug?>&tab=email_options" class="nav-tab <?php echo $active_tab == 'email_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Email Settings', 'pta_volunteer_sus'); ?></a> 
                 <a href="?page=<?php echo $this->settings_page_slug?>&tab=integration_options" class="nav-tab <?php echo $active_tab == 'integration_options' ? 'nav-tab-active' : ''; ?>"><?php _e('Integration Settings', 'pta_volunteer_sus'); ?></a> 
+                <?php do_action('pta_sus_settings_nav_tabs', $active_tab); ?>
             </h2> 
             <form action="options.php" method="post">
                 <?php 
@@ -48,15 +49,18 @@ class PTA_SUS_Options {
                 } elseif ( 'email_options' == $active_tab ) {
                 	settings_fields('pta_volunteer_sus_email_options'); 
                 	do_settings_sections('pta_volunteer_sus_email'); 
-                } else {
+                } elseif ( 'integration_options' == $active_tab ) {
                 	settings_fields('pta_volunteer_sus_integration_options'); 
                 	do_settings_sections('pta_volunteer_sus_integration'); 
+                } else {
+                    // Allow extensions to create their own tabs
+                    do_action('pta_sus_extensions_settings_tabs', $active_tab);
                 }
                        
                 submit_button();
                 ?>
             </form>
-            <?php if (!$this->main_options['hide_donation_button']): ?>
+            <?php if ('main_options' == $active_tab && !$this->main_options['hide_donation_button']): ?>
                 <h5><?php _e('Please help support continued development of this plugin! Any amount helps!', 'pta_volunteer_sus'); ?></h5>
                 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                     <input type="hidden" name="cmd" value="_s-xclick">
@@ -64,8 +68,12 @@ class PTA_SUS_Options {
                     <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
                     <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
                 </form>
-            <?php endif; ?>
-            <h3><?php echo $docs_link; ?></h3>
+            <?php endif; 
+            if ('main_options' == $active_tab): ?>
+                <h3><?php echo $docs_link; ?></h3>
+            <?php endif; 
+            do_action('pta_sus_settings_after_submit_button', $active_tab);
+            ?>
         </div>        
         <?php
         return;
