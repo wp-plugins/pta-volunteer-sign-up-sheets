@@ -3,8 +3,8 @@ Contributors: DBAR Productions
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4HF689YQ9DEE
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
-Tested up to: 3.9.1
-Stable tag: 1.6.2.1
+Tested up to: 3.9.2
+Stable tag: 1.6.2.2
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -86,6 +86,10 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6.2.2**
+
+* 	Minor change to properly sort dates on sheet date/task list
+
 **Version 1.6.2.1**
 
 * 	Minor changes/fixes.

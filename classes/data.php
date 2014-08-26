@@ -298,6 +298,7 @@ class PTA_SUS_Data
                     }
                 }
             }
+            sort($dates);
             return $dates;
         } else {
             return false;
