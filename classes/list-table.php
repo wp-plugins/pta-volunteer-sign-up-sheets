@@ -143,7 +143,7 @@ class PTA_SUS_List_Table extends WP_List_Table
             $display = '<strong><span style="color:red;">'.__("NO", "pta_volunteer_sus").'</span></strong>';
         }
         $toggle_url = sprintf('?page=%s&action=toggle_visibility&sheet_id=%s', $_GET['page'], $item['id']);
-        $nonced_toggle_url = wp_nonce_url( $toggle_url, 'toggle_visibility' );
+        $nonced_toggle_url = wp_nonce_url( $toggle_url, 'toggle_visibility', '_sus_nonce' );
         return sprintf('<strong><a href="%1$s">%2$s</a></strong>', 
             $nonced_toggle_url,  // %1$s
             $display // %2$s

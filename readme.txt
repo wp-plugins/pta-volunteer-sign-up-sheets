@@ -4,11 +4,15 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 4.0
-Stable tag: 1.6.2.2
+Stable tag: 1.6.3
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
 == Description ==
+
+**PLEASE DO NOT USE THE SUPPORT FORUM FOR FEATURE REQUESTS!!**
+You may submit and vote for new features here:
+https://stephensherrardplugins.com/support/forum/feature-requests/
 
 This plugin allows you to easily create and manage volunteer sign up sheets for your school or organization. You can define four different types of events:  Single, Recurring, Multi-Day, or Ongoing events. Single events are for events that take place on just a single date. Recurring events are events that happen more than once (such as a weekly function), but have the same needs for each date. Multi-Day events are events that are spread across more than one day, but have different needs for each day. Ongoing events do not have any dates associated with them, but are for committees or helpers that are needed on an ongoing basis.
 
@@ -61,6 +65,17 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 == Frequently Asked Questions ==
 
+**Can this plugin do (insert a feature request here)?**
+**Can you add (insert a feature request here)?**
+
+PLEASE DO NOT USE THE SUPPORT FORUM FOR FEATURE REQUESTS!!
+
+This plugin has a lot of options and features, but I have been getting overwhelmed with feature requests recently. This plugin already does MUCH more than I originally intended, and more than we needed for our own school PTA web site. I have created some extensions that I thought would be helpful to the largest number of people, which you can find at:
+https://stephensherrardplugins.com
+
+PLEASE USE THE FEATURE REQUEST FORUM TO REQUEST NEW FEATURES!!
+https://stephensherrardplugins.com/support/forum/feature-requests/
+
 **Is there any documentation or help on how to use this?**
 
 Documentation can be found at:
@@ -86,6 +101,12 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6.3**
+
+* 	Fixed broken nonce check for visibility toggle on admin sheets list
+*	Added Dutch translation
+*	Additional filter hooks for extensions
+
 **Version 1.6.2.2**
 
 * 	Minor change to properly sort dates on sheet date/task list
@@ -217,3 +238,6 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 == Additional Info ==
 
 This plugin is a major fork and and almost a complete rewrite of the Sign-Up Sheets plugin by DLS software (now called Sign-Up Sheets Lite). We needed much more functionality than their plugin offered for our PTA web site, so I started with the Sign-Up Sheets plugin and added much more functionality to it, and eventually ended up rewriting quite a bit of it to fit our needs. If you need a much more simple sign-up sheets system, you may want to check out their plugin.
+
+**PLEASE USE THE FEATURE REQUEST FORUM TO REQUEST NEW FEATURES!!**
+https://stephensherrardplugins.com/support/forum/feature-requests/

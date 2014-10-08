@@ -224,7 +224,7 @@ class PTA_SUS_Emails {
                 	}
                 }
 
-                if ($this->send_mail($event->signup_id, $reminder = true) === TRUE) { 
+                if ($this->send_mail($event->signup_id, $reminder = true) == TRUE) { 
                     // Keep track of # of reminders sent
                     $reminder_count++; 
                     // Add reminder message to reminders_log

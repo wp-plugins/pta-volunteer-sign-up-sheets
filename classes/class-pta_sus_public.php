@@ -493,7 +493,7 @@ class PTA_SUS_Public {
     public function display_task_list($sheet_id, $date) {
         // Tasks
         $return = '';
-        if (!($tasks = $this->data->get_tasks($sheet_id, $date))) {
+        if (!($tasks = apply_filters('pta_sus_public_sheet_get_tasks', $this->data->get_tasks($sheet_id, $date), $sheet_id, $date) ) ) {
             $return .= '<p>'.apply_filters( 'pta_sus_public_output', __('No tasks were found for ', 'pta_volunteer_sus'), 'no_tasks_found_for_date' ) . mysql2date( get_option('date_format'), $tdate, $translate = true ).'</p>';
         } else {
             $show_details = false;
@@ -541,7 +541,7 @@ class PTA_SUS_Public {
                         $task_url = apply_filters( 'pta_sus_task_signup_url', $task_url, $task, $sheet_id, $date );
                         
                         $i=1;
-                        $signups = $this->data->get_signups($task->id, $date);
+                        $signups = apply_filters( 'pta_sus_task_get_signups', $this->data->get_signups($task->id, $date), $task->id, $date);
                         
                         foreach ($signups AS $signup) {
                             if ($i == $task->qty) {
@@ -617,7 +617,7 @@ class PTA_SUS_Public {
     } // Display task list
 
 	public function display_signup_form($task_id, $date) {	
-        $task = $this->data->get_task($task_id);
+        $task = apply_filters( 'pta_sus_public_signup_get_task', $this->data->get_task($task_id), $task_id);
         do_action( 'pta_sus_before_signup_form', $task, $date );
         if ("0000-00-00" == $date) {
             $show_date = false;
