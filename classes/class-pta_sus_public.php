@@ -237,6 +237,18 @@ class PTA_SUS_Public {
             $sheets = $this->data->get_sheets(false, true, $show_hidden);
             $sheets = array_reverse($sheets);
 
+            // Move ongoing sheets to bottom of list if that setting is checked
+            if ($this->main_options['show_ongoing_last']) {
+                // Move ongoing events to end of our sheets array
+                foreach ($sheets as $key => $sheet) {
+                    if ('Ongoing' == $sheet->type) {
+                        $move_me = $sheet;
+                        unset($sheets[$key]);
+                        $sheets[] = $move_me;
+                    }
+                }
+            }
+
             // Allow plugins or themes to modify retrieved sheets
             $sheets = apply_filters( 'pta_sus_display_active_sheets', $sheets, $atts );
 

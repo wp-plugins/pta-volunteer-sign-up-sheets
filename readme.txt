@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 4.0
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,10 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6.4**
+
+* 	Main sheet list will now show Ongoing events at the bottom when that setting is checked (main settings). Setting text was wrong as initially the ability to show Ongoing events at the bottom was intended just for the widget. Now that setting will affect the main sheet list as well (to reflect the wording of the setting).
+
 **Version 1.6.3**
 
 * 	Fixed broken nonce check for visibility toggle on admin sheets list
