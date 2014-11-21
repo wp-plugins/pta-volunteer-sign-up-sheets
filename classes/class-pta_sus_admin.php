@@ -25,7 +25,7 @@ class PTA_SUS_Admin {
 
         add_menu_page(__('Sign-up Sheets', 'pta_volunteer_sus'), __('Sign-up Sheets', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_sheets', array($this, 'admin_sheet_page'));
         add_submenu_page($this->admin_settings_slug.'_sheets', __('Sign-up Sheets', 'pta_volunteer_sus'), __('All Sheets', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_sheets', array($this, 'admin_sheet_page'));
-        add_submenu_page($this->admin_settings_slug.'_sheets', __('Add New Sheet', 'pta_volunteer_sus'), __('Add New', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_modify_sheet', array($this, 'admin_modify_sheet_page'));
+        $sheet_page_suffix = add_submenu_page($this->admin_settings_slug.'_sheets', __('Add New Sheet', 'pta_volunteer_sus'), __('Add New', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_modify_sheet', array($this, 'admin_modify_sheet_page'));
         add_submenu_page($this->admin_settings_slug.'_sheets', __('Settings', 'pta_volunteer_sus'), __('Settings', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_settings', array($this->options_page, 'admin_options'));
         add_submenu_page($this->admin_settings_slug.'_sheets', __('CRON Functions', 'pta_volunteer_sus'), __('CRON Functions', 'pta_volunteer_sus'), 'manage_signup_sheets', $this->admin_settings_slug.'_test', array($this, 'admin_reminders_page'));
 
@@ -33,24 +33,26 @@ class PTA_SUS_Admin {
         	$this->member_directory_active = true;
         } else {
         	$this->member_directory_active = false;
-        }       
+        }
+
+        add_action('admin_print_scripts-' . $sheet_page_suffix, array($this, 'add_sheet_admin_scripts') );       
 	}
 
 	/**
     * Enqueue plugin's admin scripts
     */
     public function add_scripts_to_admin() {
-        wp_enqueue_script( 'jquery-datepick', plugins_url( '../assets/js/jquery.datepick.js' , __FILE__ ), array( 'jquery' ) );
-        wp_enqueue_script( 'jquery-ui-timepicker', plugins_url( '../assets/js/jquery.ui.timepicker.js' , __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-position' ) );
-        wp_register_script( 'pta-sus-backend', plugins_url( '../assets/js/backend.js' , __FILE__ ), array( 'jquery' ) );
-        $translation_array = array('default_text' => __('Item you are bringing', 'pta_volunteer_sus') );
-        wp_localize_script('pta-sus-backend', 'PTA_Backend_js', $translation_array);
+        wp_enqueue_style( 'pta-admin-style', plugins_url( '../assets/css/pta-admin-style.css', __FILE__ ) );
+    }
+
+    public function add_sheet_admin_scripts() {
+        wp_enqueue_script('jquery-datepick');
+        wp_enqueue_script('jquery-ui-timepicker');
         wp_enqueue_script('pta-sus-backend');
         wp_enqueue_script('jquery-ui-sortable');
         wp_enqueue_style( 'jquery.datepick', plugins_url( '../assets/css/jquery.datepick.css', __FILE__ ) );
         wp_enqueue_style( 'jquery.ui.timepicker', plugins_url( '../assets/css/jquery.ui.timepicker.css', __FILE__ ) );
         wp_enqueue_style( 'jquery-ui-1.10.0.custom', plugins_url( '../assets/css/jquery-ui-1.10.0.custom.min.css', __FILE__ ) );
-        wp_enqueue_style( 'pta-admin-style', plugins_url( '../assets/css/pta-admin-style.css', __FILE__ ) );
     }
 
 

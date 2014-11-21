@@ -256,7 +256,7 @@ class PTA_SUS_Public {
                 $return .= '<p>'.apply_filters( 'pta_sus_public_output', __('No sheets currently available at this time.', 'pta_volunteer_sus'), 'no_sheets_message' ).'</p>';
             } else {
                 $return .= apply_filters( 'pta_sus_before_sheet_list_table', '' );
-                $return .= '
+                $return .= '<div class=class="pta-sus-sheets main">
                     <table class="pta-sus-sheets" cellspacing="0">
                         <thead>
                             <tr>
@@ -304,6 +304,7 @@ class PTA_SUS_Public {
                         $return .= '
                         </tbody>
                     </table>
+                    </div>
                 ';
                 $return .= apply_filters( 'pta_sus_after_sheet_list_table', '' );
             }
@@ -347,7 +348,7 @@ class PTA_SUS_Public {
                     $return .= '<h3>'.apply_filters( 'pta_sus_public_output', __('You have signed up for the following', 'pta_volunteer_sus'), 'user_signups_list_headers_h3' ).'</h3>';
                     $return .= '<h4>'.apply_filters( 'pta_sus_public_output', __('Click on Clear to remove yourself from a signup.', 'pta_volunteer_sus'), 'user_signups_list_headers_h4' ).'</h4>';
                     $return .= apply_filters( 'pta_sus_before_user_signups_list_table', '' );
-                    $return .= '
+                    $return .= '<div class=class="pta-sus-sheets user">
                         <table class="pta-sus-sheets" cellspacing="0">
                         <thead>
                             <tr>
@@ -377,7 +378,7 @@ class PTA_SUS_Public {
                             <td style="text-align:right;"><a href="'.esc_url($clear_url).'">'.esc_html($clear_text).'</a></td>
                         </tr>';
                     }
-                    $return .= '</tbody></table>';
+                    $return .= '</tbody></table></div>';
                     $return .= apply_filters( 'pta_sus_after_user_signups_list_table', '' );
                 }
             }
@@ -519,7 +520,7 @@ class PTA_SUS_Public {
                 }
             }
             $return .= apply_filters( 'pta_sus_before_task_list', '', $tasks );
-            $return .= '
+            $return .= '<div class=class="pta-sus-sheets tasks">
                 <table class="pta-sus-tasks" cellspacing="0">
                     <thead>
                         <tr>
@@ -622,7 +623,7 @@ class PTA_SUS_Public {
                     }
                     $return .= '
                     </tbody>
-                </table>';
+                </table></div>';
             $return .= apply_filters( 'pta_sus_after_task_list', '', $tasks );
             return $return;
         }

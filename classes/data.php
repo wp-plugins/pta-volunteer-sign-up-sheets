@@ -867,9 +867,9 @@ class PTA_SUS_Data
 
                     case 'bool':
                         if ($clean_fields[$field] == true) {
-                            $sanitized_fields[$field] = true;
+                            $sanitized_fields[$field] = 1;
                         } else {
-                            $sanitized_fields[$field] = false;
+                            $sanitized_fields[$field] = 0;
                         }
                         break;
 

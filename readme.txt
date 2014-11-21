@@ -3,8 +3,8 @@ Contributors: DBAR Productions
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4HF689YQ9DEE
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
-Tested up to: 4.0
-Stable tag: 1.6.4
+Tested up to: 4.0.1
+Stable tag: 1.6.5
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,13 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.6.5**
+
+* 	Minor validation bug fix for sheet trash value on admin side
+*	Minor jQuery script updates
+*	Put div wrappers around the tables the plugin generates so that you can target them more easily with CSS, or add some custom responsive CSS to change the way the tables are displayed on small screens
+*	If you're using a responsive theme that doesn't handle tables well on small screens, you can create your own CSS styles to restyle the plugin tables using the CSS table classes and the new div containers. If that doesn't work for you, I have created a simple and lightweight plugin that simply loads the jQuery Stacktable plugin from John Polacek and applies that to ALL tables on the public side of your site (it automatically stacks table columns on smaller screens). You can download that for free at my plugins site.
+
 **Version 1.6.4**
 
 * 	Main sheet list will now show Ongoing events at the bottom when that setting is checked (main settings). Setting text was wrong as initially the ability to show Ongoing events at the bottom was intended just for the widget. Now that setting will affect the main sheet list as well (to reflect the wording of the setting).
