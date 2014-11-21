@@ -7,7 +7,7 @@
     width: 5%;
     }
 .pta_sus .tasks LI {
-    background: transparent url("'.plugins_url('assets/images/icon-drag-y.png',__FILE__).'") no-repeat scroll left center;
+    background: transparent url("../images/icon-drag-y.png") no-repeat scroll left center;
     padding-left: 16px;
     min-height: 20px;
     }
