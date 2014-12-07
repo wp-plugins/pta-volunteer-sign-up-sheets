@@ -89,6 +89,7 @@ class PTA_SUS_Options {
         add_settings_field('hide_volunteer_names', __('Hide volunteer names from public?', 'pta_volunteer_sus'), array($this, 'hide_volunteer_names_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_ongoing_in_widget', __('Show Ongoing events in Widget?', 'pta_volunteer_sus'), array($this, 'show_ongoing_in_widget_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_ongoing_last', __('Show Ongoing events last?', 'pta_volunteer_sus'), array($this, 'show_ongoing_last_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
+        add_settings_field('no_phone', __('Remove Phone field from Signup form?', 'pta_volunteer_sus'), array($this, 'no_phone_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required', __('Login Required?', 'pta_volunteer_sus'), array($this, 'login_required_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('login_required_message', __('Login Required Message:', 'pta_volunteer_sus'), array($this, 'login_required_message_text_input'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('disable_signup_login_notice', __('Disable Login Notices?', 'pta_volunteer_sus'), array($this, 'disable_signup_login_notice_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
@@ -183,6 +184,7 @@ class PTA_SUS_Options {
             'hide_volunteer_names' => 'bool',
             'show_ongoing_in_widget' => 'bool',
             'show_ongoing_last' => 'bool',
+            'no_phone' => 'bool',
             'login_required' => 'bool',
             'login_required_message' => 'text',
             'disable_signup_login_notice' => 'bool',
@@ -383,6 +385,18 @@ class PTA_SUS_Options {
         ?>
         <input name="pta_volunteer_sus_main_options[show_ongoing_last]" type="checkbox" value="1" <?php echo $checked; ?> />
         <em><?php _e('If checked, Ongoing events will be shown at the bottom of sign up sheet lists (and widget, if enabled).', 'pta_volunteer_sus'); ?></em>
+        <?php
+    }
+
+    public function no_phone_checkbox() {
+        if(isset($this->main_options['no_phone']) && true === $this->main_options['no_phone']) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        ?>
+        <input name="pta_volunteer_sus_main_options[no_phone]" type="checkbox" value="1" <?php echo $checked; ?> />
+        <em><?php _e('If checked, the Phone field will be removed from the public Sign-Up form.', 'pta_volunteer_sus'); ?></em>
         <?php
     }
 

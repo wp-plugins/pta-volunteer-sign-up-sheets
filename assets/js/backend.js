@@ -71,7 +71,7 @@ jQuery(document).ready(function($) {
                         defaultTime: '',
                         });
                         // Reset datepick for the new row
-                        new_row.find(".singlePicker").removeClass('hasDatepick').datepick({ 
+                        new_row.find(".singlePicker").removeClass('is-datepick').datepick({ 
                         monthsToShow: 1, dateFormat: 'yyyy-mm-dd',
                         showTrigger: '#calImg'});
                         // Reset toggle for new row

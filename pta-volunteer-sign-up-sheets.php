@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.6.6
+Version: 1.6.7
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.6.6');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.6.7');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -76,7 +76,7 @@ class PTA_Sign_Up_Sheet {
 
         add_action('plugins_loaded', array($this, 'init'));
         add_action('init', array($this, 'public_init' ));
-        add_action('admin_init', array($this, 'admin_init'));
+        //add_action('admin_init', array($this, 'admin_init'));
 
         add_action( 'widgets_init', array($this, 'register_sus_widget') );
 
@@ -90,11 +90,7 @@ class PTA_Sign_Up_Sheet {
     }  
 
     public function admin_init() {
-        wp_register_script( 'jquery-datepick', plugins_url( '/assets/js/jquery.datepick.js' , __FILE__ ), array( 'jquery' ) );
-        wp_register_script( 'jquery-ui-timepicker', plugins_url( '/assets/js/jquery.ui.timepicker.js' , __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-position' ) );
-        wp_register_script( 'pta-sus-backend', plugins_url( '/assets/js/backend.js' , __FILE__ ), array( 'jquery' ) );
-        $translation_array = array('default_text' => __('Item you are bringing', 'pta_volunteer_sus') );
-        wp_localize_script('pta-sus-backend', 'PTA_Backend_js', $translation_array);
+
     }
         
     /**
@@ -157,6 +153,7 @@ class PTA_Sign_Up_Sheet {
                     'hide_volunteer_names' => false,
                     'show_ongoing_in_widget' => true,
                     'show_ongoing_last' => true,
+                    'no_phone' => false,
                     'login_required' => false,
                     'login_required_message' => 'You must be logged in to a valid account to view and sign up for volunteer opportunities.',
                     'disable_signup_login_notice' => false,

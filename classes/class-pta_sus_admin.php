@@ -46,13 +46,16 @@ class PTA_SUS_Admin {
     }
 
     public function add_sheet_admin_scripts() {
-        wp_enqueue_script('jquery-datepick');
-        wp_enqueue_script('jquery-ui-timepicker');
-        wp_enqueue_script('pta-sus-backend');
+        wp_enqueue_script( 'jquery-plugin', plugins_url( '../assets/js/jquery.plugin.min.js' , __FILE__ ), array( 'jquery' ) );
+        wp_enqueue_script( 'jquery-datepick', plugins_url( '../assets/js/jquery.datepick.js' , __FILE__ ), array( 'jquery' ), '5.0.0' );
+        wp_enqueue_script( 'jquery-ui-timepicker', plugins_url( '../assets/js/jquery.ui.timepicker.js' , __FILE__ ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-position' ) );
+        wp_enqueue_script( 'pta-sus-backend', plugins_url( '../assets/js/backend.js' , __FILE__ ), array( 'jquery' ) );
         wp_enqueue_script('jquery-ui-sortable');
-        wp_enqueue_style( 'jquery.datepick', plugins_url( '../assets/css/jquery.datepick.css', __FILE__ ) );
-        wp_enqueue_style( 'jquery.ui.timepicker', plugins_url( '../assets/css/jquery.ui.timepicker.css', __FILE__ ) );
-        wp_enqueue_style( 'jquery-ui-1.10.0.custom', plugins_url( '../assets/css/jquery-ui-1.10.0.custom.min.css', __FILE__ ) );
+        wp_enqueue_style( 'pta-jquery.datepick', plugins_url( '../assets/css/jquery.datepick.css', __FILE__ ) );
+        wp_enqueue_style( 'pta-jquery.ui.timepicker', plugins_url( '../assets/css/jquery.ui.timepicker.css', __FILE__ ) );
+        wp_enqueue_style( 'pta-jquery-ui-1.10.0.custom', plugins_url( '../assets/css/jquery-ui-1.10.0.custom.min.css', __FILE__ ) );
+        $translation_array = array('default_text' => __('Item you are bringing', 'pta_volunteer_sus') );
+        wp_localize_script('pta-sus-backend', 'PTA_Backend_js', $translation_array);
     }
 
 

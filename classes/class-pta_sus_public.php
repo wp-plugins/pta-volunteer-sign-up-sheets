@@ -88,7 +88,7 @@ class PTA_SUS_Public {
                 empty($_POST['signup_firstname'])
                 || empty($_POST['signup_lastname'])
                 || empty($_POST['signup_email'])
-                || empty($_POST['signup_phone'])
+                || (false == $this->main_options['no_phone'] && empty($_POST['signup_phone']))
                 || ("YES" == $_POST['need_details'] && '' == $_POST['signup_item'])
                 || ("YES" == $_POST['enable_quantities'] && '' == $_POST['signup_item_qty'])
             ) {
@@ -112,7 +112,7 @@ class PTA_SUS_Public {
                     $this->err++;
                     $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Email!  Please try again.', 'pta_volunteer_sus').'</p>', 'email_error_message' );
                 }
-            elseif (preg_match("/[^0-9\-\.\(\)\ ]/", $_POST['signup_phone']))
+            elseif (false == $this->main_options['no_phone'] && preg_match("/[^0-9\-\.\(\)\ ]/", $_POST['signup_phone']))
                 {
                     $this->err++;
                     $this->errors .= apply_filters( 'pta_sus_public_output', '<p class="pta-sus error">'.__('Invalid Characters in Phone Number!  Please try again.', 'pta_volunteer_sus').'</p>', 'phone_error_message' );
@@ -661,9 +661,6 @@ class PTA_SUS_Public {
             if ( !($current_user instanceof WP_User) )
             return;           
             // Prefill user data if they are signed in
-            // Using Woocommerce to handle site registrations stores a "billing_phone" user meta field
-            // since we set single to "true", this will return an empty string if the field doesn't exist
-            $phone = apply_filters('pta_sus_user_phone', get_user_meta( $current_user->ID, 'billing_phone', true ), $current_user );
             $form .= '
 			<form name="pta_sus_signup_form" method="post" action="">
                 <input type="hidden" name="signup_user_id" value="'.$current_user->ID.'" />
@@ -678,11 +675,17 @@ class PTA_SUS_Public {
 				<p>
 					<label for="signup_email">'.$email_label.'</label>
 					<input type="text" id="signup_email" name="signup_email" value="'. esc_attr($current_user->user_email) .'" />
-				</p>
+				</p>';
+            if( false == $this->main_options['no_phone'] ) {
+                // Using Woocommerce to handle site registrations stores a "billing_phone" user meta field
+                // since we set single to "true", this will return an empty string if the field doesn't exist
+                $phone = apply_filters('pta_sus_user_phone', get_user_meta( $current_user->ID, 'billing_phone', true ), $current_user );
+                $form .= '
                 <p>
                     <label for="signup_phone">'.$phone_label.'</label>
                     <input type="text" id="signup_phone" name="signup_phone" value="'. esc_attr($phone).'" />
                 </p>';
+            }
         } else { 
         	// If not signed in, get the user data
             if (false == $this->main_options['disable_signup_login_notice']) {
@@ -701,11 +704,14 @@ class PTA_SUS_Public {
 				<p>
 					<label for="signup_email">'.$email_label.'</label>
 					<input type="text" id="signup_email" name="signup_email" value="'.((isset($_POST['signup_email'])) ? esc_attr($_POST['signup_email']) : '').'" />
-				</p>
+				</p>';
+            if( false == $this->main_options['no_phone'] ) {
+                $form .= '
                 <p>
                     <label for="signup_phone">'.$phone_label.'</label>
                     <input type="text" id="signup_phone" name="signup_phone" value="'.((isset($_POST['signup_phone'])) ? esc_attr($_POST['signup_phone']) : '').'" />
                 </p>';
+            }
         }
 
         $form .= apply_filters( 'pta_sus_signup_form_before_details_field', '', $task, $date );
