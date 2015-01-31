@@ -87,6 +87,7 @@ class PTA_SUS_Options {
         add_settings_field('test_mode_message', __('Test Mode Message:', 'pta_volunteer_sus'), array($this, 'test_mode_message_text_input'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('volunteer_page_id', __('Volunteer Sign Up Page', 'pta_volunteer_sus'), array($this, 'volunteer_page_id_select'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('hide_volunteer_names', __('Hide volunteer names from public?', 'pta_volunteer_sus'), array($this, 'hide_volunteer_names_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
+        add_settings_field('hide_contact_info', __('Hide chair contact info from public?', 'pta_volunteer_sus'), array($this, 'hide_contact_info_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_ongoing_in_widget', __('Show Ongoing events in Widget?', 'pta_volunteer_sus'), array($this, 'show_ongoing_in_widget_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('show_ongoing_last', __('Show Ongoing events last?', 'pta_volunteer_sus'), array($this, 'show_ongoing_last_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
         add_settings_field('no_phone', __('Remove Phone field from Signup form?', 'pta_volunteer_sus'), array($this, 'no_phone_checkbox'), 'pta_volunteer_sus_main', 'pta_volunteer_main');
@@ -182,6 +183,7 @@ class PTA_SUS_Options {
             'test_mode_message' => 'text',
             'volunteer_page_id' => 'integer',
             'hide_volunteer_names' => 'bool',
+            'hide_contact_info' => 'bool',
             'show_ongoing_in_widget' => 'bool',
             'show_ongoing_last' => 'bool',
             'no_phone' => 'bool',
@@ -361,6 +363,18 @@ class PTA_SUS_Options {
         ?>
         <input name="pta_volunteer_sus_main_options[hide_volunteer_names]" type="checkbox" value="1" <?php echo $checked; ?> />
         <em><?php _e('If checked filled sign-up slots will show "Filled" instead of first name and last initial of volunteer.', 'pta_volunteer_sus'); ?></em>
+        <?php
+    }
+
+    public function hide_contact_info_checkbox() {
+        if(isset($this->main_options['hide_contact_info']) && true === $this->main_options['hide_contact_info']) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        ?>
+        <input name="pta_volunteer_sus_main_options[hide_contact_info]" type="checkbox" value="1" <?php echo $checked; ?> />
+        <em><?php _e('If checked sheet chair contact info will NOT be shown to the public.', 'pta_volunteer_sus'); ?></em>
         <?php
     }
 

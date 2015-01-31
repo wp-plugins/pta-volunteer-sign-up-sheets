@@ -364,9 +364,17 @@ class PTA_SUS_Public {
                         </thead>
                         <tbody>';
                     foreach ($signups as $signup) {
-                        $clear_args = array('sheet_id' => false, 'task_id' => false, 'signup_id' => (int)$signup->id);
-                        $clear_url = add_query_arg($clear_args);
-                        $clear_text = apply_filters( 'pta_sus_public_output', __('Clear', 'pta_volunteer_sus'), 'clear_signup_link_text');
+                            
+                        if ( true == $signup->clear && ( 0 == $signup->clear_days || $signup->signup_date == "0000-00-00" 
+                            || ( strtotime( $signup->signup_date ) - current_time( 'timestamp' ) > ((int)$signup->clear_days * 60 * 60 * 24) ) ) ) {
+                            $clear_args = array('sheet_id' => false, 'task_id' => false, 'signup_id' => (int)$signup->id);
+                            $clear_url = add_query_arg($clear_args);
+                            $clear_text = apply_filters( 'pta_sus_public_output', __('Clear', 'pta_volunteer_sus'), 'clear_signup_link_text');
+                        } else {
+                            $clear_url = '';
+                            $clear_text = '';
+                        }
+                        
                         $return .= '<tr>
                             <td>'.esc_html($signup->title).'</td>
                             <td>'.(($signup->signup_date == "0000-00-00") ? esc_html($this->na_text) : date_i18n(get_option("date_format"), strtotime($signup->signup_date))).'</td>
@@ -442,8 +450,10 @@ class PTA_SUS_Public {
                         <p><a href="'.esc_url($this->all_sheets_uri).'">&laquo; '.esc_html( $view_all_text ).'</a></p>
                         <div class="pta-sus-sheet">
                             <h2>'.esc_html($sheet->title).'</h2>
-                            <h2>'.$display_chair.'</h2>
                     ';
+                    if ( false == $this->main_options['hide_contact_info'] ) {
+                        $return .= '<h2>'.$display_chair.'</h2>';
+                    }
                 } else {
                     $return .= '<div class="pta-sus-sheet">';
                 }

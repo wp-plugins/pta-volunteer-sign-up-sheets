@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.7.1
+Version: 1.8
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,7 +18,7 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.7.1');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.8');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
@@ -59,7 +59,7 @@ class PTA_Sign_Up_Sheet {
 	
     private $data;
     private $emails;
-    public $db_version = '1.6.5';
+    public $db_version = '1.7';
     private $wp_roles;
     public $main_options;
     
@@ -154,6 +154,7 @@ class PTA_Sign_Up_Sheet {
                     'show_ongoing_in_widget' => true,
                     'show_ongoing_last' => true,
                     'no_phone' => false,
+                    'hide_contact_info' => false,
                     'login_required' => false,
                     'login_required_message' => 'You must be logged in to a valid account to view and sign up for volunteer opportunities.',
                     'disable_signup_login_notice' => false,
@@ -319,6 +320,9 @@ Thank You!
         // Create new data object here so it works for multi-site activation
         $this->data = new PTA_SUS_Data();
 
+        global $wpdb;
+        $charset_collate = $wpdb->get_charset_collate();
+
         // Database Tables
         // **********************************************************
         $sql = "CREATE TABLE {$this->data->tables['sheet']['name']} (
@@ -334,10 +338,12 @@ Thank You!
             sus_group VARCHAR(100) DEFAULT 'none',
             reminder1_days INT,
             reminder2_days INT,
+            clear BOOL NOT NULL DEFAULT TRUE,
+            clear_days INT DEFAULT 0,
             visible BOOL NOT NULL DEFAULT TRUE,
             trash BOOL NOT NULL DEFAULT FALSE,
             UNIQUE KEY id (id)
-        );";
+        ) $charset_collate;";
         $sql .= "CREATE TABLE {$this->data->tables['task']['name']} (
             id INT NOT NULL AUTO_INCREMENT,
             sheet_id INT NOT NULL,
@@ -352,7 +358,7 @@ Thank You!
             enable_quantities VARCHAR(3) NOT NULL DEFAULT 'NO',
             position INT NOT NULL,
             UNIQUE KEY id (id)
-        );";
+        ) $charset_collate;";
         $sql .= "CREATE TABLE {$this->data->tables['signup']['name']} (
             id INT NOT NULL AUTO_INCREMENT,
             task_id INT NOT NULL,
@@ -367,7 +373,7 @@ Thank You!
             reminder2_sent BOOL NOT NULL DEFAULT FALSE,
             item_qty INT NOT NULL DEFAULT 1,
             UNIQUE KEY id (id)
-        );";
+        ) $charset_collate;";
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 

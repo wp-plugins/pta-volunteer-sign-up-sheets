@@ -32,6 +32,8 @@ class PTA_SUS_Data
                     'chair_email' => 'emails',
                     'reminder1_days' => 'int',
                     'reminder2_days' => 'int',
+                    'clear' => 'bool',
+                    'clear_days' => 'int',
                     'visible' => 'bool',
                     'trash' => 'bool',
                 ),
@@ -403,6 +405,8 @@ class PTA_SUS_Data
             $task_table.time_start AS time_start,
             $task_table.time_end AS time_end,
             $sheet_table.title AS title,
+            $sheet_table.clear AS clear,
+            $sheet_table.clear_days AS clear_days,
             $task_table.dates AS task_dates 
             FROM  $signup_table 
             INNER JOIN $task_table ON $signup_table.task_id = $task_table.id 
