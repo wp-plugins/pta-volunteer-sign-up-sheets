@@ -918,7 +918,7 @@ class PTA_SUS_Admin {
         do_action( 'pta_sus_sheet_form_after_contact_info', $f, $edit );
         $content = isset($f['sheet_details']) ? wp_kses_post($f['sheet_details']) : '';
         $editor_id = "sheet_details";
-        $settings = array( 'textarea_rows' => 10 );
+        $settings = array( 'wpautop' => false, 'textarea_rows' => 10 );
         echo '
                 <hr />
                 <p>

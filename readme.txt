@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 4.1
-Stable tag: 1.8
+Stable tag: 1.8.1
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,11 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.8.1**
+
+*	Changed parameters passed to the Wordpress Editor to fix issue with Wordpress stripping paragraph and line break tags out of the text of the Sheet Details.
+*	Updated English translation file. Other translation files are outdated, and I would be very happy to receive any up to date translation files for other languages!!
+
 **Version 1.8**
 
 *	You can now specify, on a per sheet basis, if you want to let volunteers clear their own signups. Additionally, you can specify a minimum number of days before the event after which they can no longer clear their signups. Note that this will only work if your volunteers have user accounts on your site and are either logged in when they sign up, or use the same email associated with their user account (if not logged in when they sign up).
