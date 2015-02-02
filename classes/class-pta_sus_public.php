@@ -256,7 +256,7 @@ class PTA_SUS_Public {
                 $return .= '<p>'.apply_filters( 'pta_sus_public_output', __('No sheets currently available at this time.', 'pta_volunteer_sus'), 'no_sheets_message' ).'</p>';
             } else {
                 $return .= apply_filters( 'pta_sus_before_sheet_list_table', '' );
-                $return .= '<div class=class="pta-sus-sheets main">
+                $return .= '<div class="pta-sus-sheets main">
                     <table class="pta-sus-sheets" cellspacing="0">
                         <thead>
                             <tr>
@@ -348,7 +348,7 @@ class PTA_SUS_Public {
                     $return .= '<h3>'.apply_filters( 'pta_sus_public_output', __('You have signed up for the following', 'pta_volunteer_sus'), 'user_signups_list_headers_h3' ).'</h3>';
                     $return .= '<h4>'.apply_filters( 'pta_sus_public_output', __('Click on Clear to remove yourself from a signup.', 'pta_volunteer_sus'), 'user_signups_list_headers_h4' ).'</h4>';
                     $return .= apply_filters( 'pta_sus_before_user_signups_list_table', '' );
-                    $return .= '<div class=class="pta-sus-sheets user">
+                    $return .= '<div class="pta-sus-sheets user">
                         <table class="pta-sus-sheets" cellspacing="0">
                         <thead>
                             <tr>
@@ -530,7 +530,7 @@ class PTA_SUS_Public {
                 }
             }
             $return .= apply_filters( 'pta_sus_before_task_list', '', $tasks );
-            $return .= '<div class=class="pta-sus-sheets tasks">
+            $return .= '<div class="pta-sus-sheets tasks">
                 <table class="pta-sus-tasks" cellspacing="0">
                     <thead>
                         <tr>
@@ -647,7 +647,8 @@ class PTA_SUS_Public {
         } else {
             $show_date = date_i18n(get_option('date_format'), strtotime($date));
         }
-        $form = apply_filters( 'pta_sus_signup_page_before_form_title', '', $task, $date );
+        $form = '<div class="pta-sus-sheets signup-form">';
+        $form .= apply_filters( 'pta_sus_signup_page_before_form_title', '', $task, $date );
         $form .= '<h3>'.apply_filters( 'pta_sus_public_output', __('Sign Up', 'pta_volunteer_sus'), 'sign_up_form_heading' ).'</h3>';
         $form .= '<h4>'. apply_filters( 'pta_sus_public_output', __('You are signing up for... ', 'pta_volunteer_sus'), 'you_are_signing_up_for' ).'<br/><strong>'.esc_html($task->title).'</strong> ';
         if ($show_date) {
@@ -655,17 +656,17 @@ class PTA_SUS_Public {
         }
         $form .= '</h4>';
         if ('' != $task->time_start) {
-            $form .= '<strong>'.esc_html($this->start_time_header) . ': '. date_i18n(get_option("time_format"), strtotime($task->time_start)) . '</strong><br/>';
+            $form .= '<span class="time_start">'.esc_html($this->start_time_header) . ': '. date_i18n(get_option("time_format"), strtotime($task->time_start)) . '</span><br/>';
         }
         if ('' != $task->time_end) {
-            $form .= '<strong>'.esc_html($this->end_time_header) . ': '. date_i18n(get_option("time_format"), strtotime($task->time_end)) . '</strong>';
+            $form .= '<span class="time_end">'.esc_html($this->end_time_header) . ': '. date_i18n(get_option("time_format"), strtotime($task->time_end)) . '</span><br/>';
         }
         $firstname_label = apply_filters( 'pta_sus_public_output', __('First Name', 'pta_volunteer_sus'), 'firstname_label' );
         $lastname_label = apply_filters( 'pta_sus_public_output', __('Last Name', 'pta_volunteer_sus'), 'lastname_label' );
         $email_label = apply_filters( 'pta_sus_public_output', __('E-mail', 'pta_volunteer_sus'), 'email_label' );
         $phone_label = apply_filters( 'pta_sus_public_output', __('Phone', 'pta_volunteer_sus'), 'phone_label' );
 
-        $form .= apply_filters( 'pta_sus_signup_form_before_form_fields', '', $task, $date );
+        $form .= apply_filters( 'pta_sus_signup_form_before_form_fields', '<br/>', $task, $date );
         if ( is_user_logged_in() ) {
             $current_user = wp_get_current_user();
             if ( !($current_user instanceof WP_User) )
@@ -699,7 +700,7 @@ class PTA_SUS_Public {
         } else { 
         	// If not signed in, get the user data
             if (false == $this->main_options['disable_signup_login_notice']) {
-                $form .= '<p><strong>'.apply_filters( 'pta_sus_public_output', __('If you have an account, it is strongly recommended that you <em style="text-decoration:underline;">login before you sign up</em> so that you can view and edit all your signups.', 'pta_volunteer_sus'), 'signup_login_notice' ).'</strong></p>';
+                $form .= '<p>'.apply_filters( 'pta_sus_public_output', __('If you have an account, it is strongly recommended that you <strong>login before you sign up</strong> so that you can view and edit all your signups.', 'pta_volunteer_sus'), 'signup_login_notice' ).'</p>';
             }
             $form .= '
 			<form name="pta_sus_signup_form" method="post" action="">
@@ -779,6 +780,7 @@ class PTA_SUS_Public {
             ' . wp_nonce_field('pta_sus_signup','pta_sus_signup_nonce') . '
 		</form>
 		';
+        $form .= '</div>';
         return $form;       
 	} // Display Sign up form
 

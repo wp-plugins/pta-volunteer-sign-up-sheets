@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 4.1
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,14 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.8.2**
+
+*	Add div wrapper around sign-up sheet form so output elements can be more easily targeted with custom CSS for styling, and cleaned up the text output formatting a bit.
+*	Fixed a couple of minor CSS class declaration typos
+*	Updated the admin sheets list table so that the Event Type for each sheet can be translated
+*	Includes Croation translation files. THANKS to vipteam!!
+*	PLEASE send me any other language translations and help me keep them up to date!! 
+
 **Version 1.8.1**
 
 *	Changed parameters passed to the Wordpress Editor to fix issue with Wordpress stripping paragraph and line break tags out of the text of the Sheet Details.

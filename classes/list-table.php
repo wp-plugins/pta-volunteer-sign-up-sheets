@@ -61,8 +61,6 @@ class PTA_SUS_List_Table extends WP_List_Table
     function column_default($item, $column_name) {
         switch($column_name){
             case 'id':
-            case 'type':
-                return $item[$column_name];
             case 'first_date':
             case 'last_date':
                 return ($item[$column_name] == '0000-00-00') ? __("N/A", 'pta_volunteer_sus') : mysql2date( get_option('date_format'), $item[$column_name], $translate = true );
@@ -148,6 +146,18 @@ class PTA_SUS_List_Table extends WP_List_Table
             $nonced_toggle_url,  // %1$s
             $display // %2$s
         );
+    }
+
+    function column_type($item) {
+        $sheet_types = apply_filters( 'pta_sus_sheet_form_sheet_types', 
+        array(
+            'Single' => __('Single', 'pta_volunteer_sus'), 
+            'Recurring' => __('Recurring', 'pta_volunteer_sus'), 
+            'Multi-Day' => __('Multi-Day', 'pta_volunteer_sus'), 
+            'Ongoing' => __('Ongoing', 'pta_volunteer_sus')
+            ));
+        $type = $item['type'];
+        return esc_html($sheet_types[$type]);
     }
     
     /**
