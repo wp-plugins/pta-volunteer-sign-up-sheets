@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PTA Volunteer Sign Up Sheets v1.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-01 20:33-0800\n"
-"PO-Revision-Date: 2015-02-01 20:33-0800\n"
+"POT-Creation-Date: 2015-02-02 08:29-0800\n"
+"PO-Revision-Date: 2015-02-02 08:29-0800\n"
 "Last-Translator: Stephen Sherrard <stephen@dbar-productions.com>\n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -1452,12 +1452,10 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-# @ pta_volunteer_sus
 #: classes/class-pta_sus_public.php:703
 msgid ""
-"If you have an account, it is strongly recommended that you <em style=\"text-"
-"decoration:underline;\">login before you sign up</em> so that you can view "
-"and edit all your signups."
+"If you have an account, it is strongly recommended that you <strong>login "
+"before you sign up</strong> so that you can view and edit all your signups."
 msgstr ""
 
 # @ pta_volunteer_sus
