@@ -61,6 +61,7 @@ class PTA_SUS_List_Table extends WP_List_Table
     function column_default($item, $column_name) {
         switch($column_name){
             case 'id':
+                return $item[$column_name];
             case 'first_date':
             case 'last_date':
                 return ($item[$column_name] == '0000-00-00') ? __("N/A", 'pta_volunteer_sus') : mysql2date( get_option('date_format'), $item[$column_name], $translate = true );
