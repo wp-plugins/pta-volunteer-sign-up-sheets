@@ -300,7 +300,7 @@ class PTA_SUS_Admin {
                                 }
                                 
                             }
-                            $export_url = add_query_arg(array('action' => 'export', 'data' => 'pta_sus_reports'));
+                            $export_url = add_query_arg(array('pta-action' => 'export', 'data' => 'pta_sus_reports'));
                             $nonced_export_url = wp_nonce_url($export_url, 'pta-export');
                             update_option( 'pta_sus_reports', $report );
                             echo '
@@ -383,6 +383,8 @@ class PTA_SUS_Admin {
             $count = 0;
             $dates = array();
             $old_dates = $this->data->get_all_task_dates($sheet_id);
+
+            do_action( 'pta_sus_admin_process_tasks_start', $sheet_id, $tasks, $old_dates );
 
             // Get keys for any task line items on screen when posted (even if empty)
             foreach ($_POST['task_title'] AS $key=>$value) {
@@ -637,11 +639,13 @@ class PTA_SUS_Admin {
                 }
             }
 
-
+            do_action( 'pta_sus_admin_process_tasks_end', $sheet_id );    
             
         } elseif($sheet_submitted) {
             // Nonce check
             check_admin_referer( 'pta_sus_add_sheet', 'pta_sus_add_sheet_nonce' );
+
+            do_action( 'pta_sus_admin_process_sheet_start' );
             // Create an empty results array to grab validation results
             $results = array();
             $sheet_err = 0;
@@ -679,6 +683,12 @@ class PTA_SUS_Admin {
                 } else {
                     $sheet_fields['sheet_visible'] = false;
                 }
+                // Make sure our sheet_clear gets set correctly
+                if (isset($sheet_fields['sheet_clear']) && '1' == $sheet_fields['sheet_clear']) {
+                    $sheet_fields['sheet_clear'] = true;
+                } else {
+                    $sheet_fields['sheet_clear'] = false;
+                }
                 if ($duplicates && $add) {
                     $sheet_err++;
                     echo '<div class="error"><p><strong>'.__('A Sheet with the same name already exists!', 'pta_volunteer_sus').'</strong></p></div>';
@@ -702,6 +712,9 @@ class PTA_SUS_Admin {
                         $sheet_fields['sheet_id'] = (int)$_GET['sheet_id'];
                     }
                 }
+
+                do_action( 'pta_sus_admin_process_sheet_end', $add, $sheet_err );
+
                 if (!$sheet_err) {
                     // Sheet saved successfully, set flags to show tasks form
                     $sheet_success = true;
@@ -790,7 +803,7 @@ class PTA_SUS_Admin {
         } elseif ( 'Recurring' == $sheet_fields['sheet_type'] ) {
             $fields['recurring_dates'] = (false === $dates) ? '' : implode(",", $dates);
         }
-        return $fields;
+        return apply_filters( 'pta_sus_admin_get_fields', $fields, $id );
     } // Get Fields
 
     private function display_sheet_form($f=array(), $edit=false) {
@@ -940,6 +953,7 @@ class PTA_SUS_Admin {
 
     private function display_tasks_form($f=array()) {
         $count = (isset($f['task_title'])) ? count($f['task_title']) : 3;
+        do_action( 'pta_sus_tasks_form_start', $f, $count );
         if ($count < 3) $count = 3;
         echo '<form name="add_tasks" id="pta-sus-modify-tasks" method="post" action="">';
         if ( "Single" == $f['sheet_type'] ) {
@@ -967,52 +981,54 @@ class PTA_SUS_Admin {
             <ul class="tasks">
         ';
         for ($i = 0; $i < $count; $i++) {
-                echo '
-                    <li id="task-'.$i.'">
-                        '.__('Task/Item:', 'pta_volunteer_sus').' <input type="text" name="task_title['.$i.']" id="task_title['.$i.']" value="'.((isset($f['task_title'][$i]) ? esc_attr($f['task_title'][$i]) : '')).'" size="20">&nbsp;&nbsp;&nbsp;';
-                        if ( "Multi-Day" == $f['sheet_type'] ) {
-                            echo __('Date:','pta_volunteer_sus').' <input type="text" class="singlePicker" name="task_dates['.$i.']" id="singlePicker['.$i.']" value="'.((isset($f['task_dates'][$i]) ? esc_attr($f['task_dates'][$i]) : '')).'" size="10">&nbsp;&nbsp;&nbsp;';
-                        }
-                echo        
-                        __('# Needed:','pta_volunteer_sus').' <input type="text" name="task_qty['.$i.']" id="task_qty['.$i.']" value="'.((isset($f['task_qty'][$i]) ? (int)$f['task_qty'][$i] : '')).'" size="3">
-                        &nbsp;&nbsp;&nbsp;'.__('Start Time:', 'pta_volunteer_sus').' <input type="text" class="timepicker" id="timepicker_start['.$i.']" name="task_time_start['.$i.']" value="'.((isset($f['task_time_start'][$i]) ? esc_attr($f['task_time_start'][$i]) : '')).'" size="10">
-                        &nbsp;&nbsp;&nbsp;'.__('End Time:', 'pta_volunteer_sus').' <input type="text" class="timepicker" id="timepicker_end['.$i.']" name="task_time_end['.$i.']" value="'.((isset($f['task_time_end'][$i]) ? esc_attr($f['task_time_end'][$i]) : '')).'" size="10">
-                        &nbsp;&nbsp;&nbsp;'.__('Allow Duplicates? ', 'pta_volunteer_sus');
-                        if (!isset($f['task_allow_duplicates'][$i])) {
-                            $f['task_allow_duplicates'][$i] = "NO"; 
-                        }
-                        echo '<input type="checkbox" name="task_allow_duplicates['.$i.']" id="task_allow_duplicates['.$i.']" value="YES" ';
-                        if (isset($f['task_allow_duplicates'][$i]) &&  $f['task_allow_duplicates'][$i] === "YES") {
-                            echo 'checked="checked" ';
-                        }
-                        echo '>
-                        &nbsp;&nbsp;&nbsp;'.__('Enable Quantities? ', 'pta_volunteer_sus');
-                        if (!isset($f['task_enable_quantities'][$i])) {
-                            $f['task_enable_quantities'][$i] = "NO"; 
-                        }
-                        echo '<input type="checkbox" name="task_enable_quantities['.$i.']" id="task_enable_quantities['.$i.']" value="YES" ';
-                        if (isset($f['task_enable_quantities'][$i]) &&  $f['task_enable_quantities'][$i] === "YES") {
-                            echo 'checked="checked" ';
-                        }
-                        echo '>
-                        &nbsp;&nbsp;&nbsp;'.__('Details Needed? ', 'pta_volunteer_sus');
-                        if (!isset($f['task_need_details'][$i])) {
-                            $f['task_need_details'][$i] = "NO"; 
-                        }
-                        echo '<input type="checkbox" class="details_checkbox" name="task_need_details['.$i.']" id="task_need_details['.$i.']" value="YES" ';
-                        if (isset($f['task_need_details'][$i]) &&  $f['task_need_details'][$i] === "YES") {
-                            echo 'checked="checked" ';
-                        }
-                        echo '>';
-                        // Details label - added in version 1.6
-                        echo '<span class="pta_toggle"><br />'.__('Details text:','pta_volunteer_sus').' <input type="text" class="details_text" name="task_details_text['.$i.']" id="task_details_text['.$i.']" value="'.((isset($f['task_details_text'][$i]) ? esc_attr($f['task_details_text'][$i]) : __("Item you are bringing", "pta_volunteer_sus" ) )).'" size="25"></span>';                                                            
-                        echo '&nbsp;&nbsp;<input type="hidden" name="task_id['.$i.']" id="task_id['.$i.']" value="'.((isset($f['task_id'][$i]) ? (int)$f['task_id'][$i] : '')).'">
-                        <a href="#" class="add-task-after">(+)</a>
-                        <a href="#" class="remove-task">(-)</a>
-                    </li>
-                ';
-            }
-            
+            do_action( 'pta_sus_tasks_form_task_loop_start', $f, $i );
+            echo '
+                <li id="task-'.$i.'">
+                    '.__('Task/Item:', 'pta_volunteer_sus').' <input type="text" name="task_title['.$i.']" id="task_title['.$i.']" value="'.((isset($f['task_title'][$i]) ? esc_attr($f['task_title'][$i]) : '')).'" size="20">&nbsp;&nbsp;&nbsp;';
+                    if ( "Multi-Day" == $f['sheet_type'] ) {
+                        echo __('Date:','pta_volunteer_sus').' <input type="text" class="singlePicker" name="task_dates['.$i.']" id="singlePicker['.$i.']" value="'.((isset($f['task_dates'][$i]) ? esc_attr($f['task_dates'][$i]) : '')).'" size="10">&nbsp;&nbsp;&nbsp;';
+                    }
+            echo        
+                    __('# Needed:','pta_volunteer_sus').' <input type="text" name="task_qty['.$i.']" id="task_qty['.$i.']" value="'.((isset($f['task_qty'][$i]) ? (int)$f['task_qty'][$i] : '')).'" size="3">
+                    &nbsp;&nbsp;&nbsp;'.__('Start Time:', 'pta_volunteer_sus').' <input type="text" class="timepicker" id="timepicker_start['.$i.']" name="task_time_start['.$i.']" value="'.((isset($f['task_time_start'][$i]) ? esc_attr($f['task_time_start'][$i]) : '')).'" size="10">
+                    &nbsp;&nbsp;&nbsp;'.__('End Time:', 'pta_volunteer_sus').' <input type="text" class="timepicker" id="timepicker_end['.$i.']" name="task_time_end['.$i.']" value="'.((isset($f['task_time_end'][$i]) ? esc_attr($f['task_time_end'][$i]) : '')).'" size="10">
+                    &nbsp;&nbsp;&nbsp;'.__('Allow Duplicates? ', 'pta_volunteer_sus');
+                    if (!isset($f['task_allow_duplicates'][$i])) {
+                        $f['task_allow_duplicates'][$i] = "NO"; 
+                    }
+                    echo '<input type="checkbox" name="task_allow_duplicates['.$i.']" id="task_allow_duplicates['.$i.']" value="YES" ';
+                    if (isset($f['task_allow_duplicates'][$i]) &&  $f['task_allow_duplicates'][$i] === "YES") {
+                        echo 'checked="checked" ';
+                    }
+                    echo '>
+                    &nbsp;&nbsp;&nbsp;'.__('Enable Quantities? ', 'pta_volunteer_sus');
+                    if (!isset($f['task_enable_quantities'][$i])) {
+                        $f['task_enable_quantities'][$i] = "NO"; 
+                    }
+                    echo '<input type="checkbox" name="task_enable_quantities['.$i.']" id="task_enable_quantities['.$i.']" value="YES" ';
+                    if (isset($f['task_enable_quantities'][$i]) &&  $f['task_enable_quantities'][$i] === "YES") {
+                        echo 'checked="checked" ';
+                    }
+                    echo '>
+                    &nbsp;&nbsp;&nbsp;'.__('Details Needed? ', 'pta_volunteer_sus');
+                    if (!isset($f['task_need_details'][$i])) {
+                        $f['task_need_details'][$i] = "NO"; 
+                    }
+                    echo '<input type="checkbox" class="details_checkbox" name="task_need_details['.$i.']" id="task_need_details['.$i.']" value="YES" ';
+                    if (isset($f['task_need_details'][$i]) &&  $f['task_need_details'][$i] === "YES") {
+                        echo 'checked="checked" ';
+                    }
+                    echo '>';
+                    // Details label - added in version 1.6
+                    echo '<span class="pta_toggle"><br />'.__('Details text:','pta_volunteer_sus').' <input type="text" class="details_text" name="task_details_text['.$i.']" id="task_details_text['.$i.']" value="'.((isset($f['task_details_text'][$i]) ? esc_attr($f['task_details_text'][$i]) : __("Item you are bringing", "pta_volunteer_sus" ) )).'" size="25"></span>';                                                            
+                    echo '&nbsp;&nbsp;<input type="hidden" name="task_id['.$i.']" id="task_id['.$i.']" value="'.((isset($f['task_id'][$i]) ? (int)$f['task_id'][$i] : '')).'">
+                    <a href="#" class="add-task-after">(+)</a>
+                    <a href="#" class="remove-task">(-)</a>
+                </li>
+            ';
+            do_action( 'pta_sus_tasks_form_task_loop_end', $f, $i );
+        }
+        do_action( 'pta_sus_tasks_form_after_tasks', $f );
             echo '
             </ul>';
             wp_nonce_field('pta_sus_add_tasks','pta_sus_add_tasks_nonce');

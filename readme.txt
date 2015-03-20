@@ -3,8 +3,8 @@ Contributors: DBAR Productions
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4HF689YQ9DEE
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
-Tested up to: 4.1
-Stable tag: 1.8.4
+Tested up to: 4.1.1
+Stable tag: 1.8.5
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,13 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.8.5**
+
+*	Fix an issue with the "Show Clear Links" checkbox field not saving when unchecked. 
+*	Updated/Corrected Dutch translation files
+*	A few additional action/filter hooks for extensions
+*	Renamed CSV exporter action to avoid conflict with another plugin
+
 **Version 1.8.4**
 
 *	Minor fix in the admin all sheets list table file that was causing dates to show up in the ID column.

@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.8.4
+Version: 1.8.5
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -18,14 +18,14 @@ if (!defined('PTA_VOLUNTEER_SUS_VERSION_KEY'))
     define('PTA_VOLUNTEER_SUS_VERSION_KEY', 'pta_volunteer_sus_version');
 
 if (!defined('PTA_VOLUNTEER_SUS_VERSION_NUM'))
-    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.8.4');
+    define('PTA_VOLUNTEER_SUS_VERSION_NUM', '1.8.5');
 
 add_option(PTA_VOLUNTEER_SUS_VERSION_KEY, PTA_VOLUNTEER_SUS_VERSION_NUM);
 
 if (!class_exists('PTA_SUS_Data')) require_once 'classes/data.php';
 if (!class_exists('PTA_SUS_List_Table')) require_once 'classes/list-table.php';
 if (!class_exists('PTA_SUS_Widget')) require_once 'classes/widget.php';
-if (!class_exists('PTA_CSV_EXPORTER')) require_once 'classes/class-pta_csv_exporter.php';
+if (!class_exists('PTA_SUS_CSV_EXPORTER')) require_once 'classes/class-pta_csv_exporter.php';
 if (!class_exists('PTA_SUS_Emails')) require_once 'classes/class-pta_sus_emails.php';
 
 // To resolve fatal erros with PHP versions < 5.3 that don't have str_getcsv function
@@ -408,7 +408,7 @@ Thank You!
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
         $plugin = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : '';
-        check_admin_referer( "deactivate-plugin_{$plugin}" );
+        //check_admin_referer( "deactivate-plugin_{$plugin}" );
 
         // Remove custom role and capability
         $role = get_role('signup_sheet_manager');

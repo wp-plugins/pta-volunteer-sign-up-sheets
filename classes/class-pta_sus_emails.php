@@ -55,6 +55,8 @@ class PTA_SUS_Emails {
         $signup = $this->data->get_signup($signup_id);
         $task = $this->data->get_task($signup->task_id);
         $sheet = $this->data->get_sheet($task->sheet_id);
+
+        do_action( 'pta_sus_before_create_email', $signup, $task, $sheet, $reminder, $clear );
         
         $from = $this->email_options['from_email'];
         if (empty($from)) $from = get_bloginfo('admin_email');
@@ -140,7 +142,16 @@ class PTA_SUS_Emails {
             $this->last_reminder = "To: " . $to . "\r\n\r\n" . $message . "\r\n\r\n\r\n";
         }
 
-        return wp_mail($to, $subject, $message, $headers);
+        do_action( 'pta_sus_before_send_email', $to, $subject, $message, $headers );
+
+        // Allow other plugins to determine if we should send this email -- return false to not send
+        $send_email = apply_filters( 'pta_sus_send_email_check', true, $signup, $task, $sheet, $reminder, $clear );
+
+        if($send_email) {
+            return wp_mail($to, $subject, $message, $headers);
+        } else {
+            return true;
+        }
     }
 
     public function get_member_directory_emails($group='') {

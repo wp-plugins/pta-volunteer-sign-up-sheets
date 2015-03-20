@@ -5,7 +5,7 @@
 */
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class PTA_CSV_EXPORTER {
+class PTA_SUS_CSV_EXPORTER {
 
 	public function  __construct() {
 
@@ -30,7 +30,7 @@ class PTA_CSV_EXPORTER {
 	 * @return CSV exports a csv file to the broswer for open/save
 	 */
 	public function export_csv() {
-		$export = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+		$export = isset($_REQUEST['pta-action']) ? $_REQUEST['pta-action'] : '';
 		if ($export == 'export') {
 			check_admin_referer('pta-export');
 			if (!current_user_can('manage_options') && !current_user_can('manage_pta'))  {
@@ -113,6 +113,6 @@ class PTA_CSV_EXPORTER {
 
 } // End Class
 
-$pta_csv_exporter = new PTA_CSV_EXPORTER();
+$pta_sus_csv_exporter = new PTA_SUS_CSV_EXPORTER();
 
 /* EOF */

@@ -2,13 +2,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PTA Volunteer Sign Up Sheets\n"
 "POT-Creation-Date: 2014-07-18 12:45-0800\n"
-"PO-Revision-Date: 2014-09-04 15:55+0100\n"
+"PO-Revision-Date: 2015-03-15 09:53+0100\n"
 "Last-Translator: \n"
 "Language-Team: Stephen Sherrard <stephen@dbar-productions.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.7.5\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -21,7 +21,7 @@ msgstr ""
 #: classes/class-pta_csv_exporter.php:37 classes/class-pta_sus_admin.php:111
 #: classes/class-pta_sus_admin.php:348 classes/class-pta_sus_options.php:27
 msgid "You do not have sufficient permissions to access this page."
-msgstr "Je hebt geen toegang tot deze pagina."
+msgstr "Je hebt geen toegang tot deze pagina"
 
 #: classes/class-pta_csv_exporter.php:44
 msgid "Invalid Report Data!"
@@ -127,7 +127,7 @@ msgstr "Aanmelding ongedaan maken niet gelukt (ID# %s)"
 
 #: classes/class-pta_sus_admin.php:130
 msgid "Spot has been cleared."
-msgstr "Plek is weer vrij."
+msgstr "Plek is weer vrij"
 
 #: classes/class-pta_sus_admin.php:144
 msgid "Sheet Details"
@@ -147,7 +147,7 @@ msgstr "Activiteit is hersteld."
 
 #: classes/class-pta_sus_admin.php:157
 msgid "Error moving sheet to trash."
-msgstr "activiteit verwijderen niet gelukt."
+msgstr "Activiteit verwijderen niet gelukt."
 
 #: classes/class-pta_sus_admin.php:159
 msgid "Sheet has been moved to trash."
@@ -180,7 +180,7 @@ msgstr "Activiteit (on)zichtbaar maken niet gelukt."
 
 #: classes/class-pta_sus_admin.php:181
 msgid "No sign-up sheet found."
-msgstr "geen activiteiten gevonden"
+msgstr "Geen activiteiten gevonden"
 
 #: classes/class-pta_sus_admin.php:187
 msgid "Event Type: "
@@ -322,9 +322,9 @@ msgid ""
 "The task \"%1$s\" cannot be changed to a new date because it has %2$d %3$s "
 "signed up.  Please clear all spots first before changing this task date."
 msgstr ""
-"De taak \"%1$s\" kan geen andere datum krijgenomdat er %2$d %3$s aangemeld "
+"De taak \"%1$s\" kan geen andere datum krijgen, omdat er %2$d %3$s aangemeld "
 "zijn.  Verwijder eerst alle aanmeldingen voordat je de datum van deze taak "
-"verandert. "
+"verandert."
 
 #: classes/class-pta_sus_admin.php:485
 msgid "a date"
@@ -362,7 +362,7 @@ msgid ""
 "currently has %2$d %3$s signed up.  Please clear some spots first before "
 "updating this task."
 msgstr ""
-"Het aantal open plekken voor taak \"%1$s\" kan niet minder zijn dan %2$d "
+"Het aantal open plekken voor taak \"%1$s\" kan niet minder zijn dan %2$d, "
 "omdat er momenteel %2$d %3$s aanmeldingen van vrijwilligers zijn.  Verwijder "
 "een aantal aanmeldingen voordat je deze taak aanpast."
 
@@ -379,7 +379,7 @@ msgid ""
 "The task \"%1$s\" cannot be removed because it has %2$d %3$s signed up.  "
 "Please clear all spots first before removing this task."
 msgstr ""
-"De taak \"%1$s\" kan niet verwijderd worden omdat er %2$d %3$s aangemeld "
+"De taak \"%1$s\" kan niet verwijderd worden, omdat er %2$d %3$s aangemeld "
 "zijn.  Verwijder eerst deze aanmeldingen voordat je de taak verwijdert. "
 
 #: classes/class-pta_sus_admin.php:591
@@ -391,7 +391,7 @@ msgstr[1] "taken."
 #: classes/class-pta_sus_admin.php:591
 #, php-format
 msgid "Error saving %d "
-msgstr "Error bij opslaan %d"
+msgstr "Fout bij opslaan %d"
 
 #: classes/class-pta_sus_admin.php:616 classes/class-pta_sus_admin.php:695
 msgid "Error updating sheet."
@@ -414,7 +414,7 @@ msgstr "Vul de naam EN email in van de coördinator(en)!"
 
 #: classes/class-pta_sus_admin.php:654
 msgid "Please either select a position or type in the chair contact info!"
-msgstr "Selecteer een"
+msgstr "Selecteer een positie of type bij de coördinator!"
 
 #: classes/class-pta_sus_admin.php:657
 msgid "Please enter Chair Name(s) and Email(s)!"
@@ -448,7 +448,7 @@ msgstr "Bewerk taken"
 
 #: classes/class-pta_sus_admin.php:742
 msgid "Dates and Tasks are added on the next page"
-msgstr "Data en taken worden toegevoegd op de volgende pagina."
+msgstr "Data en taken worden toegevoegd op de volgende pagina"
 
 #: classes/class-pta_sus_admin.php:747
 msgid "Tasks Successfully Updated!"
@@ -497,7 +497,7 @@ msgstr "Type activiteit:"
 
 #: classes/class-pta_sus_admin.php:840
 msgid "1st Reminder # of days:"
-msgstr "1ste herinnering # aantal dagen"
+msgstr "1ste herinnering # aantal dagen:"
 
 #: classes/class-pta_sus_admin.php:842
 msgid ""
@@ -665,7 +665,7 @@ msgstr "Opslaan"
 
 #: classes/class-pta_sus_emails.php:254
 msgid "Volunteer Signup Reminders sent"
-msgstr "Vrijwilligers Aanmeldingsherinneringen verstuurd"
+msgstr "Vrijwilligers aanmeldingsherinneringen verstuurd"
 
 #: classes/class-pta_sus_emails.php:255 pta-volunteer-sign-up-sheets.php:118
 msgid "Volunteer signup sheet CRON job has been completed."
@@ -694,20 +694,20 @@ msgstr "Email instellingen"
 
 #: classes/class-pta_sus_options.php:40 classes/class-pta_sus_options.php:109
 msgid "Integration Settings"
-msgstr "Integration Settings"
+msgstr "Integratie instellingen"
 
 #: classes/class-pta_sus_options.php:60
 msgid ""
 "Please help support continued development of this plugin! Any amount helps!"
-msgstr "Ondersteun de ontwikkeling van deze plugin"
+msgstr "Ondersteun de ontwikkeling van deze plug-in!"
 
 #: classes/class-pta_sus_options.php:78
 msgid "Enable Test Mode"
-msgstr "Test Mode aanzetten"
+msgstr "Testmodus aanzetten"
 
 #: classes/class-pta_sus_options.php:79
 msgid "Test Mode Message:"
-msgstr "Test Mode Bericht:"
+msgstr "Testmodus bericht:"
 
 #: classes/class-pta_sus_options.php:80
 msgid "Volunteer Sign Up Page"
@@ -719,7 +719,7 @@ msgstr "Namen van vrijwilligers verbergen voor anderen?"
 
 #: classes/class-pta_sus_options.php:82
 msgid "Show Ongoing events in Widget?"
-msgstr "Doorgaande activiteiten in Widget tonen?"
+msgstr "Doorgaande activiteiten in widget tonen?"
 
 #: classes/class-pta_sus_options.php:83
 msgid "Show Ongoing events last?"
@@ -739,11 +739,11 @@ msgstr "Login-meldingen uitzetten?"
 
 #: classes/class-pta_sus_options.php:87
 msgid "Enable CRON Notifications?"
-msgstr "CRON Notificaties aanzetten?"
+msgstr "CRON notificaties aanzetten?"
 
 #: classes/class-pta_sus_options.php:88
 msgid "Detailed Reminder Notifications?"
-msgstr "Gedetailleerde Herinnerings Notificaties?"
+msgstr "Gedetailleerde herinneringsnotificaties?"
 
 #: classes/class-pta_sus_options.php:89
 msgid "Show Expired Tasks?"
@@ -775,15 +775,15 @@ msgstr "Onderwerp voor bevestigingsmail:"
 
 #: classes/class-pta_sus_options.php:100
 msgid "Confirmation email template:"
-msgstr "Template voor bevestigingsmail"
+msgstr "Template voor bevestigingsmail:"
 
 #: classes/class-pta_sus_options.php:101
 msgid "Cleared signup email subject:"
-msgstr "Subjectregel voor bevestiging van afmeldingsmail"
+msgstr "Subjectregel voor bevestiging van afmeldingsmail:"
 
 #: classes/class-pta_sus_options.php:102
 msgid "Cleared signup email template:"
-msgstr "Template voor bevestiging afmeldingsmail"
+msgstr "Template voor bevestiging afmeldingsmail:"
 
 #: classes/class-pta_sus_options.php:103
 msgid "Reminder email subject:"
@@ -1134,7 +1134,7 @@ msgstr "Verborgen!"
 
 #: classes/class-pta_sus_public.php:221
 msgid "No sheets currently available at this time."
-msgstr "Geen activiteiten beschikbaar"
+msgstr "Geen activiteiten beschikbaar."
 
 #: classes/class-pta_sus_public.php:228 classes/class-pta_sus_public.php:317
 #: classes/list-table.php:173
@@ -1163,7 +1163,7 @@ msgstr "Gevuld"
 
 #: classes/class-pta_sus_public.php:277
 msgid "Please login to view and edit your volunteer sign ups."
-msgstr "Login om je aanmeldingen te zien of te veranderen."
+msgstr "Log in om je aanmeldingen te zien of te veranderen."
 
 #: classes/class-pta_sus_public.php:289
 msgid "Not a valid signup!"
@@ -1220,7 +1220,7 @@ msgstr "Bekijk alle activiteiten"
 
 #: classes/class-pta_sus_public.php:413
 msgid "This sheet is currently hidden from the public."
-msgstr "Deze activiteit is momenteel niet zichtbaar"
+msgstr "Deze activiteit is momenteel niet zichtbaar."
 
 #: classes/class-pta_sus_public.php:440
 msgid "DETAILS:"
@@ -1248,7 +1248,7 @@ msgstr "Meld aan"
 
 #: classes/class-pta_sus_public.php:598
 msgid "You are signing up for... "
-msgstr "Je meld je aan voor..."
+msgstr "Je meldt je aan voor..."
 
 #: classes/class-pta_sus_public.php:600
 #, php-format
@@ -1436,7 +1436,7 @@ msgstr "Het herstellen van activiteit# %d is niet gelukt."
 #: classes/list-table.php:283
 #, php-format
 msgid "%d sheets have been restored."
-msgstr "%d activiteiten zijn hersteld"
+msgstr "%d activiteiten zijn hersteld."
 
 #: classes/list-table.php:291
 #, php-format
