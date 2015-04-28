@@ -3,7 +3,7 @@
 Plugin Name: PTA Volunteer Sign Up Sheets
 Plugin URI: http://wordpress.org/plugins/pta-volunteer-sign-up-sheets
 Description: Volunteer sign-up sheet manager
-Version: 1.8.6
+Version: 1.8.7
 Author: Stephen Sherrard
 Author URI: https://stephensherrardplugins.com
 License: GPL2
@@ -84,6 +84,38 @@ class PTA_Sign_Up_Sheet {
 
         $this->main_options = get_option( 'pta_volunteer_sus_main_options' );
     }
+
+	/**
+	 * Get all Sheets
+	 *
+	 * @param     bool     get just trash
+	 * @param     bool     get only active sheets or those without a set date
+	 * @return    mixed    array of sheets
+	 */
+	public function get_sheets($trash=false, $active_only=false, $show_hidden=false) {
+		return $this->data->get_sheets($trash, $active_only, $show_hidden);
+	}
+
+	/**
+	 * Get tasks by sheet
+	 *
+	 * @param     int        id of sheet
+	 * @return    mixed    array of tasks
+	 */
+	public function get_tasks($sheet_id, $date = '') {
+		return $this->data->get_tasks($sheet_id, $date);
+	}
+
+	/**
+	 * Get signups by task & date
+	 *
+	 * @param    int        id of task
+	 * @return    mixed    array of siginups
+	 */
+	public function get_signups($task_id, $date='')
+	{
+		return $this->data->get_signups($task_id, $date);
+	}
 
     public function register_sus_widget() {
         register_widget( 'PTA_SUS_Widget' );
@@ -391,6 +423,14 @@ Thank You!
         if (is_object($role)) {
             $role->add_cap('manage_signup_sheets');
         }
+
+	    // add capability to all super admins
+	    $supers = get_super_admins();
+	    foreach($supers as $admin) {
+		    $user = new WP_User( 0, $admin );
+		    $user->add_cap( 'manage_signup_sheets' );
+	    }
+
 
         // Schedule our Cron job for sending out email reminders
         // Wordpress only checks when someone visits the site, so

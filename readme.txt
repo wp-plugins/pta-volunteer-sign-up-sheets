@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 4.2.1
-Stable tag: 1.8.6
+Stable tag: 1.8.7
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,12 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.8.7**
+
+*	Added manage_signup_sheets capability to super admin users, due to rare conflict where super admin could not access the settings or menu pages for the plugin
+*   Add public accessor functions for other extensions
+
+
 **Version 1.8.6**
 
 *   Confirmed compatibility with WordPress 4.2.1
