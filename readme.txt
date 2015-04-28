@@ -3,8 +3,8 @@ Contributors: DBAR Productions
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4HF689YQ9DEE
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
-Tested up to: 4.1.1
-Stable tag: 1.8.5
+Tested up to: 4.2.1
+Stable tag: 1.8.6
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,12 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.8.6**
+
+*   Confirmed compatibility with WordPress 4.2.1
+*   Confirmed that all public side URLs generated with add_query_arg were already being properly escaped, so no public side issues with the recently discovered XSS vulnerability with the add_query_arg function.
+*   Properly escaped the URLs in two locations for the admin side of the plugin to address the XSS vulnerability, but would only be an issue if someone else had access to your admin dashboard.
+
 **Version 1.8.5**
 
 *	Fix an issue with the "Show Clear Links" checkbox field not saving when unchecked. 

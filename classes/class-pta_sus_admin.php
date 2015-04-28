@@ -99,11 +99,11 @@ class PTA_SUS_Admin {
         echo '<h3>'.__('Volunteer Reminders', 'pta_volunteer_sus').'</h3>';
         echo '<p>'.__("The system automatically checks if it needs to send reminders hourly via a CRON function. If you are testing, or don't want to wait for the next CRON job to be triggered, you can trigger the reminders function with the button below.", "pta_volunteer_sus") . '</p>';
     	echo $messages;
-    	echo '<p><a href="'.$nonced_reminders_link.'" class="button-primary">'.__('Send Reminders', 'pta_volunteer_sus').'</a></p>';
+    	echo '<p><a href="'.esc_url($nonced_reminders_link).'" class="button-primary">'.__('Send Reminders', 'pta_volunteer_sus').'</a></p>';
         echo '<hr/>';
         echo '<h3>'.__('Clear Expired Signups', 'pta_volunteer_sus').'</h3>';
         echo '<p>'.__("If you have disabled the automatic clearing of expired signups, you can use this to clear ALL expired signups from ALL sheets. NOTE: THIS ACTION CAN NOT BE UNDONE!", "pta_volunteer_sus") . '</p>';
-        echo '<p><a href="'.$nonced_clear_signups_link.'" class="button-secondary">'.__('Clear Expired Signups', 'pta_volunteer_sus').'</a></p>';
+        echo '<p><a href="'.esc_url($nonced_clear_signups_link).'" class="button-secondary">'.__('Clear Expired Signups', 'pta_volunteer_sus').'</a></p>';
         echo $cleared_message;
     	echo '</div>';
     }
