@@ -142,7 +142,10 @@ class PTA_SUS_Options {
         			break;
     			case 'email':
                     // Allow cc_email to be blank
-                    if ('cc_email' === $field && '' == $inputs[$field]) break;
+                    if ('cc_email' === $field && '' == $inputs[$field]) {
+	                    $this->{$options}[$field] = '';
+	                    break;
+                    }
     				if(is_email($inputs[$field])) {
 		                $this->{$options}[$field] = $inputs[$field];
 		            } else {
