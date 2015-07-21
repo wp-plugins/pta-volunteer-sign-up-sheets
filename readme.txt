@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 4.2.1
-Stable tag: 1.8.8
+Stable tag: 1.8.9
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,10 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.8.8**
+
+*	Fix capability check in CSV exporter class to allow Sign-Up Sheet Manager role users to export sheets
+
 **Version 1.8.8**
 
 *	Fix settings page to allow deletion of CC email field
