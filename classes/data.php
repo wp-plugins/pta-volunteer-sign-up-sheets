@@ -10,12 +10,14 @@ class PTA_SUS_Data
     public $wpdb;
     public $tables = array();
     public $now;
+    public $time;
     
     public function __construct()
     {
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->now = current_time( 'mysql' );
+        $this->time = current_time( 'timestamp' );
         
         // Set table names
         $this->tables = array(
@@ -367,6 +369,7 @@ class PTA_SUS_Data
     public function get_sheet_total_spots($id, $date='') {
         $total_spots = 0;
         $tasks = $this->get_tasks($id, $date);
+        
         foreach ($tasks as $task) {
             $task_dates = explode(',', $task->dates);
             $good_dates = 0;
@@ -376,7 +379,7 @@ class PTA_SUS_Data
                         continue;
                     }
                 }
-                if( (strtotime($tdate) >= (time() - (24*60*60))) || "0000-00-00" == $tdate ) {
+                if( (strtotime($tdate) >= ($this->time - (24*60*60))) || "0000-00-00" == $tdate ) {
                     ++$good_dates;
                 }
             }

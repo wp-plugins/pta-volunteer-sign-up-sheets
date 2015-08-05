@@ -3,8 +3,8 @@ Contributors: DBAR Productions
 Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R4HF689YQ9DEE
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
-Tested up to: 4.2.1
-Stable tag: 1.8.9
+Tested up to: 4.2.4
+Stable tag: 1.8.10
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,7 +101,12 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
-**Version 1.8.8**
+**Version 1.8.10**
+
+*	Minor Fix to use the WordPress current time as opposed to the PHP/Server time when calculating when to show sheets and tasks
+*	Added German translation
+
+**Version 1.8.9**
 
 *	Fix capability check in CSV exporter class to allow Sign-Up Sheet Manager role users to export sheets
 
