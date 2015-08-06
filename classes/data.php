@@ -95,7 +95,7 @@ class PTA_SUS_Data
             WHERE trash = %d
             ";
         if ( $active_only ) {
-            $SQL .= " AND (ADDDATE(last_date,1) >= NOW() OR last_date = 0000-00-00)";
+            $SQL .= " AND (ADDDATE(last_date,1) >= %s OR last_date = 0000-00-00)";
         }
         if ( !$show_hidden ) {
             $SQL .= " AND visible = 1";
@@ -103,7 +103,7 @@ class PTA_SUS_Data
         $SQL .= "
             ORDER BY first_date DESC, id DESC
         ";
-        $results = $this->wpdb->get_results($this->wpdb->prepare($SQL, $trash));
+        $results = $this->wpdb->get_results($this->wpdb->prepare($SQL, $trash, $this->now));
         $results = $this->stripslashes_full($results);
         // Hide incomplete sheets (no tasks) from public
 
@@ -343,12 +343,12 @@ class PTA_SUS_Data
             FROM $task_table 
             RIGHT OUTER JOIN $signup_table ON $task_table.id = $signup_table.task_id 
             WHERE $task_table.sheet_id = %d 
-            AND (NOW() <= ADDDATE($signup_table.date, 1) OR $signup_table.date = 0000-00-00) 
+            AND (%s <= ADDDATE($signup_table.date, 1) OR $signup_table.date = 0000-00-00) 
         ";
         if( '' != $date ) {
             $SQL .= " AND $signup_table.date = %s ";
         }
-        $results = $this->wpdb->get_results($this->wpdb->prepare($SQL, $id, $date));
+        $results = $this->wpdb->get_results($this->wpdb->prepare($SQL, $id, $this->now, $date));
         $count = 0;
         foreach ($results as $result) {
             if ( 'YES' === $result->enable_quantities ) {
@@ -415,8 +415,8 @@ class PTA_SUS_Data
             INNER JOIN $task_table ON $signup_table.task_id = $task_table.id 
             INNER JOIN $sheet_table ON $task_table.sheet_id = $sheet_table.id 
             WHERE $signup_table.user_id = %d AND $sheet_table.trash = 0 
-            AND (ADDDATE($signup_table.date, 1) >= NOW() OR $signup_table.date = '0000-00-00') 
-            ", $user_id);
+            AND (ADDDATE($signup_table.date, 1) >= %s OR $signup_table.date = '0000-00-00') 
+            ", $user_id, $this->now);
         $results = $this->wpdb->get_results($safe_sql);
         $results = $this->stripslashes_full($results);
         return $results;
@@ -617,7 +617,7 @@ class PTA_SUS_Data
     }
 
     public function delete_expired_signups() {
-        return $this->wpdb->query("DELETE FROM ".$this->tables['signup']['name']." WHERE NOW() > ADDDATE(date, 1)");
+        return $this->wpdb->query($this->wpdb->prepare("DELETE FROM ".$this->tables['signup']['name']." WHERE %s > ADDDATE(date, 1)", $this->now));
     }
     
     /**
