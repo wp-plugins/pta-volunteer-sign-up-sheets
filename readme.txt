@@ -4,7 +4,7 @@ Donate link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id
 Tags: Volunteer,Sign Up, Events
 Requires at least: 3.3
 Tested up to: 4.2.4
-Stable tag: 1.8.11
+Stable tag: 1.8.12
 
 Easily create and manage sign-up sheets for volunteer activities, while protecting the privacy of the volunteers' personal information.
 
@@ -101,6 +101,10 @@ https://stephensherrardplugins.com/docs/pta-volunteer-sign-up-sheets-documentati
 
 
 == Changelog ==
+**Version 1.8.12**
+
+*	One more minor fix for tasks lists to use WordPress date/time instead of PHP date function (server time) to decide if a task has expired or not.
+
 **Version 1.8.11**
 
 *	Modified SQL database queries to use WordPress current date/time instead of the SQL NOW() function so that sign-up sheets or tasks won't be hidden early when the server's time is different than the WordPress time (such as when the server is in a different time zone).

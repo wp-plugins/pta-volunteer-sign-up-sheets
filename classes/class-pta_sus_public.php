@@ -475,7 +475,7 @@ class PTA_SUS_Public {
                     $future_dates = false;
                     $task_dates = $this->data->get_all_task_dates($sheet->id);
                     foreach ($task_dates as $tdate) {
-                        if($tdate >= date('Y-m-d') || "0000-00-00" == $tdate) {
+                        if($tdate >= current_time('Y-m-d') || "0000-00-00" == $tdate) {
                             $future_dates = true;
                             break;
                         }
@@ -497,7 +497,7 @@ class PTA_SUS_Public {
                         
                         $task_dates = apply_filters( 'pta_sus_sheet_task_dates', $task_dates, $sheet->id );
                         foreach ($task_dates as $tdate) {
-                            if( "0000-00-00" != $tdate && $tdate < date('Y-m-d')) continue; // Skip dates that have passed already
+                            if( "0000-00-00" != $tdate && $tdate < current_time('Y-m-d')) continue; // Skip dates that have passed already
                             if( "0000-00-00" != $tdate ) {
                                 $return .= '<h4><strong>'.mysql2date( get_option('date_format'), $tdate, $translate = true ).'</strong></h4>';
                             }                           
