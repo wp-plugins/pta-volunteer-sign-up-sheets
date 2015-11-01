@@ -59,3 +59,20 @@ TABLE.pta-sus-sheets .column-view_link {
 .pta-sus-em {
     font-style: italic;
 }
+
+/* Styles for an adaptive calendar */
+
+.vsus_date {font-weight: bold;}
+.vsus_time {margin: 0 1 0 1;
+	background:#eee;}
+
+.vsus_container ul{ list-style: none; padding: 0; margin: 0; clear: both; width: 100%; } .vsus_container li{ display: block; float: left; width: 14.2857142857%; padding: 5px; box-sizing: border-box; border: 1px solid #ccc; margin-right: -1px; margin-bottom: -1px; }
+
+@media only screen and (min-width : 768px) { .day_cell { display: none; } }
+
+@media only screen and (max-width : 768px) { 
+.vsus_container .weekdays { display: none; } 
+.vsus_container li { height: auto!important; border: 1px solid #ededed; width: 100%; padding: 10px; margin-bottom: -1px; } 
+.vsus_container li .day, .vsus_container li .month { display: inline; } 
+.vsus_container li.outofrange { display: none; } 
+}

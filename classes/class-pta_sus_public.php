@@ -163,6 +163,92 @@ class PTA_SUS_Public {
     }
 
 	/**
+     * Return the day of month as a string,
+     * along with any markup that should accompany it,
+     * affecting whether it's the beginning of a month or end of a week.
+     * 
+     * @param   d   The date to be formatted.
+     */
+    public function date_with_markup($d) {
+        $dateparts = date_parse($d);
+        $dayofweek = jddayofweek(
+        cal_to_jd(CAL_GREGORIAN, $dateparts["month"], $dateparts["day"],
+                                 $dateparts["year"]));
+        $ret = '';
+
+        // On Sunday, we need to end the UL to start a new calendar week.
+        if ($dayofweek === 0) {
+            //if ($dateparts["day"] > 1)
+            if (isset($this->lastday))
+                $ret .= '
+</ul>
+';
+            $ret .= '
+<ul>
+';
+        }
+
+        // On the first day of the month, we may need to insert some
+        // extra <li> since the first day probably isn't Sunday.
+        else if ($dateparts["day"] == 1) {
+            for ($d=0; $d < $dayofweek; ++$d)
+                $ret .= '<li class="vsus_empty_day">';
+        }
+
+        // If we skipped days, then we'll have to insert extra <li>s.
+        else if (isset($this->lastdayofweek) &&
+                 ($dayofweek != $this->lastdayofweek) &&
+                 ($dayofweek != ($this->lastdayofweek+1))) {
+            // Are we in a new week?
+            if ($dayofweek < $this->lastdayofweek) {
+                $ret .= '
+</ul>
+<ul>
+';
+                // Don't try to insert as many </ul><ul> as there are
+                // intervening weeks; if we miss a week row, that's okay.
+
+                for ($d=0; $d < $dayofweek; ++$d)
+                    $ret .= '<li class="vsus_empty_day">';
+            }
+            // Else we've just skipped a day or so in the same week:
+            else {
+                for ($i = $this->lastdayofweek+1; $i < $dayofweek; ++$i)
+                    $ret .= '<li class="vsus_empty_day">';
+            }
+        }
+
+        $ret .= '
+<li><p class="vsus_date weekdays">' . $dateparts["day"] . '</p>
+<p class="vsus_date day_cell">' . $dateparts["month"] . ',' . $dateparts["day"] . '</p>
+';
+        $this->lastday = $dateparts["day"];
+        // Could save month and year too, but as long as we always
+        // iterate in ascending date order, we shouldn't need them. I hope.
+        $this->lastdayofweek = $dayofweek;
+        return $ret;
+    }
+
+	/**
+     * Return a time range as the shortest string we can manage,
+     * e.g. 9:00-11:00am instead of 9:00 am - 11:00 am.
+     *
+     * @param   start   Start time
+     * @param   end     End time
+     */
+    public function times_with_markup($startt, $endt) {
+        $st = strtotime($startt);
+        $et = strtotime($endt);
+        $start_ampm = date("A", $st);
+        $end_ampm = date("A", $et);
+        if ($start_ampm === $end_ampm) $start_ampm = "";
+        return '<p class="vsus_time">'
+            . date("g:i", $st) . $start_ampm . '-'
+            . date("g:i", $et) . $end_ampm
+            . '<br />' . PHP_EOL;
+    }
+
+	/**
      * Output the volunteer signup form
      * 
      * @param   array   attributes from shortcode call
@@ -496,10 +582,26 @@ class PTA_SUS_Public {
                         }
                         
                         $task_dates = apply_filters( 'pta_sus_sheet_task_dates', $task_dates, $sheet->id );
+                        $return .= '
+<div class="vsus_container">
+<ul class="weekdays">
+<li>Sun</li>
+<li>Mon</li>
+<li>Tues</li>
+<li>Wed</li>
+<li>Thur</li>
+<li>Fri</li>
+<li>Sat</li>
+</ul>
+<ul>';
+/*
+<li>
+<div class="date day_cell"><span class="day">Sun,</span> <span class="month">Nov</span> 1</div>';
+*/
                         foreach ($task_dates as $tdate) {
                             if( "0000-00-00" != $tdate && $tdate < current_time('Y-m-d')) continue; // Skip dates that have passed already
                             if( "0000-00-00" != $tdate ) {
-                                $return .= '<h4><strong>'.mysql2date( get_option('date_format'), $tdate, $translate = true ).'</strong></h4>';
+                                $return .= $this->date_with_markup($tdate);
                             }                           
                             $return .= $this->display_task_list($sheet->id, $tdate);
                         }
@@ -530,25 +632,7 @@ class PTA_SUS_Public {
                 }
             }
             $return .= apply_filters( 'pta_sus_before_task_list', '', $tasks );
-            $return .= '<div class="pta-sus-sheets tasks">
-                <table class="pta-sus-tasks" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>'.esc_html($this->task_item_header).'</th>
-                            <th>'.esc_html($this->start_time_header).'</th>
-                            <th>'.esc_html($this->end_time_header).'</th>
-                            <th>'.esc_html( apply_filters( 'pta_sus_public_output', __('Available Spots', 'pta_volunteer_sus'), 'task_available_spots_header' ) ).'</th>';
-            if ($show_details) {
-                $return .= '<th>'.esc_html($this->item_details_header).'</th>';
-            }
-            if ($show_qty) {
-                $return .= '<th>'.esc_html($this->item_qty_header).'</th>';
-            }
-            $return .= '                
-                        </tr>
-                    </thead>
-                    <tbody>
-                    ';
+            $cur_time_range = '';
                     foreach ($tasks AS $task) {
                         $task_dates = explode(',', $task->dates);
                         // Don't show tasks that don't include our date, if one was passed in
@@ -569,19 +653,14 @@ class PTA_SUS_Public {
                         foreach ($signups AS $signup) {
                             if ($i == $task->qty) {
                                 $return .= '<tr class="pta-sus-tasks-bb">';
-                            } else {
-                                $return .= '<tr>';
                             }
                             if (1 == $i) {
-                                $return .= '
-                                <td>'.esc_html($task->title).'</td>
-                                <td>'.(("" == $task->time_start) ? esc_html($this->na_text) : date_i18n(get_option("time_format"), strtotime($task->time_start)) ).'</td>
-                                <td>'.(("" == $task->time_end) ? esc_html($this->na_text) : date_i18n(get_option("time_format"), strtotime($task->time_end)) ).'</td>';
-                            } else {
-                                $return .= '
-                                <td></td>
-                                <td></td>
-                                <td></td>';
+                                $timerange = $this->times_with_markup(
+                                    $task->time_start, $task->time_end);
+                                if ($timerange !== $cur_time_range) {
+                                    $return .= $timerange;
+                                    $cur_time_range = $timerange;
+                                }
                             }
                             if($this->main_options['hide_volunteer_names']) {
                                 $display_signup = apply_filters( 'pta_sus_public_output', __('Filled', 'pta_volunteer_sus'), 'task_spot_filled_message' );
@@ -590,50 +669,37 @@ class PTA_SUS_Public {
                             }
                             // hook to allow others to modify how the signed up names are displayed
                             $display_signup = apply_filters( 'pta_sus_display_signup_name', $display_signup, $signup );
-                            $return .= '<td class="pta-sus-em">#'.$i.': '.$display_signup.'</td>';
+                            $return .= '#'.$i.': '.$display_signup.'<br />' . PHP_EOL;
                             if ($show_details) {
-                                    $return .= '<td class="pta-sus-em">'.esc_html($signup->item).'</td>';
+                                $return .= esc_html($signup->item) . PHP_EOL;
                             }
                             if ($show_qty) {
-                                    $return .= '<td>'.("YES" === $task->enable_quantities ? (int)($signup->item_qty) : "").'</td>';
+                                    $return .= ("YES" === $task->enable_quantities ? (int)($signup->item_qty) : "").'<br />';
                             }
                             if ('YES' === $task->enable_quantities) {
                                 $i += $signup->item_qty;
                             } else {
                                 $i++;
                             }                           
-                            $return .= '</tr>';
                         }
                         for ($i=$i; $i<=$task->qty; $i++) {
-                            if ($i == $task->qty) {
-                                $return .= '<tr class="pta-sus-tasks-bb">';
-                            } else {
-                                $return .= '<tr>';
-                            }
                             if (1 == $i) {
-                                $return .= '
-                                <td>'.esc_html($task->title).'</td>
-                                <td>'.(("" == $task->time_start) ? esc_html($this->na_text) : date_i18n(get_option("time_format"), strtotime($task->time_start)) ).'</td>
-                                <td>'.(("" == $task->time_end) ? esc_html($this->na_text) : date_i18n(get_option("time_format"), strtotime($task->time_end)) ).'</td>';
-                            } else {
-                                $return .= '
-                                <td></td>
-                                <td></td>
-                                <td></td>';
+                                $timerange = $this->times_with_markup(
+                                    $task->time_start, $task->time_end);
+                                if ($timerange !== $cur_time_range) {
+                                    $return .= $timerange;
+                                    $cur_time_range = $timerange;
+                                }
                             }
-                            $return .= '<td>#'.$i.': <a href="'.esc_url($task_url).'">'.apply_filters( 'pta_sus_public_output', __('Sign up ', 'pta_volunteer_sus'), 'task_sign_up_link_text' ) . '&raquo;</a></td>';
-                            if($show_details) {
-                            	$return .= '<td></td>';
-                            }
-                            if($show_qty) {
-                                $return .= '<td></td>';
-                            }
-                        	$return .= '</tr>';
+                            $return .= '#' . $i . ': <a href="'
+                                . esc_url($task_url) . '">'
+                                . apply_filters( 'pta_sus_public_output',
+                                                 __('Sign up ',
+                                                    'pta_volunteer_sus'),
+                                                'task_sign_up_link_text' )
+                                . '&raquo;</a><br />' . PHP_EOL;
                         }
                     }
-                    $return .= '
-                    </tbody>
-                </table></div>';
             $return .= apply_filters( 'pta_sus_after_task_list', '', $tasks );
             return $return;
         }
