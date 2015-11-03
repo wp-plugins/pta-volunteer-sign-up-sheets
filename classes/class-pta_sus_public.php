@@ -171,9 +171,9 @@ class PTA_SUS_Public {
      */
     public function date_with_markup($d) {
         $dateparts = date_parse($d);
-        $dayofweek = jddayofweek(
-        cal_to_jd(CAL_GREGORIAN, $dateparts["month"], $dateparts["day"],
-                                 $dateparts["year"]));
+        $jd =  cal_to_jd(CAL_GREGORIAN, $dateparts["month"],
+                         $dateparts["day"], $dateparts["year"]);
+        $dayofweek = jddayofweek($jd);
         $ret = '';
 
         // On Sunday, we need to end the UL to start a new calendar week.
@@ -188,9 +188,13 @@ class PTA_SUS_Public {
 ';
         }
 
-        // On the first day of the month, we may need to insert some
+        // On the first day of a month, we may need to insert some
         // extra <li> since the first day probably isn't Sunday.
-        else if ($dateparts["day"] == 1) {
+        // But this applies to the first day *we see* of any month,
+        // which is not necessarily the first calendar day.
+        //else if ($dateparts["day"] == 1) {
+        else if (!isset($this->lastmonth)
+                 || $dateparts["month"] != $this->lastmonth) {
             for ($d=0; $d < $dayofweek; ++$d)
                 $ret .= '<li class="vsus_empty_day">';
         }
@@ -207,24 +211,25 @@ class PTA_SUS_Public {
 ';
                 // Don't try to insert as many </ul><ul> as there are
                 // intervening weeks; if we miss a week row, that's okay.
-
-                for ($d=0; $d < $dayofweek; ++$d)
+                for ($wd=0; $wd < $dayofweek; ++$wd)
                     $ret .= '<li class="vsus_empty_day">';
             }
             // Else we've just skipped a day or so in the same week:
             else {
-                for ($i = $this->lastdayofweek+1; $i < $dayofweek; ++$i)
-                    $ret .= '<li class="vsus_empty_day">';
+                for ($i = $this->lastdayofweek+1, $d=$this->lastday+1;
+                     $i < $dayofweek; ++$i, ++$d)
+                    $ret .= '<li class="vsus_empty_day">' . $d;
             }
         }
 
         $ret .= '
 <li><p class="vsus_date weekdays">' . $dateparts["day"] . '</p>
-<p class="vsus_date day_cell">' . $dateparts["month"] . ',' . $dateparts["day"] . '</p>
+<p class="vsus_date day_cell">'
+            . jddayofweek($jd, 1) . ", " . jdmonthname($jd, 0)
+            . ' ' . $dateparts["day"] . '</p>
 ';
         $this->lastday = $dateparts["day"];
-        // Could save month and year too, but as long as we always
-        // iterate in ascending date order, we shouldn't need them. I hope.
+        $this->lastmonth = $dateparts["month"];
         $this->lastdayofweek = $dayofweek;
         return $ret;
     }
